@@ -27,13 +27,17 @@ for (i in rev(y)) {
   
   cat("", f)
   f <- read_lines(f) %>% 
-    # AD   : ? (2015, 2017)
-    # CP   : plénière, pas toujours numérotée (toutes éditions)
-    # MD   : module disciplinaire (2009)
-    # MPP  : module professionnel (2013)
-    # MTED : ? (2015)
-    # ST : section thématique (toutes éditions), parfois numérotées DD.D
-    str_subset("(AD|MD|MPP|MTED|ST)\\s?\\d|\\sCP") %>%
+    # AD   : atelier (2015, 2017)
+    # CP   : conférence plénière, pas toujours numérotée (toutes éditions)
+    # MD   : module (2009)
+    # MDFB : module (2015)
+    # MPP  : module (2013)
+    # MTED : module (2015)
+    # ST : section thématique (toutes éditions)
+    # - parfois numérotées DD.D : 12.1, 12.2 (2009)
+    # - parfois spéciales : 'ST RC20IPSA', 'ST PopAct' (2015)
+    # excluded: single, unnumbered TR (2013)
+    str_subset("(AD|CP|MD|MPP|MTED|ST)\\s?(\\d|GRAM|GrePo|PopAct|RC)|\\s(MDFB|CP)") %>%
     # transliterate, using sub to keep strings with non-convertible bytes
     iconv(to = "ASCII//TRANSLIT", sub = " ") %>%
     # remove diacritics
@@ -91,31 +95,58 @@ d <- mapply(function(year, i) {
     )
   }) %>% 
   bind_rows %>% 
-  mutate_at(2:3, str_replace, pattern = "::", replacement = "") %>% 
-  # fix sessions with no type (all are 2009, all are ST)
-  mutate(j = str_replace(j, "_(\\d+)$", "_ST\\1")) %>% 
-  # safety measure to avoid duplicate rows
-  distinct
+  # remove separator from attendee and panel names
+  mutate_at(2:3, str_replace, pattern = "::", replacement = "")
 
-# finalize names
+# ==============================================================================
+# FINALIZE
+# ==============================================================================
+
+# finalize attendee names
 
 # (1) remove composed family names to avoid married 'x-y' duplicates
 d$i <- str_replace(d$i, "^(\\w+)-(.*)\\s", "\\1 ")
 
-# remove 6 problematic rows
-# filter(d, !str_detect(i, " "))
-d <- filter(d, str_detect(i, "\\s"))
+# fix some problematic rows (caused by extra comma between first and last names)
+d$i[ d$year == 2013 & d$i == "PILLON" ] <- "PILLON JEAN-MARIE"
+d$i[ d$year == 2013 & d$i == "ABENA-TSOUNGI" ] <- "ABENA-TSOUNGI ALAIN"
+d$i[ d$year == 2015 & d$i == "LENGUITA" ] <- "LENGUITA PAULA"
+d$i[ d$year == 2017 & d$i == "GONZALES-GONZALESVERONICA" ] <- "GONZALES VERONICA"
+
+# no remaining problematic rows
+stopifnot(str_detect(d$i, "\\s"))
 
 # (2) remove dashes to avoid 'marie claude' and 'marie-claude' duplicates
 d$i <- str_replace_all(d$i, "-", " ")
 
+# finalize panel names
+
+# fix sessions with no type (all are 2009, all are ST)
+d$j <- str_replace(d$j, "_(\\d+)$", "_ST\\1")
+
+# fix sessions with an extra comma between type and id (one case in 2009)
+d$j <- str_replace(d$j, "ST, (\\d+)$", "_ST\\1")
+
+# remove panels with less than 2 attendees (false positives)
+d <- group_by(d, year, j) %>% 
+  summarise(n_j = n()) %>% 
+  filter(n_j > 1) %>% 
+  inner_join(d, ., by = c("year", "j")) %>% 
+  distinct(.keep_all = TRUE)
+
+# safety measure to avoid duplicate rows
+
+# ==============================================================================
+# COUNTS
+# ==============================================================================
+
 # how many participations over the 5 conferences?
 t <- group_by(d, i) %>% 
-  summarise(n_conf = n_distinct(year)) %>% 
-  arrange(-n_conf)
+  summarise(t_c = n_distinct(year)) %>% 
+  arrange(-t_c)
 
-table(t$n_conf) # ~ 30 attendees went to all conferences, 1,800+ went to only 1
-table(t$n_conf > 1) / nrow(t) # 72% attended only 1 conference in 8 years
+table(t$t_c) # 35 attendees went to all conferences, ~ 1,800+ went to only 1
+table(t$t_c > 1) / nrow(t) # 72% attended only 1 conference in 8 years
 
 # number of panels overall
 n_distinct(d$j)
@@ -124,15 +155,18 @@ n_distinct(d$j)
 cat("\nPanels per conference:\n\n")
 print(tapply(d$j, d$year, n_distinct))
 
-# add number of panels attended per conference (useful for edge weighting)
-d <- summarise(group_by(d, year, i), n_papc = n()) %>% 
+# add number of panels attended per conference
+# (useful for edge weighting)
+d <- summarise(group_by(d, year, i), n_p = n()) %>% 
   inner_join(d, ., by = c("year", "i"))
 
-# add number of conferences attended (useful for vertex subsetting)
-d <- summarise(group_by(d, i), n_conf = n_distinct(year)) %>% 
+# add total number of panels attended and total number of conferences attended
+# (useful for vertex subsetting)
+d <- summarise(group_by(d, i), t_p = n_distinct(j), t_c = n_distinct(year)) %>% 
   inner_join(d, ., by = "i")
 
 write_csv(d, "data/edges.csv")
-cat("\nSaved", nrow(d), "rows,", n_distinct(d$i), "attendees,", n_distinct(d$j), "panels.")
+cat("\nSaved", nrow(d), "rows,", 
+    n_distinct(d$i), "attendees,", n_distinct(d$j), "panels.")
 
 # kthxbye

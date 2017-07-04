@@ -8,10 +8,12 @@ R code to build panel co-attendance networks from [AFSP conferences](http://www.
   - Composed family names `X-Y` are simplified to their first component `X`.
   - Dashes in names (e.g. `MARIE-CLAUDE`) have been removed.
 - `j` -- Panel attended, coded as `YEAR_ID`, where `ID` contains:
-  - The type of panel (`CP`: plenary, `ST`: thematic, plus a few other types).
-  - The number of the panel, when there was one (`12.x` is simplified to `12x`).
-- `n_papc` -- Number of conference panels attended that year.
-- `n_conf` -- Total number of conferences attended (1-5).
+  - The type of panel (e.g. `CP`for plenary, `ST` for thematic).
+  - The alphanumeric identifier of the panel when there was one.
+- `n_j` -- Number of attendees to the conference panel.
+- `n_p` -- Number of conference panels attended that year by the attendee.
+- `t_p` -- Total number of panels attended by the attendee.
+- `t_c` -- Total number of conferences attended by the attendee.
 
 # HOWTO
 
