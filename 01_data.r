@@ -45,7 +45,7 @@ for (i in rev(y)) {
     # &eacute, &icirc -> e, i
     str_replace_all("&(\\w{1})(.*?);", "\\1") %>% 
     # lone initials
-    str_replace_all("\\s[A-Z]{1}\\s", " ") %>% 
+    str_replace_all("\\s[A-Za-z]{1}\\s", " ") %>% 
     str_trim %>% 
     data_frame(year = str_extract(f, "\\d{4}"), i = .)
   
@@ -79,7 +79,7 @@ table(str_count(d$i, ","))
 d <- mapply(function(year, i) {
   x <- unlist(str_split(i, ",\\s?"))
   x[ -1 ] <- str_replace_all(x[ -1 ], "\\s+", "") # ST 0 -> ST0
-  str_c(x[ 1 ], "::", str_c(year, "_", x[ -1 ])) # NAME : ST0, ST1, ...
+  str_c(x[ 1 ], "::", str_c(year, "_", x[ -1 ])) # NAME : YEAR_ST0, ST1, ...
 }, d$year, d$i) %>% 
   unlist %>% 
   as.vector %>% 
