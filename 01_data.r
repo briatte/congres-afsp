@@ -92,7 +92,10 @@ d <- mapply(function(year, i) {
   }) %>% 
   bind_rows %>% 
   mutate_at(2:3, str_replace, pattern = "::", replacement = "") %>% 
-  distinct # safety (avoid duplicate rows)
+  # fix sessions with no type (all are 2009, all are ST)
+  mutate(j = str_replace(j, "_(\\d+)$", "_ST\\1")) %>% 
+  # safety measure to avoid duplicate rows
+  distinct
 
 # finalize names
 
