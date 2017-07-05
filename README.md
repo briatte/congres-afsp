@@ -23,7 +23,7 @@ R code to build panel co-attendance networks from [AFSP conferences](http://www.
 
 # HOWTO
 
-```{r}
+```r
 # dependencies, repeated in scripts
 
 # data
