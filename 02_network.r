@@ -60,7 +60,7 @@ for (i in y) {
   
   ggraph(n, layout = "fr") +
     geom_edge_link(aes(alpha = weight), show.legend = FALSE) +
-    geom_node_point(aes(size = size, shape = type, color = type)) + 
+    geom_node_point(aes(size = size, shape = type, color = type)) +
     scale_shape_manual("", values = c("P0" = 15, "P1" = 19, "P2" = 19), labels = l) +
     scale_color_manual("", values = c("P0" = "grey35", "P1" = "steelblue3", "P2" = "tomato3"), labels = l) +
     guides(size = FALSE) +
@@ -73,13 +73,15 @@ for (i in y) {
     ) +
     labs(title = str_c("Congrès AFSP ", i),
          subtitle = str_c(
-           sum(V(n)$type == "P0"), " panels, ", 
+           sum(V(n)$type == "P0"), " panels, ",
            sum(V(n)$type != "P0"), " participant(e)s")
     )
-  
+
   ggsave(str_c("plots/congres-afsp", i, ".pdf"), width = 8, height = 9)
   ggsave(str_c("plots/congres-afsp", i, ".png"), width = 8, height = 9, dpi = 150)
-  cat("Saved plot for year", i, "\n")
+
+  cat("\nYear", i, ":", components(n)$no, "components\n")
+  print(table(V(n)$type))
   
 }
 
