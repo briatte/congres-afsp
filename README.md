@@ -19,12 +19,19 @@ R code to build panel co-attendance networks from [AFSP conferences](http://www.
 
 ```{r}
 # dependencies, repeated in scripts
+
+# data
 library(dplyr)
-library(igraph)
 library(readr)
 library(stringr)
 
+# networks
+library(ggplot2)
+library(ggraph)
+library(igraph)
+
 # make
+
 source("01_data.r")
 source("02_network.r")
 ```
