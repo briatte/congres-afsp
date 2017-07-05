@@ -1,6 +1,14 @@
-R code to build panel co-attendance networks from [AFSP conferences](http://www.afsp.info/).
+R code to build panel co-attendance networks from [AFSP](http://www.afsp.info/) biennial conferences.
+
+# CITATION
+
+Briatte, François. 2017. _AFSP Conference Panel Co-attendance Networks._ DOI: [10.5281/zenodo.822976](https://doi.org/10.5281/zenodo.822976).
+
+[![DOI](https://zenodo.org/badge/96291301.svg)](https://zenodo.org/badge/latestdoi/96291301)
 
 # DATA
+
+Contents of the [`edges.csv`](https://github.com/briatte/congres-afsp/blob/master/data/edges.csv) data object:
 
 - `year` – Year of AFSP conference ([2009][2009], [2011][2011], [2013][2013], [2015][2015], [2017][2017]).
 - `i` – Full name of the attendee, slightly simplified for cross-year matching:
@@ -21,10 +29,12 @@ R code to build panel co-attendance networks from [AFSP conferences](http://www.
 [2015]: http://www.afsp.info/archives/congres/congres2015/indexcongres.html
 [2017]: http://www.afsp.info/congres/congres-2017/index/
 
+The [`incidence_matrix.rds`](https://github.com/briatte/congres-afsp/blob/master/data/incidence_matrix.rds) data object contains the _i_ &times; _j_ incidence matrix, with each tie weighted by 1 / _n<sub>j</sub>_.
+
 # HOWTO
 
 ```r
-# dependencies, repeated in scripts
+# PACKAGE DEPENDENCIES (repeated in scripts)
 
 # data
 library(dplyr)
@@ -36,8 +46,15 @@ library(ggplot2)
 library(ggraph)
 library(igraph)
 
-# make
+# MAKE
 
+# complete run
 source("01_data.r")
-source("02_network.r")
+source("02_networks.r")
+
+# to load the edge list on its own
+d <- readr::read_csv("data/edges.csv", col_types = "icciiii")
+
+# to load the weighted incidence matrix on its own
+w <- readRDS("data/incidence_matrix.rds")
 ```
