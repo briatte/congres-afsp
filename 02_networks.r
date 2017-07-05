@@ -60,7 +60,7 @@ for (i in y) {
   
   ggraph(n, layout = "fr") +
     geom_edge_link(aes(alpha = weight), show.legend = FALSE) +
-    geom_node_point(aes(size = size, shape = type, color = type)) +
+    geom_node_point(aes(size = size, shape = type, color = type), alpha = 2/3) +
     scale_shape_manual("", values = c("P0" = 15, "P1" = 19, "P2" = 19), labels = l) +
     scale_color_manual("", values = c("P0" = "grey35", "P1" = "steelblue3", "P2" = "tomato3"), labels = l) +
     guides(size = FALSE) +
