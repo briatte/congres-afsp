@@ -2,7 +2,7 @@ R code to build panel co-attendance networks from [AFSP](http://www.afsp.info/) 
 
 # CITATION
 
-Briatte, François. 2017. _AFSP Conference Panel Co-attendance Networks._ DOI: [10.5281/zenodo.822976](https://doi.org/10.5281/zenodo.822976).
+Briatte, François. 2017. _AFSP Conference Panel Co-attendance Data._ DOI: [10.5281/zenodo.823352](https://doi.org/10.5281/zenodo.823352).
 
 [![DOI](https://zenodo.org/badge/96291301.svg)](https://zenodo.org/badge/latestdoi/96291301)
 
