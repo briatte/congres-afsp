@@ -44,13 +44,14 @@ A serialized R object of class `matrix` representing the _i_ &times; _j_ inciden
 - `id` – Panel identifier that matches the `ID` part of the `j` variable in [`edges.csv`][data-edges].
 - `title` – Panel title, slightly cleaned up:
   - Multiples spaces were replaced by a single one.
-  - Double quotes are coded as « French quotes », i.e _chevrons_.
-  - Single quotes are coded as `’`, i.e. as a curly _apostrophe_.
+  - Double quotes are coded as `«` French quotes `»`.
+  - Single quotes are coded as `’`.
   - Unbreakable spaces are used before `:;?!` and before/after double quotes.
+  - Full stops at the end of titles were removed.
   - All instances of `État` (the State) are accentuated.
 - `notes` – Notes, in French, when available (e.g. to indicate the panel was postponed).
 
-The data were manually extracted from the relevant [AFSP Web pages](http://www.afsp.info/congres/editions-precedentes/). A handful of panels listed in the file have no participants listed in `[`edges.csv`][data-edges], for various reasons (e.g. the panel was cancelled or postponed, the panel is a PhD workshop with no attendees list).
+The data were manually extracted from the relevant [AFSP Web pages](http://www.afsp.info/congres/editions-precedentes/). A handful of panels listed in the file have no participants listed in [`edges.csv`][data-edges], for various reasons (e.g. the panel was cancelled or postponed, the panel is a PhD workshop with no attendees list).
 
 [data-panels]: https://github.com/briatte/congres-afsp/blob/master/data/panels.csv
 
