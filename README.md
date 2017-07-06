@@ -8,7 +8,9 @@ Briatte, François. 2017. _AFSP Conference Panel Co-attendance Networks._ DOI: [
 
 # DATA
 
-Contents of the [`edges.csv`](https://github.com/briatte/congres-afsp/blob/master/data/edges.csv) data object:
+## [`edges.csv`][data-edges]
+
+A CSV file with one row per attendee and per conference panel attended:
 
 - `year` – Year of AFSP conference ([2009][2009], [2011][2011], [2013][2013], [2015][2015], [2017][2017]).
 - `i` – Full name of the attendee, slightly simplified for cross-year matching:
@@ -23,27 +25,34 @@ Contents of the [`edges.csv`](https://github.com/briatte/congres-afsp/blob/maste
 - `t_p` – Total number of panels attended by the attendee.
 - `t_c` – Total number of conferences attended by the attendee.
 
+[data-edges]: https://github.com/briatte/congres-afsp/blob/master/data/edges.csv
 [2009]: http://www.afsp.info/archives/congres/congres2009/programmes/indexnoms.html
 [2011]: http://www.afsp.info/archives/congres/congres2011/programme/index.html
 [2013]: http://www.afsp.info/archives/congres/congres2013/indexducongres.html
 [2015]: http://www.afsp.info/archives/congres/congres2015/indexcongres.html
 [2017]: http://www.afsp.info/congres/congres-2017/index/
 
-The [`incidence_matrix.rds`](https://github.com/briatte/congres-afsp/blob/master/data/incidence_matrix.rds) data object contains the _i_ &times; _j_ incidence matrix, with each tie weighted by 1 / _n<sub>j</sub>_.
+## [`incidence_matrix.rds`][data-incidence_matrix]
 
-The `panels.csv` file has additional information on all conference panels:
+A serialized R object of class `matrix` representing the _i_ &times; _j_ incidence matrix contained in [`edges.csv`][data-edges], with each edge weighted by 1 / _n<sub>j</sub>_. Because all conference panels have at least two attendees, the edge weights have a maximum value of 0.5.
+
+[data-incidence_matrix]: https://github.com/briatte/congres-afsp/blob/master/data/incidence_matrix.rds
+
+## [`panels.csv`][data-panels]
 
 - `year` – Year of AFSP conference (2009, 2011, 2013, 2015, 2017).
-- `id` – Panel identifier that matches the `ID` part of the `j` variable in `edges.csv`.
+- `id` – Panel identifier that matches the `ID` part of the `j` variable in [`edges.csv`][data-edges].
 - `title` – Panel title, slightly cleaned up:
   - Multiples spaces were replaced by a single one.
-  - Double quotes are coded as « French quotes » (_chevrons_).
-  - Single quotes are coded as « l’apostrophe ».
-  - Unbreakable spaces are used before ":" and "?" (no occurrences of ";" and "!") and before/after double quotes.
-  - All instances of "_État_" (the State) are accentuated.
+  - Double quotes are coded as « French quotes », i.e _chevrons_.
+  - Single quotes are coded as `’`, i.e. as a curly _apostrophe_.
+  - Unbreakable spaces are used before `:;?!` and before/after double quotes.
+  - All instances of `État` (the State) are accentuated.
 - `notes` – Notes, in French, when available (e.g. to indicate the panel was postponed).
 
-The data were manually extracted from the relevant [AFSP Web pages](http://www.afsp.info/congres/editions-precedentes/). A handful of panels listed in the file have no participants listed in the `edges.csv` file, for various reasons (e.g. panel was cancelled, panel is a PhD workshop with no attendees list).
+The data were manually extracted from the relevant [AFSP Web pages](http://www.afsp.info/congres/editions-precedentes/). A handful of panels listed in the file have no participants listed in `[`edges.csv`][data-edges], for various reasons (e.g. the panel was cancelled or postponed, the panel is a PhD workshop with no attendees list).
+
+[data-panels]: https://github.com/briatte/congres-afsp/blob/master/data/panels.csv
 
 # HOWTO
 
