@@ -66,13 +66,13 @@ library(readr)
 library(stringr)
 
 # networks
+library(igraph)
 library(ggplot2)
 library(ggraph)
-library(igraph)
 
 # BUILD NETWORKS
 
-# complete run
+# full construction routine
 source("01_data.r")
 source("02_networks.r")
 
