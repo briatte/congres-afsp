@@ -1,0 +1,362 @@
+year,id,title,notes
+2009,"CP1","Unité et diversité de la science politique francophone",NA
+2009,"CP2","Fronts et frontières disciplinaires",NA
+2009,"CP3","L’utilité sociale de la science politique et l’engagement politique de ses praticiens",NA
+2009,"CP4","Exportation internationale de la science politique francophone",NA
+2009,"CP5","La cumulativité des savoirs en science politique",NA
+2009,"CP6","Science politique et éthique professionnelle",NA
+2009,"MD1","Histoire. La science politique au prisme de son passé",NA
+2009,"MD2","Enquêtes. Enquête(s) sur une science politique en devenir",NA
+2009,"ST1","L’Europe sans constitution : quelle communauté politique en construction ?","Proposée par la SEE de l’AFSP"
+2009,"ST2","Sociologie politique de l’action extérieure de l’État dans la nouvelle multipolarité.","Proposée par la SEI de l’AFSP"
+2009,"ST3","L’État de la France. La « fin d’une exception » mise en perspective comparée.","Proposée par le groupe SPCA de l’AFSP"
+2009,"ST4","Economie du politique et politique de l’économie.","Proposée par le groupe ArP de l’AFSP"
+2009,"ST5","Etudier les comportements électoraux : bilan de la recherche francophone.","Proposée par le GAEL de l’AFSP"
+2009,"ST6","Le métier politique à l’épreuve de sa féminisation. Genre et (re)définition des rôles politiques.","Proposée par le groupe Genre & Politique de l’AFSP"
+2009,"ST7","Naissance et mort des partis politiques.","Proposée par le GEOPP de l’AFSP"
+2009,"ST8","Aux marges des mouvements sociaux : les arts de la résistance.","Proposée par le GERMM de l’AFSP"
+2009,"ST9","Républiques. Trajectoires, historicités et voyages d’un concept.","Proposée par le GRESCOP de l’AFSP"
+2009,"ST10","Chronologie, périodisation, temporalités.","Proposée par le GRHISPO de l’AFSP"
+2009,"ST11","Les assemblées du Parlement : la séance, les commissions et les groupes.","Proposée par le GRPP de l’AFSP"
+2009,"ST121","Regards critiques : le local comme objet global ?","Proposée par le groupe Local & Politique de l’AFSP"
+2009,"ST122","La démocratie urbaine et régionale en débats.","Proposée par le groupe Local & Politique de l’AFSP"
+2009,"ST13","Variables, Individus, Contextes. Comment observer et analyser leurs interactions ?","Proposée par le groupe MOD de l’AFSP"
+2009,"ST14","L’analyse des politiques publiques existe-t-elle encore ?","Proposée par le groupe Politiques Publiques de l’AFSP"
+2009,"ST15","Genre et politiques publiques : de la découverte mutuelle au dialogue.",NA
+2009,"ST16","Science politique et sexualités en francophonie : un état des lieux.",NA
+2009,"ST17","L’européanisation des systèmes partisans en Europe.",NA
+2009,"ST18","L’académie européenne : experts, savoirs et savants dans le gouvernement de l’Union européenne.",NA
+2009,"ST19","La Présidence du Conseil de l’Union européenne dans tous ses États.",NA
+2009,"ST20","Transferts institutionnels et convergences étatiques. Vers une sociologie comparative post-institutionnaliste de l’État ?",NA
+2009,"ST21","Les politiques de défense : une redéfinition des contours régaliens de l’État ?",NA
+2009,"ST22","Les formes contemporaines de la biopolitique : États, « nouvelle santé publique » et politiques publiques comparées.",NA
+2009,"ST23","Les politiques sociales : mutations, enjeux, théories.",NA
+2009,"ST24","Les politiques de recherche : entre traditions nationales et tournant néo-managérial ?",NA
+2009,"ST25","L’analyse des politiques publiques à l’épreuve de l’Amérique Latine.",NA
+2009,"ST26","Les ambiguïtés de l’action publique face aux inégalités socio-spatiales. État des travaux francophones au regard des « urban studies ».",NA
+2009,"ST27","Action publique et parcours de vie. Nouvelles inégalités et nouvelles approches des inégalités.",NA
+2009,"ST28","Acteurs, référentiels, instruments et énoncés : la spécificité d’une approche « francophone » des politiques publiques en débat.",NA
+2009,"ST29","Pour une analyse des politiques publiques de l’éducation.",NA
+2009,"ST30","L’hydropolitique et les relations internationales.",NA
+2009,"ST31","Les terrorismes : un objet pluriel pour un champ restreint ?",NA
+2009,"ST32","Le mouvement des institutions internationales.",NA
+2009,"ST33","L’action collective des élites économiques.",NA
+2009,"ST34","Représentants et représentés : élus de la diversité et minorités visibles.",NA
+2009,"ST35","Du fait colonial à l’immigration contemporaine. La représentation des groupes minorisés, de l’Outre-mer français à l’hexagone.",NA
+2009,"ST36","Mobilisations « ethniques » et comparaison internationale.",NA
+2009,"ST37","Partis politiques et mouvements sociaux à la croisée des approches : interdépendances, transformations et traits communs.",NA
+2009,"ST38","Ruptures biographiques, bifurcations collectives et rapports au politique.",NA
+2009,"ST39","Les mobilisations ethnolinguistiques en Europe.",NA
+2009,"ST40","Le temps de l’écologie politique.",NA
+2009,"ST41","De la protection de la nature au développement durable : les mutations de l’enjeu environnemental.",NA
+2009,"ST42","Des valeurs politiques en mutation : analyse quantitative comparée.",NA
+2009,"ST43","Les « sciences » dans l’État : perspectives comparées.",NA
+2009,"ST44","Sociologie et histoire des mécanismes de dépacification du jeu politique.",NA
+2009,"ST45","Formes de compétence et savoirs de gouvernement.",NA
+2009,"ST46","Sociologie historique des « changements de régimes ».",NA
+2009,"ST47","Les combattants : approches sociologiques et socio-historiques.",NA
+2009,"ST48","Maurice Duverger aujourd’hui.",NA
+2009,"ST49","Une science politique camérale : pratiques et contraintes du champ politologique au Maghreb.",NA
+2009,"ST50","Que faire des idées en science politique ?",NA
+2009,"ST51","Repenser l’anthropologie politique de la démocratie.",NA
+2009,"ST52","La liberté à l’épreuve de la démocratie. Regards de la théorie politique.",NA
+2011,"CP1","Democratic Theory and Political Science",NA
+2011,"CP2","La science politique en Europe : cartographies de la discipline",NA
+2011,"CP3","Science politique et politique aux frontières de l’Union européenne",NA
+2011,"MPP1","Les docteurs face aux défis du recrutement : regards croisés sur la formation et la sélection des candidats aux métiers de l’enseignement et de la recherche en science politique",NA
+2011,"MPP2","Les simulations pédagogiques",NA
+2011,"MPP3","Les manuels de science politique. Editions et usages d’un outil pédagogique",NA
+2011,"MPP4","Stages de terrain. Comment enseigner, en actes, l’ethnographie ?",NA
+2011,"MPP5","Enseigner les méthodes d’enquêtes quantitatives. Echanges d’expériences",NA
+2011,"ST1","Pour une socio-histoire de la science politique",NA
+2011,"ST2","Penser le changement international",NA
+2011,"ST3","La sortie des conflits armés contemporains : Quel rôle pour les institutions internationales ?",NA
+2011,"ST4","Métier : pacificateur. Professionnels internationaux de la paix et sorties de conflits depuis l’entre-deux-guerres",NA
+2011,"ST5","Le dilemme de la paix et de la justice en sortie de conflit armé",NA
+2011,"ST6","Sociologie des politiques de DDR : analyse des processus de co-production",NA
+2011,"ST7","La pacification politique : questionnements historiques et analyses symboliques",NA
+2011,"ST8","Représentations et labellisations de la « guerre » : pour une sociologie interprétativiste des systèmes de classification de la conflictualité internationale",NA
+2011,"ST9","Ni guerre, ni paix : enquêtes sur les ordres politiques disloqués",NA
+2011,"ST10","La notion de martyr en science politique : au-delà des mots et des maux",NA
+2011,"ST11","L’État en restructuration. Division du travail, hiérarchies, action publique et identités professionnelles dans des administrations en recomposition",NA
+2011,"ST12","L’État et ses territoires : nouvelles logiques, nouvelles relations ?",NA
+2011,"ST13","L’entre-soi politique local : Approches ethnographiques",NA
+2011,"ST14","Retour sur l’État local",NA
+2011,"ST15","L’ « État régulateur » en question : perspectives comparées",NA
+2011,"ST16","Leadership et « entrepreneurs » dans l’action publique",NA
+2011,"ST17","Excellence scientifique et prise de parole dans l’espace public. Le cas de l’analyse des politiques publiques",NA
+2011,"ST18","Circulation internationale des idées et mimétisme politique et le cas des nouveaux instruments des politiques environnementales : transferts de politiques ?",NA
+2011,"ST19","Concerter, négocier, délibérer … Et après ?",NA
+2011,"ST20","La managérialisation de l’État social en France et aux États-Unis",NA
+2011,"ST21","Les politiques de l’immigration : entre démocratie et justice sociale",NA
+2011,"ST22","Des politiques d’égalité aux politiques de l’identité : parité, diversité, intersectionnalité",NA
+2011,"ST23","Les crises de santé publique : une question politique ?",NA
+2011,"ST24","Universités et recherche face à la réforme",NA
+2011,"ST25","Les administrations publiques en réforme(s) : une comparaison Allemagne-France",NA
+2011,"ST26","Agir par réseaux. Les réseaux en science politique : méthodes et objets.",NA
+2011,"ST27","L’ « économisation » du secteur public en Europe",NA
+2011,"ST28","Milieux politiques et milieux d’affaires : pour une sociologie comparée européenne",NA
+2011,"ST29","Partis politiques et politiques publiques",NA
+2011,"ST30","Territorialisation des systèmes politiques et transformations organisationnelles des partis en Europe",NA
+2011,"ST31","La production partisane des candidatures. Vers une démonopolisation ?",NA
+2011,"ST32","Faire, défaire les programmes. Coproductions et réceptions des « programmes politiques »",NA
+2011,"ST33","Communication politique et mobilisation électorale. Bilan et perspective des dispositifs d’enquête",NA
+2011,"ST34","Géographie et sociologie électorales : duel ou duo ? Actualité et avenir d’une concurrence/collaboration scientifique",NA
+2011,"ST35","Rapports ordinaires au politique et comportements électoraux",NA
+2011,"ST36","Le découpage électoral : histoire, enjeux et méthodes",NA
+2011,"ST37","Participation ou délibération ? Sociologie historique de l’implication des citoyens en démocratie",NA
+2011,"ST38","Logiques de la participation politique, de la contestation à la démocratie participative",NA
+2011,"ST39","Pratiques et dispositifs de participation dans le monde du travail",NA
+2011,"ST40","Le travail politique",NA
+2011,"ST41","Pour une sociologie de la codification du jeu politique (activités, métiers et organisations politiques)",NA
+2011,"ST42","Les enjeux politiques et académiques des réformes de l’enseignement du droit : perspectives comparées",NA
+2011,"ST43","Le rapport aux institutions des descendants de migrants",NA
+2011,"ST44","Comparer les Parlements",NA
+2011,"ST45","Quantifier le monde et l’Europe : acteurs, outils et appropriations",NA
+2011,"ST46","L’européanisation et ses coins d’ombre : vers une normalisation des études européennes ?",NA
+2011,"ST47","Droits de l’homme et démocratie dans l’ensemble européen",NA
+2011,"ST48","Que font les terrains autoritaires aux théories de l’action collective ?",NA
+2011,"ST49","Le pouvoir de la croyance. Le statut explicatif d’un concept problématique",NA
+2011,"ST50","Les politiques symboliques existent-elles ?",NA
+2011,"ST51","Sociologie politique du sport. Renouvellement des perspectives et approches comparées",NA
+2011,"ST52","La justice au prisme du genre : approches comparées",NA
+2011,"ST53","Genre et Nation",NA
+2013,"AD1","L’état de la discipline au prisme du doctorat en science politique",NA
+2013,"AD2","Réussir son parcours doctoral. Témoignages de jeunes docteur(e)s",NA
+2013,"AD3","Faire face au bouleversement soudain du terrain de l’enquête. A l’épreuve du « Printemps arabe »",NA
+2013,"AD4","Vers une synergie des méthodes des relations internationales et de la sociologie des mobilisations. Le cas des émotions dans les mobilisations violentes",NA
+2013,"CP","Le Brésil à l'honneur. Conférence d'Elisa P. Reis sur le thème « Cultural Changes and the Challenge of Reducing Social Inequalities »",NA
+2013,"MPP1","Enseigner les relations internationales. Expériences croisées.",NA
+2013,"MPP2","Les incidences pédagogiques du « tournant ethnographique » en sociologie politique. Retours d’expériences et analyses croisées de l’initiation à la recherche par l’enquête en terrains électoraux et politiques.",NA
+2013,"MPP3","Les simulations en science politique : histoire d’une innovation et étude de ses enjeux pédagogiques.",NA
+2013,"MPP4","Les politistes et les médias, les politistes dans les médias. Quelles modalités d’intervention dans l’espace public médiatique ?",NA
+2013,"MPP5","Une « révolution des données » en science politique ? Enjeux et formes possibles d’une « data social science ».",NA
+2013,"MTED1","Le futur des études électorales en France",NA
+2013,"MTED2","Les politiques internationales : objets et stratégies de recherche",NA
+2013,"MTED3","La théorie politique en France : un état des lieux",NA
+2013,"ST1","US politics and policies in motion : un nouveau regard sur l’État américain",NA
+2013,"ST2","« Saisir l’État » à travers ses écrits ordinaires. Enjeux, méthodes et objets",NA
+2013,"ST3","Gouverner la mémoire, gouverner le futur. Nouvelles perspectives sur l’État à partir d’objets « marginaux »",NA
+2013,"ST4","Les politiques de réforme de l’État et des services publics : une approche par les activités des « cadres intermédiaires » de l’administration",NA
+2013,"ST5","Ce que le genre fait à l’État : une ethnographie du contrôle des déviances",NA
+2013,"ST6","Politiques publiques et démocratie. Les « policy feedbacks » et les attitudes et comportements politiques",NA
+2013,"ST7","Opinion publique et action publique",NA
+2013,"ST8","Impôt et politiques publiques",NA
+2013,"ST9","L’économie sociale et solidaire et les territoires du politique : vers un dialogue interdisciplinaire",NA
+2013,"ST10","Sociologie politique des agendas. Emploi du temps, activité quotidienne des acteurs politiques et gouvernement des territoires",NA
+2013,"ST11","Regards croisés sur les catégorisations ethnoraciales : action publique et mobilisations en contextes nationaux",NA
+2013,"ST12","La terre et le politique : de la construction de l’État aux mobilisations sociales",NA
+2013,"ST13","Prospective et action publique",NA
+2013,"ST14","Gouverner les langues",NA
+2013,"ST15","Markets and Health. Quels enjeux nationaux et internationaux ? Quelle régulation politique ?",NA
+2013,"ST16","Sociologie des politiques économiques : état des lieux et perspectives",NA
+2013,"ST17","Retour sur le gouvernement des risques collectifs : quelle place pour les industriels ?",NA
+2013,"ST18","Penser la politisation de l’environnement à l’international",NA
+2013,"ST19","Penser les régimes urbains",NA
+2013,"ST20","Vers une sociologie politique des sciences ?",NA
+2013,"ST21","L’activité scientifique au prisme de l’impératif participatif",NA
+2013,"ST22","Les procédures de la démocratie. Perspectives pour la théorie politique et la pratique de la démocratie",NA
+2013,"ST23","Agendas publics et réactivité démocratique : une perspective comparée",NA
+2013,"ST24","Un retour des meetings électoraux ? Les meetings dans la campagne présidentielle : dispositifs, acteurs et publics",NA
+2013,"ST25","Hérédité et compétition politique : Le paradoxe de la transmission familiale du pouvoir politique dans les systèmes politiques concurrentiels",NA
+2013,"ST26","L’élection présidentielle de 2012 : quelles permanences et quelles évolutions des « alignements » électoraux ?",NA
+2013,"ST27","Le « nouveau » Front national en question",NA
+2013,"ST28","La coordination des partis et des électeurs dans les systèmes politiques bipolarisés",NA
+2013,"ST29","La participation politique des musulmans dans les sociétés occidentales",NA
+2013,"ST30","Les enseignants, un groupe mobilisé ?",NA
+2013,"ST31","La représentation politique au-delà de l’élection. Penser la représentation face aux transformations contemporaines de la démocratie",NA
+2013,"ST32","Des mouvements en changement : autonomisation, institutionnalisation, professionnalisation et transnationalisation des associations LGBT",NA
+2013,"ST33","Affaires sexuelles, questions sexuelles, sexualités",NA
+2013,"ST34","L’analyse de réseaux comme méthode pour la science politique",NA
+2013,"ST35","La socialisation politique des enfants : pour un réexamen empirique et transdisciplinaire",NA
+2013,"ST36","La division du travail exécutif : distribution, différenciation et appropriation des postes exécutifs",NA
+2013,"ST37","Groupes d’intérêt et Think tanks pendant les campagnes électorales. Qui intervient ? Comment ? Avec quels effets politiques ?",NA
+2013,"ST38","Le travail politique orienté vers les médias",NA
+2013,"ST39","Sociogenèse de l’ordre parlementaire. Processus, configurations et pratiques",NA
+2013,"ST40","La gouvernance : ouverture démocratique ou pluralisme limité ?",NA
+2013,"ST41","Political Finance and Political Corruption",NA
+2013,"ST42","La « dépolitisation » : registres, processus et interprétations",NA
+2013,"ST43","Une échelle parmi d’autres ? La fabrique européenne des politiques de réconciliation",NA
+2013,"ST44","Champs transnationaux, enquête transnationale",NA
+2013,"ST45","Organisations internationales et acteurs non étatiques : vers de nouvelles pratiques démocratiques dans l’espace international ?",NA
+2013,"ST46","La globalisation à l’aune du genre : vers une sociologie politique de la promotion internationale des normes égalitaires",NA
+2013,"ST47","Les fonctions symboliques des organisations internationales",NA
+2013,"ST48","Les diplomaties des pays émergents",NA
+2013,"ST49","Puissances émergentes, institutions globales et gestion de crise",NA
+2013,"ST50","« Plaidoyer » et Advocates. Acteurs et formats internationaux des mobilisations",NA
+2013,"ST51","L’art comme indice et matrice des conflits armés",NA
+2013,"ST52","Sociologie politique de l’international",NA
+2013,"ST53","L’option violente. Combattants et insurgés dans les soulèvements populaires",NA
+2013,"ST54","Praticiens et experts de la sécurité internationale : sociologie politique d’un espace professionnel",NA
+2013,"ST55","Foucault ou le politiste impossible ?",NA
+2013,"ST56","Acteurs et généalogie des études européennes (1945-1992)",NA
+2013,"ST57","Comment étudier les clubs, les fondations politiques, les think tanks ?",NA
+2013,"ST58","Cinéma, Film et (Science) politique",NA
+2013,"ST59","La laïcité comme répertoire d’action administratif",NA
+2013,"ST60","Une sociologie de la pensée politique est-elle possible ? Le cas des (néo)libéralismes",NA
+2013,"ST61","Quelle place pour le comparatisme en histoire des idées politiques et en théorie politique ?",NA
+2013,"ST62","Appropriations et prolongements critiques de la Green Political Theory",NA
+2013,"ST63","Les frontières de la communauté libérale",NA
+2013,"ST64","Approches du normatif. La théorie politique entre philosophie et sociologie",NA
+2013,"ST65","Des « politiques » de l’intersectionnalité. Un regard comparatif sur l’institutionnalisation du traitement des discriminations multiples en Europe",NA
+2013,"ST66","Le partage public-privé : généalogie et recompositions",NA
+2015,"AD1","Présentation-débat autour du bilan de mandature de la section 04 du CNU",NA
+2015,"AD2","Présentation-débat autour du rapport de conjoncture de la section 40 du CNRS",NA
+2015,"CP","When Power Evaporates From Our Arms",NA
+2015,"CPXX","When Power Evaporates From Our Arms",NA
+2015,"MDFB","Module doctoral franco-brésilien. La recherche sur le Brésil",NA
+2015,"MTED1","Approches expérimentales en science politique",NA
+2015,"MTED2","Ce que les révolutions arabes ont fait aux sciences sociales",NA
+2015,"MTED3","Les études européennes entre interdisciplinarité et normalisation",NA
+2015,"MTED4","Ce que les sciences sociales font des révolutions arabes",NA
+2015,"MTED5","Explorer les logiques narratives de l’action publique. Pour une synergie méthodologique des approches « politistes »",NA
+2015,"ST1","Crise, insécurité sociale et comportements électoraux",NA
+2015,"ST2","Politique des temps ordinaires et politique des temps électoraux",NA
+2015,"ST3","Matérialité de l’électeur. Approches empiriques comparées des dispositifs de vote.",NA
+2015,"ST4","Investiguer le bureau de vote. Réflexions épistémologiques et mutualisation des expériences de terrain",NA
+2015,"ST5","Sociologie du vote à distance",NA
+2015,"ST6","Les réformes électorales : un nouvel angle d’approche des systèmes électoraux ?",NA
+2015,"ST7","Les appropriations méthodologiques d’internet dans la recherche sur des objets politiques",NA
+2015,"ST8","Pour une politique des émotions",NA
+2015,"ST9","A quoi sert la psychologie politique ?",NA
+2015,"ST10","Les rapports au politique des étudiants",NA
+2015,"ST11","Enjeux théoriques et méthodologiques d’une cartographie dynamique des espaces militants",NA
+2015,"ST12","(Ne pas) Consentir ? Conformismes contestataires et institutions de la critique",NA
+2015,"ST13","« Banaliser » un objet socio-historique : les gauches alternatives dans les années 1968",NA
+2015,"ST14","Ouvriers, mouvement syndical et mouvements sociaux de 1968 à nos jours",NA
+2015,"ST15","Quelle économie politique pour quelle «crise» ?",NA
+2015,"ST16","Ripostes catholiques: mobilisations conservatrices autour d’enjeux sexuels et reproductifs",NA
+2015,"ST17","Les gouvernés aux prises avec l’action publique. Variation des représentations et inégalités des pratiques",NA
+2015,"ST18"," Gouverner (par) les données. Open-data et Big Data : vers une redéfinition des outils et des publics de l’action publique ?",NA
+2015,"ST19","La profession politique aujourd’hui. Comment sociologiser les transformations du champ politique ?",NA
+2015,"ST20","Sociologie des entourages politiques",NA
+2015,"ST21","Adoption, organisation et diffusion des primaires ouvertes. Une approche comparée",NA
+2015,"ST22","Les alternances politiques au local",NA
+2015,"ST23","Remettre les idées sur le métier ? La place des « idées » dans la profession politique",NA
+2015,"ST24","L’avenir de la démocratie délibérative : forums, systèmes, médias",NA
+2015,"ST25","Nouvelles approches de la décision collective",NA
+2015,"ST26","Démocratie sans croissance: théories, institutions et pratiques",NA
+2015,"ST27","Relations interinstitutionnelles et ordre politique",NA
+2015,"ST28","Ethnographier les institutions : un impératif empirique ?",NA
+2015,"ST29","Pour une théorie politique appliquée à l’intégration européenne. État des lieux d’un champ de recherche en construction",NA
+2015,"ST30","« Penser l’action publique » en contexte africain",NA
+2015,"ST31","Rendre faillible le secteur public. Processus, instruments et acteurs de la mise en crise financière des services publics",NA
+2015,"ST32","Le process-tracing comme méthode d’analyse des politiques publiques",NA
+2015,"ST33","Les acteurs politiques face à la crise : entre « volontarisme » et « contraintes » dans les politiques publiques",NA
+2015,"ST34","Former les élus : repenser la relation entre légitimité démocratique et expertise",NA
+2015,"ST35","Pour une sociologie politique de l’énergie : approches théoriques et nouveaux enjeux",NA
+2015,"ST36","Le rôle des syndicats dans les réformes de la protection sociale",NA
+2015,"ST37","Les rationalités comparées des politiques sociales",NA
+2015,"ST38","Changements dans la gouvernance des politiques sociales et dynamique du pacte démocratique en Europe",NA
+2015,"ST39","Peut-on parler de régions-providence ? Les politiques sociales entre européanisation et régionalisation",NA
+2015,"ST40","Entre États et marchés, les transformations des politiques de concurrence",NA
+2015,"ST41","Crise et gouvernance territoriale en Europe : convergence ou différenciation ?",NA
+2015,"ST42","« Europeanisation Goes West » : Interroger les effets des élargissements de l’UE à l’Europe centrale sur son fonctionnement",NA
+2015,"ST43","Le Parlement européen, acteur international et institution parlementaire internationale (IPI): exemples et comparaisons avec d ́autres IPIs.",NA
+2015,"ST44","Modèles et instruments d’administration publique en Europe : l’Union européenne au prisme des phénomènes de circulation internationale",NA
+2015,"ST45","Les logiques sociales de sélection du personnel politique en Europe Centrale et Orientale et leurs transformations historiques",NA
+2015,"ST46","Soulèvements populaires et transformations des régimes politiques : de l’Europe de l’Est à l’Afrique du Nord/Moyen-Orient et retour ","Ajournée"
+2015,"ST47","« Révolution », « transition démocratique », « crise politique », « changement de régime »… Enjeux et usages des qualifications politiques et savantes",NA
+2015,"ST48","L’ordre social nocturne en questions. Régulations politiques et dispositifs de contrôle",NA
+2015,"ST49","Protestations ouvrières, clientélismes et mutations du capitalisme. Comparer les mondes industriels sous tension",NA
+2015,"ST50","La circulation des procédures judiciaires et des outils du « post-conflit » dans la construction des causes victimaires : une perspective comparée",NA
+2015,"ST51","Sociologie politique des interventions internationales : Ce que les « terrains » font aux acteurs de la paix",NA
+2015,"ST52","Politiques mémorielles en contexte « post-conflit » : espaces de production et de manifestation des cadres interprétatifs du conflit",NA
+2015,"ST53","Violer la loi pour maintenir l’ordre ? Approches comparées du vigilantisme",NA
+2015,"ST54","Les «bonnes pratiques» des organisations internationales",NA
+2015,"ST55","La communication des organisations intergouvernementales",NA
+2015,"ST56","La mise en politique de la biodiversité: éclairages pluridisciplinaires",NA
+2015,"ST57","Sociologie politique de l’international",NA
+2015,"ST58","Elections et politique étrangère en Amérique latine",NA
+2015,"ST59","Rencontrer l’administration en Afrique et dans le monde arabe : pratiques, interactions et économie(s) du consentement",NA
+2015,"ST60","Les usages de l’histoire des idées politiques en Relations internationales",NA
+2015,"ST61","Les approches non-occidentales des relations internationales",NA
+2015,"ST62","Les Nudges : enjeux, applications et limites du paternalisme libertarien",NA
+2015,"STRC20IPSA","Political Finance and Political Corruption",NA
+2015,"STGRAM","Les crises dans les négociations internationales",NA
+2015,"STGREPO","Au-delà du mandat : pour une approche globale de la représentation politique",NA
+2015,"STPOPACT","Opinion publique et politiques européennes",NA
+2015,"TR","L’an IV des révolutions arabes : vers un décloisonnement des aires culturelles ?",NA
+2017,"AD1","Frontières disciplinaires : la science politique comme pratique de recherche et matière d’enseignement",NA
+2017,"AD2","Passeurs de sciences sociales",NA
+2017,"AD3","Former aux métiers de la communication en science politique",NA
+2017,"AD4","Genre, précarité et développement de carrières en science politique",NA
+2017,"AD5","Recrutements et carrières de politistes en France : règles, normes et pratiques du CNU et du CNRS",NA
+2017,"AD6","Quelles réformes pour les recrutements des enseignants-chercheurs en science politique ?",NA
+2017,"CP","Les changements politiques face au changement climatique. Institutionnalisation des innovations de politiques publiques",NA
+2017,"ST1","Controverses & jeu politique",NA
+2017,"ST2","Quelle ethnographie pour quelle science politique ?",NA
+2017,"ST3","Que faire des traditions politiques en histoire sociale des idées ?",NA
+2017,"ST4","Le rapport entre l’économique et la politique",NA
+2017,"ST5","Science politique du capitalisme",NA
+2017,"ST6","Les nouveaux habits de la protection sociale : transferts de risques, assurances et reconfigurations de l’État-providence",NA
+2017,"ST7","Que fait le New Public Management aux politiques environnementales ?",NA
+2017,"ST8","Gouverner par les modèles",NA
+2017,"ST9","Les circulations comme révélateur des transformations de l’action publique urbaine",NA
+2017,"ST10","Les données et le gouvernement de la ville",NA
+2017,"ST11","Les métropoles encore au cœur de la critique ? Controverses autour des politiques métropolitaines",NA
+2017,"ST12","L’action publique comme action collective : enquêter sur les acteurs « relais » de la régulation politique",NA
+2017,"ST13","Pour une sociologie des politiques pénitentiaires",NA
+2017,"ST14","Gouverner les systèmes agri alimentaires et leur durabilité, nouvelles perspectives de recherche",NA
+2017,"ST15","L’État au prisme de l’urgence et des crises",NA
+2017,"ST16","Savoirs et pouvoirs bureaucratiques dans le gouvernement de la nature",NA
+2017,"ST17","Politiques énergétiques : modèles alternatifs et dynamiques locales",NA
+2017,"ST18","Sociologie politique de l’UE et analyse de l’action publique européenne : quels débats, quelles passerelles ?",NA
+2017,"ST19","Le champ de l’eurocratie en action",NA
+2017,"ST20","Repenser le rôle des Policy Analysis dans les processus de politiques publiques",NA
+2017,"ST21","Saisir l’action publique en Afrique au prisme des instruments",NA
+2017,"ST22","Redécouper les frontières de l’action publique : de quoi la « transversalité » est-elle le nom ?",NA
+2017,"ST23","Coalitions Multi-niveaux d’action publique. Théorie et Méthode",NA
+2017,"ST24","La politique saisie par « la transparence ». Sociologie des pratiques et des dispositifs publics",NA
+2017,"ST25","Contrôle des dépenses de santé et sélection des instruments : une comparaison entre États membres de l’Union Européenne",NA
+2017,"ST26","Gouverner la sexualité",NA
+2017,"ST27","L’intimité publique : politiques du corps des femmes",NA
+2017,"ST28","Le genre : un outil de (re)politisation du droit ?",NA
+2017,"ST29","Les mobilisations de mères et de pères, un non objet pour la science politique ? Réflexions sur les processus de politisation parentale individuels et collectifs au début du 21ème siècle",NA
+2017,"ST30","La citoyenneté industrielle : pratiques militantes et sociabilités quotidiennes",NA
+2017,"ST31","La citoyenneté au prisme de l’action publique : comment l’État travaille-t-il la citoyenneté ?",NA
+2017,"ST32","Convictions religieuses et citoyenneté aujourd’hui en Europe",NA
+2017,"ST33","Les échelles de citoyenneté",NA
+2017,"ST34","Les élus et l’argent : normes et usages",NA
+2017,"ST35","Des élites administratives de second ordre : positions, trajectoires et logiques de corps",NA
+2017,"ST36","Le pouvoir local, entre politisation et dépolitisation",NA
+2017,"ST37","Dans l’ombre de la loi. Travail au parlement et vie politique",NA
+2017,"ST38","Qualifier et quantifier l’activité parlementaire : données, méthodes et pratiques",NA
+2017,"ST39","Etre représenté ? Sociologie du sentiment de représentation politique.",NA
+2017,"ST40","Au cœur des Exécutifs : de l’importance des Secrétariats généraux",NA
+2017,"ST41","Les élus de l’étranger : une nouvelle catégorie de représentants politiques ?",NA
+2017,"ST42","Nouvelles sciences électorales : électorat, opinion, élection",NA
+2017,"ST43","Réformer la démocratie. Le changement institutionnel en contexte",NA
+2017,"ST44","Participation Politique et Internet : questions traditionnelles, nouveaux dispositifs de recherche et nouvelles données",NA
+2017,"ST45","Rapports ordinaires au genre en politique",NA
+2017,"ST46","Les représentations enfantines du politique",NA
+2017,"ST47","Sociabilités politiques et politiques des sociabilités en milieu rural",NA
+2017,"ST48","Sociologie politique des élections professionnelles",NA
+2017,"ST49","Militer dans les médias",NA
+2017,"ST50","Expériences des discriminations, sentiment d’injustice et engagements dans les quartiers populaires",NA
+2017,"ST51","Les publics précaires dans les associations : dynamiques politiques et rapport à l’action sociale",NA
+2017,"ST52","Quelle sociologie politique du conspirationnisme ? Doxa populaire contre doxa savante de l’ésotérisme politique",NA
+2017,"ST53"," Questions de Genre. Entre États et Religions",NA
+2017,"ST54","Réagir aux attentats",NA
+2017,"ST55","Les partis et les politiques économiques",NA
+2017,"ST56","Quelle histoire politique écrivent les séries télévisées ?",NA
+2017,"ST57","Les religions dans les capitalismes contemporaines. Normativités, pratiques, engagements",NA
+2017,"ST58","Rendre le religieux gouvernable dans les institutions publiques",NA
+2017,"ST59","L’intérêt général : l’État à l’épreuve de la société",NA
+2017,"ST60","L’engagement des supporters de football dans l’espace public. Une politisation de circonstance ?",NA
+2017,"ST61","Réponses politiques aux menaces « terroristes » : approches comparées",NA
+2017,"ST62","Au-delà de la “crise des réfugiés”: (re)penser la représentation et la capacité d’action des réfugiés syriens",NA
+2017,"ST63","Vers une typologie des formes de reconnaissance asymétrique dans les relations internationales",NA
+2017,"ST64","Les victimes au tribunal : du témoignage à la preuve judiciaire",NA
+2017,"ST65","Les financements communautaires aux marges de l’Europe. Sociologie des usages",NA
+2017,"ST66","Nouvelles diplomaties et résolution de conflit en Méditerranée",NA
+2017,"ST67","L’ordinaire de la sortie de guerre. Sociologie de l’action publique après la violence armée",NA
+2017,"ST68","Crime et guerre : sociologie historique d’un partage inachevé",NA
+2017,"ST69","Les pratiques de la politique étrangère et de la diplomatie : nouveaux enjeux",NA
+2017,"ST70","Gouverner les risques dans les États fragiles",NA
+2017,"ST71","États infaillibles ? Fragmentation des institutions et institutionnalisation du chaos",NA
+2017,"ST72","L’environnement en Relations Internationales : pour une sociologie historique",NA
+2017,"ST73","Fonctionnalisation et (dé)politisation de l’Assemblée générale des Nations Unies : contributions à une sociologie des institutions internationales",NA
+2017,"ST74","Le séminaire : un nouvel objet pour l’histoire des idées politiques",NA
+2017,"ST75","Le rapport au rapport. Un impensé de la science politique ?",NA
+2017,"ST76","Contributions et perspectives critiques des éthiques environnementales dans la pensée politique : théories, pratiques et activités politiques",NA

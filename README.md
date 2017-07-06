@@ -31,6 +31,20 @@ Contents of the [`edges.csv`](https://github.com/briatte/congres-afsp/blob/maste
 
 The [`incidence_matrix.rds`](https://github.com/briatte/congres-afsp/blob/master/data/incidence_matrix.rds) data object contains the _i_ &times; _j_ incidence matrix, with each tie weighted by 1 / _n<sub>j</sub>_.
 
+The `panels.csv` file has additional information on all conference panels:
+
+- `year` – Year of AFSP conference (2009, 2011, 2013, 2015, 2017).
+- `id` – Panel identifier that matches the `ID` part of the `j` variable in `edges.csv`.
+- `title` – Panel title, slightly cleaned up:
+  - Multiples spaces were replaced by a single one.
+  - Double quotes are coded as « French quotes » (_chevrons_).
+  - Single quotes are coded as « l’apostrophe ».
+  - Unbreakable spaces are used before ":" and "?" (no occurrences of ";" and "!") and before/after double quotes.
+  - All instances of "_État_" (the State) are accentuated.
+- `notes` – Notes, in French, when available (e.g. to indicate the panel was postponed).
+
+The data were manually extracted from the relevant [AFSP Web pages](http://www.afsp.info/congres/editions-precedentes/). A handful of panels listed in the file have no participants listed in the `edges.csv` file, for various reasons (e.g. panel was cancelled, panel is a PhD workshop with no attendees list).
+
 # HOWTO
 
 ```r
@@ -46,7 +60,7 @@ library(ggplot2)
 library(ggraph)
 library(igraph)
 
-# MAKE
+# BUILD NETWORKS
 
 # complete run
 source("01_data.r")
@@ -57,4 +71,14 @@ d <- readr::read_csv("data/edges.csv", col_types = "icciiii")
 
 # to load the weighted incidence matrix on its own
 w <- readRDS("data/incidence_matrix.rds")
+
+# PANEL DATA
+
+# to read the panel information data
+p <- readr::read_csv("data/panels.csv", col_types = "iccc")
+
+# to check that all panel identifiers match
+dplyr::mutate(p, j = stringr::str_c(year, "_", id)) %>% 
+  dplyr::inner_join(d, by = c("year", "j")) %>% 
+  nrow(.) == nrow(d)
 ```
