@@ -40,6 +40,8 @@ A serialized R object of class `matrix` representing the _i_ &times; _j_ inciden
 
 ## [`panels.csv`][data-panels]
 
+A CSV file with one row per conference panel:
+
 - `year` – Year of AFSP conference (2009, 2011, 2013, 2015, 2017).
 - `id` – Panel identifier that matches the `ID` part of the `j` variable in [`edges.csv`][data-edges].
 - `title` – Panel title, slightly cleaned up:
