@@ -44,6 +44,8 @@ for (i in rev(y)) {
     str_replace_all("[\"^'`\\.]|&#8217;|&(l|r)squo;", "") %>%
     # remove loose HTML tags
     str_replace_all("<br\\s?/?>|<(p|b|li|span)(.*?)>|</(p|b|li|span)>", "") %>%
+    # remove name particles
+    str_replace_all("\\s\\(de\\)", "") %>%
     # fix spaces (keep before next)
     str_replace_all("(\\s|&nbsp;)+", " ") %>% 
     # &eacute, &icirc -> e, i
