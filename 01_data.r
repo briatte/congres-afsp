@@ -6,7 +6,7 @@ dir.create("data", showWarnings = FALSE)
 dir.create("html", showWarnings = FALSE)
 
 # ==============================================================================
-# DATA :: ATTENDANCE
+# DATA :: ATTENDEE INDEXES
 # ==============================================================================
 
 y <- c("http://www.afsp.info/congres/congres-2017/index/",
@@ -17,7 +17,7 @@ y <- c("http://www.afsp.info/congres/congres-2017/index/",
 
 d <- data_frame()
 
-cat("Parsing indexes for", length(y), "conferences:\n\n")
+cat("[PARSING] attendee indexes for", length(y), "conferences:\n\n")
 for (i in rev(y)) {
   
   f <- str_c("html/", str_extract(i, "\\d{4}"), ".html")
@@ -186,8 +186,105 @@ d <- summarise(group_by(d, year, i), n_p = n()) %>%
 d <- summarise(group_by(d, i), t_p = n_distinct(j), t_c = n_distinct(year)) %>% 
   inner_join(d, ., by = "i")
 
-write_csv(d, "data/edges.csv")
-cat("\nSaved", nrow(d), "rows,", 
+# ==============================================================================
+# FIND FIRST NAMES AND GENDERS
+# ==============================================================================
+
+f <- "data/prenoms2016.zip"
+
+if (!file.exists(f)) {
+  
+  cat("Downloading: Fichier des prénoms, Édition 2016\nSource: insee.fr\nDestination:", f, "\n")
+  download.file("https://www.insee.fr/fr/statistiques/fichier/2540004/nat2015_txt.zip", f, mode = "wb")
+  
+}
+
+p <- read_tsv(f, locale = locale(encoding = "latin1"), col_types = "iccd") %>% 
+  filter(preusuel != "_PRENOMS_RARES", str_count(preusuel) > 2) %>% 
+  mutate(preusuel = iconv(preusuel, to = "ASCII//TRANSLIT", sub = " ") %>%
+           # remove diacritics
+           str_replace_all("[\"^'`\\.]|&#8217;|&(l|r)squo;", "") %>% 
+           # make 'marie claude' and 'marie-claude' the same
+           str_replace_all("-", " ")) %>%
+  group_by(preusuel) %>% 
+  summarise(p_f = sum(nombre[ sexe == 2 ]) / sum(nombre)) %>% 
+  rename(first_name = preusuel)
+
+a <- select(d, year, i, j) %>% 
+  distinct
+
+# extract first names
+a$first_name <- if_else(
+  str_detect(a$i, " (JEAN|MARIE) \\w+$"), # e.g. Jean-Marie, Marie-Claude
+  str_replace(a$i, "(.*)\\s(.*)\\s(\\w+)", "\\2 \\3"),
+  str_replace(a$i, "(.*)\\s(.*)", "\\2")
+)
+stopifnot(!is.na(a$first_name))
+
+a$found_name <- a$first_name %in% unique(p$first_name)
+a <- left_join(a, p, by = "first_name") %>% 
+  mutate(
+    p_f = if_else(p_f > 0.85, 1, p_f),
+    p_f = if_else(p_f < 0.1, 0, p_f) # 'Claude' is .12, so keep this one lower
+  )
+
+# manual fixes: females
+a$p_f[ a$i %in% c("AL DABAGHY CAMILLE", "BEDOCK CAMILLE", "BOUBAL CAMILLE",
+                  "CARTER CAITRIONA", "COEFFIC AUDE KHALYLA", "CUSSO ROSER",
+                  "DRAKE HELEN", "DUMITRU SPERANTA", "DUPUY CAMILLE",
+                  "FELICETTI ANDREA", "FROIDEVAUX CAMILLE", "HAMIDI CAMILLE",
+                  "HIRSCH YAEL", "KAYA SUMBUL", "KLEIN ASMARA",
+                  "LANCELEVEE CAMILLE", "LECHAUX BLEUWENN", "LENDARO ANALISA",
+                  "MAYER NONNA", "MAZE CAMILLE", "MICHONOVA ROUMIANA",
+                  "MITSUSHIMA NAGISA", "SHUKAN IOULIA", "SOULE FOLASHADE",
+                  "TANNOUS MANON NOUR", "TOPCU SEZIN", "YOUSSEF MAAI") ] <- 1
+
+# manual fixes: males
+a$p_f[ a$i %in% c("ANDOLFATTO DOMINIQUE", "CARDON DOMINIQUE",
+                  "COLAS DOMINIQUE", "CONNAN DOMINIQUE", "DARBON DOMINIQUE",
+                  "DUPRET BEAUDOIN", "GILBERT CLAUDE", "GRAJALES JACOBO",
+                  "LINHARDT DOMINIQUE", "MARCUS GEORGE", "MARTIN CLAUDE",
+                  "PAGE ED", "PEUGNY CAMILLE", "PRATCHETT LAWRENCE",
+                  "SOO SIM HEUNG", "TROM DANNY", "VASILOPOULOS PAVLOS",
+                  "WALGRAVE STEFAAN", "YON KAREL") ] <- 0
+
+# identify names as found
+a$found_name[ !a$found_name & a$p_f %in% 0:1 ] <- TRUE
+
+# finalize first names, < 100 missing values
+a$first_name <- if_else(a$found_name, a$first_name, NA_character_)
+a$family_name <- if_else(
+  is.na(a$first_name),
+  str_replace(a$i, "(.*)\\s(.*)", "\\1"),
+  str_replace(a$i, a$first_name, "") %>% 
+    str_trim
+)
+stopifnot(!is.na(a$family_name)) # sanity check
+
+# finalize genders, < 100 missing values
+a$gender <- recode(a$p_f, `1` = "f", `0` = "m", .default = NA_character_)
+
+# # for manual checks:
+# filter(a, !p_f %in% c(0, 1)) %>% View
+
+cat(
+  "\n[MISSING] First names for",
+  n_distinct(a$i[ is.na(a$first_name) ]),
+  "attendees.\n[MISSING] Gender for",
+  n_distinct(a$i[ is.na(a$gender) ]), "attendees.\n"
+)
+
+# ==============================================================================
+# EXPORT TO CSV
+# ==============================================================================
+
+write_csv(
+  select(a, -found_name, p_female = p_f) %>% 
+    left_join(d, ., by = c("year", "i", "j")),
+  "data/edges.csv"
+)
+
+cat("\n[SAVED]", nrow(d), "rows,", 
     n_distinct(d$i), "attendees,", n_distinct(d$j), "panels.")
 
 # kthxbye
