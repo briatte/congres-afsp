@@ -63,7 +63,7 @@ for (i in rev(y)) {
 }
 
 # make sure that every row has at least one comma
-d$i <- str_replace(d$i, "([a-z]+)\\s(AD|CP|MD|MPP|MTED|ST)", "\\1, \\2") %>% 
+d$i <- str_replace(d$i, "([a-z]+)\\s(AD|CP|MD|MPP|MTED|ST|TR)", "\\1, \\2") %>% 
   str_to_upper
 
 # rows with ';' are all false positives, as are rows without ','
