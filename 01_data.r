@@ -111,7 +111,8 @@ d <- mapply(function(year, i) {
 # (1) remove composed family names to avoid married 'x-y' duplicates
 d$i <- str_replace(d$i, "^(\\w+)-(.*)\\s", "\\1 ")
 
-# fix some problematic rows (caused by extra comma between first and last names)
+# fix some problematic rows (many caused by extra comma between first and last names)
+d$i[ d$year %in% c(2009, 2015) & d$i == "VISSCHER CHRISTIAN DE" ] <- "VISSCHER CHRISTIAN"
 d$i[ d$year == 2013 & d$i == "PILLON" ] <- "PILLON JEAN-MARIE"
 d$i[ d$year == 2013 & d$i == "ABENA-TSOUNGI" ] <- "ABENA-TSOUNGI ALAIN"
 d$i[ d$year == 2015 & d$i == "LENGUITA" ] <- "LENGUITA PAULA"
