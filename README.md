@@ -17,6 +17,7 @@ A CSV file with one row per attendee and per conference panel attended:
   - Coded as `FAMILY NAME FIRST NAME`, all uppercase.
   - Composed family names `X-Y` are simplified to their first component `X`.
   - Dashes in names (e.g. `MARIE-CLAUDE`) have been removed.
+  - Lone initials (e.g. `SMITH JOHN K`) have been removed.
 - `j` – Panel attended, coded as `YEAR_ID`, where `ID` contains:
   - The type of panel (e.g. `CP` for plenary conferences, `ST` for thematic sessions).
   - The alphanumeric identifier of the panel when there was one.

@@ -6,7 +6,7 @@ dir.create("data", showWarnings = FALSE)
 dir.create("html", showWarnings = FALSE)
 
 # ==============================================================================
-# DATA
+# DATA :: ATTENDANCE
 # ==============================================================================
 
 y <- c("http://www.afsp.info/congres/congres-2017/index/",
@@ -48,8 +48,10 @@ for (i in rev(y)) {
     str_replace_all("(\\s|&nbsp;)+", " ") %>% 
     # &eacute, &icirc -> e, i
     str_replace_all("&(\\w{1})(.*?);", "\\1") %>% 
-    # lone initials
+    # lone initials within name
     str_replace_all("\\s[A-Za-z]{1}\\s", " ") %>% 
+    # lone initials at the end of name
+    str_replace_all("(\\s[A-Za-z])+,", ",") %>% 
     str_trim %>% 
     data_frame(year = str_extract(f, "\\d{4}"), i = .)
   
