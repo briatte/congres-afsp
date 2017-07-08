@@ -112,6 +112,7 @@ d <- mapply(function(year, i) {
 d$i <- str_replace(d$i, "^(\\w+)-(.*)\\s", "\\1 ")
 
 # fix some problematic rows (many caused by extra comma between first and last names)
+d$i[ d$year == 2009 & d$i == "TEJERINA BEJAMIN" ] <- "TEJERINA BENJAMIN"
 d$i[ d$year %in% c(2009, 2015) & d$i == "VISSCHER CHRISTIAN DE" ] <- "VISSCHER CHRISTIAN"
 d$i[ d$year == 2013 & d$i == "PILLON" ] <- "PILLON JEAN-MARIE"
 d$i[ d$year == 2013 & d$i == "ABENA-TSOUNGI" ] <- "ABENA-TSOUNGI ALAIN"
@@ -122,6 +123,7 @@ d$i[ d$year == 2017 & d$i == "BLEUWENN BLEUWENN" ] <- "LECHAUX BLEUWENN"
 d$i[ d$year == 2017 & d$i == "BILLOWS BILLOWS" ] <- "BILLOWS SEBASTIEN"
 d$i[ d$year == 2017 & d$i == "EVRARD AURELIEN EVRARD" ] <- "EVRARD AURELIEN"
 d$i[ d$year == 2017 & d$i == "NDONGMO BERTRAND MAGLOIRE" ] <- "NDONGMO BERTRAND" # convenience fix
+d$i[ d$year == 2017 & d$i == "SOULE FOLASAHDE" ] <- "SOULE FOLASHADE"
 
 # # to detect (several forms of, but not all) errors:
 # str_split(d$i, " ") %>% sapply(function(x) x[1] == x[2]) %>% which
