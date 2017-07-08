@@ -115,7 +115,16 @@ d$i <- str_replace(d$i, "^(\\w+)-(.*)\\s", "\\1 ")
 d$i[ d$year == 2013 & d$i == "PILLON" ] <- "PILLON JEAN-MARIE"
 d$i[ d$year == 2013 & d$i == "ABENA-TSOUNGI" ] <- "ABENA-TSOUNGI ALAIN"
 d$i[ d$year == 2015 & d$i == "LENGUITA" ] <- "LENGUITA PAULA"
+d$i[ d$year == 2015 & d$i == "MATUKHNO NATALIA NATALIA" ] <- "MATUKHNO NATALIA"
 d$i[ d$year == 2017 & d$i == "GONZALES-GONZALESVERONICA" ] <- "GONZALES VERONICA"
+d$i[ d$year == 2017 & d$i == "BLEUWENN BLEUWENN" ] <- "LECHAUX BLEUWENN"
+d$i[ d$year == 2017 & d$i == "BILLOWS BILLOWS" ] <- "BILLOWS SEBASTIEN"
+d$i[ d$year == 2017 & d$i == "EVRARD AURELIEN EVRARD" ] <- "EVRARD AURELIEN"
+
+# # to detect (several forms of, but not all) errors:
+# str_split(d$i, " ") %>% sapply(function(x) x[1] == x[2]) %>% which
+# str_split(d$i, " ") %>% sapply(function(x) x[1] == x[3]) %>% which
+# str_split(d$i, " ") %>% sapply(function(x) x[2] == x[3]) %>% which
 
 # no remaining problematic rows
 stopifnot(str_detect(d$i, "\\s"))
