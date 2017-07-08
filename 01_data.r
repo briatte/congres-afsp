@@ -117,6 +117,7 @@ d$i[ d$year %in% c(2009, 2015) & d$i == "VISSCHER CHRISTIAN DE" ] <- "VISSCHER C
 d$i[ d$year == 2013 & d$i == "PILLON" ] <- "PILLON JEAN-MARIE"
 d$i[ d$year == 2013 & d$i == "ABENA-TSOUNGI" ] <- "ABENA-TSOUNGI ALAIN"
 d$i[ d$year == 2013 & d$i == "DEBOCK CAMILLE" ] <- "BEDOCK CAMILLE"
+d$i[ d$year == 2013 & d$i == "DUSCHINSKY MICHAEL PINTO" ] <- "PINTO DUSCHINSKY MICHAEL"
 d$i[ d$year == 2015 & d$i == "LENGUITA" ] <- "LENGUITA PAULA"
 d$i[ d$year == 2015 & d$i == "MATUKHNO NATALIA NATALIA" ] <- "MATUKHNO NATALIA"
 d$i[ d$year == 2017 & d$i == "GONZALES-GONZALESVERONICA" ] <- "GONZALES VERONICA"
