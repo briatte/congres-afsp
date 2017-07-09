@@ -5,7 +5,7 @@ library(ggraph)
 library(readr)
 library(stringr)
 
-d <- read_csv("data/edges.csv", col_types = "icciiii")
+d <- read_csv("data/edges.csv", col_types = "icciiiiccc")
 
 # ==============================================================================
 # INCIDENCE MATRIX
