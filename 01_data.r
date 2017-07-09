@@ -52,8 +52,8 @@ for (i in rev(y)) {
     str_replace_all("&(\\w{1})(.*?);", "\\1") %>% 
     # lone initials within name
     str_replace_all("\\s[A-Za-z]{1}\\s", " ") %>% 
-    # lone initials at the end of name
-    str_replace_all("(\\s[A-Za-z])+,", ",") %>% 
+    # lone initials at end of name + extra spaces
+    str_replace_all("(\\s[A-Za-z])+,|\\s+,", ",") %>% 
     str_trim %>% 
     data_frame(year = str_extract(f, "\\d{4}"), i = .)
   
@@ -112,6 +112,8 @@ d <- mapply(function(year, i) {
 d$i <- str_replace(d$i, "^(\\w+)-(.*)\\s", "\\1 ")
 
 # fix some problematic rows (many caused by extra comma between first and last names)
+
+d$i[ d$year == 2009 & d$i == "HAMEL CHISTOPHER" ] <- "HAMEL CHRISTOPHER"
 d$i[ d$year == 2009 & d$i == "TEJERINA BEJAMIN" ] <- "TEJERINA BENJAMIN"
 d$i[ d$year %in% c(2009, 2015) & d$i == "VISSCHER CHRISTIAN DE" ] <- "VISSCHER CHRISTIAN"
 d$i[ d$year == 2013 & d$i == "ABENA-TSOUNGI" ] <- "ABENA-TSOUNGI ALAIN"
@@ -119,6 +121,7 @@ d$i[ d$year == 2013 & d$i == "DEBOCK CAMILLE" ] <- "BEDOCK CAMILLE"
 d$i[ d$year == 2013 & d$i == "DUSCHINSKY MICHAEL PINTO" ] <- "PINTO DUSCHINSKY MICHAEL"
 d$i[ d$year == 2013 & d$i == "PILLON" ] <- "PILLON JEAN-MARIE"
 d$i[ d$year == 2013 & d$i == "LONTZI AMADO-BORTHAYRE" ] <- "AMADO BORTHAYRE LONTZI"
+d$i[ d$year == 2015 & d$i == "JIMENEZ FERNADO" ] <- "JIMENEZ FERNANDO"
 d$i[ d$year == 2015 & d$i == "LENGUITA" ] <- "LENGUITA PAULA"
 d$i[ d$year == 2015 & d$i == "MATUKHNO NATALIA NATALIA" ] <- "MATUKHNO NATALIA"
 d$i[ d$year == 2017 & d$i == "BLEUWENN BLEUWENN" ] <- "LECHAUX BLEUWENN"
