@@ -248,28 +248,6 @@ a$p_f[ a$i %in% f$name[ f$gender == "f" ] ] <- 1 # females
 a$p_f[ a$i %in% f$name[ f$gender == "m" ] ] <- 0 # males
 
 # ==============================================================================
-# FINALIZE GENDERS
-# ==============================================================================
-
-# missing less than 100 missing values
-a$gender <- recode(a$p_f, `1` = "f", `0` = "m", .default = NA_character_)
-
-# # for manual checks:
-# filter(a, !p_f %in% c(0, 1)) %>% View
-
-# save manually collected values, with missing values back again
-data_frame(gender = NA_character_, name = a$i[ is.na(a$first_name) ]) %>% 
-  bind_rows(f) %>% 
-  arrange(name) %>% 
-  write_tsv("data/genders.tsv")
-
-cat(
-  "\n[MISSING] Gender of",
-  n_distinct(a$i[ is.na(a$gender) ]),
-  "attendees\n"
-)
-
-# ==============================================================================
 # FINALIZE FIRST NAMES
 # ==============================================================================
 
@@ -296,11 +274,33 @@ cat(
 )
 
 # ==============================================================================
+# FINALIZE GENDERS
+# ==============================================================================
+
+# missing less than 100 missing values
+a$gender <- recode(a$p_f, `1` = "f", `0` = "m", .default = NA_character_)
+
+# # for manual checks:
+# filter(a, !p_f %in% c(0, 1)) %>% View
+
+# save manually collected values, with missing values back again
+data_frame(gender = NA_character_, name = a$i[ is.na(a$first_name) ]) %>% 
+  bind_rows(f) %>% 
+  arrange(name) %>% 
+  write_tsv("data/genders.tsv")
+
+cat(
+  "[MISSING] Gender of",
+  n_distinct(a$i[ is.na(a$gender) ]),
+  "attendees\n"
+)
+
+# ==============================================================================
 # EXPORT TO CSV
 # ==============================================================================
 
 write_csv(
-  select(a, -found_name, p_female = p_f) %>% 
+  select(a, -found_name, -p_f) %>% 
     left_join(d, ., by = c("year", "i", "j")),
   "data/edges.csv"
 )
