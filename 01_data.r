@@ -227,7 +227,7 @@ a <- select(d, year, i, j) %>%
 
 # extract first names
 a$first_name <- if_else(
-  str_detect(a$i, " (JEAN|MARIE) \\w+$"), # e.g. Jean-Marie, Marie-Claude
+  str_detect(a$i, " (ANNE|JEAN|MARIE) \\w+$"), # e.g. Jean-Marie, Marie-Claude
   str_replace(a$i, "(.*)\\s(.*)\\s(\\w+)", "\\2 \\3"),
   str_replace(a$i, "(.*)\\s(.*)", "\\2")
 )
