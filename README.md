@@ -64,9 +64,9 @@ A serialized R object of class `matrix` representing the _i_ &times; _j_ inciden
 
 [data-incidence_matrix]: https://github.com/briatte/congres-afsp/blob/master/data/incidence_matrix.rds
 
-## [`panels.csv`][data-panels]
+## [`panels.tsv`][data-panels]
 
-A CSV file with one row per conference panel:
+A TSV (tab-separated) file with one row per conference panel:
 
 - `year` – Year of AFSP conference (2009, 2011, 2013, 2015, 2017).
 - `id` – Panel identifier that matches the `ID` part of the `j` variable in [`edges.csv`][data-edges].
@@ -83,7 +83,7 @@ The data were manually extracted from the relevant [AFSP Web pages](http://www.a
 
 This file contains slightly better formatted panel titles than those collected during data preparation, and should therefore be preferred when requesting that information. The information contained in the `notes` column are exclusive to that file.
 
-[data-panels]: https://github.com/briatte/congres-afsp/blob/master/data/panels.csv
+[data-panels]: https://github.com/briatte/congres-afsp/blob/master/data/panels.tsv
 
 # HOWTO
 
@@ -93,6 +93,7 @@ This file contains slightly better formatted panel titles than those collected d
 # data
 library(dplyr)
 library(readr)
+library(rvest)
 library(stringr)
 
 # networks
@@ -115,7 +116,7 @@ w <- readRDS("data/incidence_matrix.rds")
 # PANEL DATA
 
 # to read the panel information data
-p <- readr::read_csv("data/panels.csv", col_types = "iccc")
+p <- readr::read_tsv("data/panels.tsv", col_types = "iccc")
 
 # to check that all panel identifiers match
 dplyr::mutate(p, j = stringr::str_c(year, "_", id)) %>% 
