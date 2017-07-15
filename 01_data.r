@@ -1,5 +1,6 @@
 library(dplyr)
 library(readr)
+library(rvest)
 library(stringr)
 
 dir.create("data", showWarnings = FALSE)
@@ -342,5 +343,244 @@ cat(
   n_distinct(d$j),
   "panels."
 )
+
+# ==============================================================================
+# DATA :: PANELS
+# ==============================================================================
+
+y <- c("http://www.afsp.info/congres/congres-2017/sessions/sections-thematiques/",
+       "http://www.afsp.info/archives/congres/congres2015/st.html",
+       "http://www.afsp.info/archives/congres/congres2013/st.html",
+       "http://www.afsp.info/archives/congres/congres2011/sectionsthematiques/presentation.html",
+       "http://www.afsp.info/archives/congres/congres2009/sectionsthematiques/presentation.html")
+
+# initialize panels data
+d <- data_frame()
+
+cat("\n\n[PARSING] 'ST' panel indexes for", length(y), "conferences:\n\n")
+for (i in rev(y)) {
+  
+  f <- str_c("html/", str_extract(i, "\\d{4}"), "_panels.html")
+  if (!file.exists(f)) {
+    download.file(i, f, mode = "wb", quiet = TRUE)
+  }
+  
+  cat("", f)
+  f <- read_html(f) %>% 
+    html_nodes(xpath = "//a[contains(@href, 'st')]")
+  
+  j <- str_c("ancestor::", if_else(str_detect(i, "2017"), "p", "li"))
+  
+  # special cases below are all for 2015
+  w <- str_which(html_attr(f, "href"), "st(-|\\d|gram|grepo|popact|rc20ipsa)+(.html|/$)")
+  
+  w <- data_frame(
+    year = as.integer(str_extract(i, "\\d{4}")),
+    url = html_attr(f[ w ], "href"),
+    id = basename(url) %>%
+      str_replace_all(".html|-", "") %>%
+      str_to_upper, # matches ids in edges.csv and panels.tsv
+    title = html_nodes(f[ w ], xpath = j) %>% 
+      html_text(trim = TRUE) %>% 
+      str_replace("^ST[\\.\\s\\d/-]+", "") # redundant with (cleaner) panels.tsv
+  )
+  
+  # fix relative URLs
+  w$url <- if_else(str_detect(w$url, "^http"), w$url, str_c(dirname(i), "/", w$url))
+  
+  # avoid 'empty id' mistakes that would overwrite indexes!
+  stopifnot(!str_detect(w$id, "st$"))
+  
+  cat(":", nrow(w), "ST panels\n")
+  d <- rbind(d, w)
+  
+}
+
+# fix mismatch in panel URL / id for one case in 2017
+d$id[ str_detect(d$url, "st2-2") ] <- "ST2"
+
+# save only if the cleaner file does not exist
+f <- "data/panels.tsv"
+if (!file.exists(f)) {
+  write_tsv(d, f)
+}
+
+# ==============================================================================
+# DOWNLOAD PANEL PAGES
+# ==============================================================================
+
+# approx. 300 files (quick enough)
+cat("\n[DOWNLOADING]", nrow(d), "panel pages\n")
+
+for (i in 1:nrow(d)) {
+  
+  f <- str_c("html/", d$year[ i ], "_", d$id[ i ], ".html")
+  
+  if (!file.exists(f)) {
+    download.file(d$url[ i ], f, mode = "wb", quiet = TRUE)
+  }
+  
+}
+
+# note: one ST panel of 2015 is missing because it was cancelled/postponed
+
+# ==============================================================================
+# PREPARE ATTENDEES AND PANELS DATA
+# ==============================================================================
+
+# reduce attendees to unique groups of conference years, attendees and panels
+a <- filter(a, str_detect(j, "ST")) %>% 
+  select(year, i, j, first_name, family_name) %>% 
+  distinct %>% 
+  mutate(
+    affiliation = if_else(
+      is.na(first_name),
+      family_name,
+      str_c(first_name, "[\\s\\w]+?", family_name, "|", family_name, "[\\s\\w]+?", first_name)
+    )
+  )
+
+# create panel uid
+d$j <- str_c(d$year, "_", d$id)
+
+# ==============================================================================
+# EXTRACT NAMES AND AFFILIATIONS
+# ==============================================================================
+
+cat("\n[PARSING]", n_distinct(d$j), "panels\n")
+
+for (i in unique(d$j)) {
+  
+  f <- str_c("html/", i, ".html")
+  
+  # this is where it gets messy...
+  # what we have are on one end are 'standardized' attendee names in uppercase
+  # (see README for details), and various strands of not-so-structured HTML on 
+  # the other one...
+  
+  # let's try to match both
+  t <- read_html(f) %>% 
+    html_nodes(xpath = "//*[contains(text(), '(')]") %>% 
+    html_text %>% 
+    str_to_upper %>% 
+    iconv(to = "ASCII//TRANSLIT", sub = " ") %>%
+    # remove diacritics
+    str_replace_all("[\"^'`\\.]", "") %>%
+    # composed names + handle multiple spaces
+    str_replace_all( "-|\\s+", " ") %>% 
+    str_trim
+  
+  # keep only strings likely to match a name and affiliation
+  t <- t[ str_detect(t, "\\s") & str_count(t) > 2 & str_count(t) < 5000 ] %>% 
+    str_extract("(.*)\\)") # exclude everything after last affiliation
+  
+  a$affiliation[ a$j == i ] <- sapply(a$affiliation[ a$j == i ], function(x) {
+    t[ str_which(t, x)[1] ] %>%
+      str_extract(str_c("(", x, ")(.*?)\\)"))
+  }) # still returns lists in some cases, don't know why
+  
+}
+
+# coerce to vector
+stopifnot(sapply(a$affiliation, length) == 1)
+a$affiliation <- unlist(a$affiliation)
+
+# ==============================================================================
+# FINALIZE EXTRACTED AFFILIATIONS
+# ==============================================================================
+
+# # fix double sets of opening brackets
+# filter(a, str_detect(affiliation, "\\([\\w\\s]+\\(")) %>% View
+w <- !is.na(a$affiliation) & str_detect(a$affiliation, "\\([\\w,\\s]+\\(")
+a$affiliation[ w ] <- str_replace(a$affiliation[ w ], "(\\([\\w,\\s]+)\\(", "\\1")
+
+# extract affiliations on 'clean' rows
+w <- !is.na(a$affiliation) & str_count(a$affiliation, "\\(") == 1
+a$affiliation[ w ] <- str_replace(a$affiliation[ w ], "\\((.*)\\)", "\\1")
+
+# remove full names
+w <- !is.na(a$first_name)
+a$affiliation[ w ] <- str_replace(
+  a$affiliation[ w ],
+  str_c(a$first_name[ w ], " ", a$family_name[ w ]),
+  ""
+)
+
+a$affiliation <- str_replace_all(a$affiliation, "\\s+", " ") %>% 
+  str_trim
+
+# # some attendees have had a lot of different affiliations...
+# group_by(a, i) %>%
+#   summarise(n_a = n_distinct(affiliation)) %>%
+#   arrange(-n_a)
+
+# ==============================================================================
+# EXPORT AND REVISE AFFILIATIONS
+# ==============================================================================
+
+a <- select(a, i, j, affiliation) %>% 
+  arrange(i, j)
+
+# sanity check: all rows are distinct
+stopifnot(nrow(distinct(a)) == nrow(a))
+
+# initialize file if missing
+f <- "data/affiliations.tsv"
+if (!file.exists(f)) {
+  write_tsv(a, f)
+}
+
+# specify '.' when merging to ensure that affiliation.x is from panels.tsv
+p <- read_tsv(f, col_types = "ccc") %>% 
+  full_join(., a, by = c("i", "j"))
+
+# replace empty affiliations with existing ones in panels.tsv
+w <- which(is.na(p$affiliation.x) & !is.na(p$affiliation.y))
+p$affiliation.x[ w ] <- p$affiliation.y[ w ]
+cat("[REPLACED]", length(w), "missing affiliation(s)\n")
+
+# replace 'raw' affiliations with revised ones in panels.tsv
+w <- which(p$affiliation.x != p$affiliation.y)
+p$affiliation.x[ w ] <- p$affiliation.y[ w ]
+cat("[REPLACED]", length(w), "revised affiliation(s)\n")
+
+f <- "data/edges.csv"
+p <- select(p, i, j, affiliation = affiliation.x, -affiliation.y) %>% 
+  left_join(read_csv(f, col_types = "icciiiiccc"), ., by = c("i", "j"))
+
+cat("\nDistinct attendees:\n\n")
+tapply(p$i, p$year, n_distinct) %>%
+  print
+
+cat("\nNon-missing attendees:\n\n")
+tapply(p$i, p$year, function(x) sum(!is.na(x), na.rm = TRUE)) %>%
+  print
+
+cat("\nDistinct affiliations:\n\n")
+tapply(p$affiliation, p$year, n_distinct) %>%
+  print
+
+cat("\nNon-missing affiliations:\n\n")
+tapply(p$affiliation, p$year, function(x) sum(!is.na(x), na.rm = TRUE)) %>%
+  print
+
+cat("\nPercentages of non-missing affiliations:\n\n")
+f <- function(x) { 100 * sum(!is.na(x), na.rm = TRUE) }
+round(tapply(p$affiliation, p$year, f) / table(p$year)) %>%
+  print
+
+cat(
+  "\n[SAVED]",
+  nrow(p),
+  "rows,", 
+  n_distinct(p$i),
+  "attendees,",
+  n_distinct(p$j),
+  "panels,",
+  n_distinct(p$affiliation),
+  "affiliations.\n"
+)
+
+write_csv(p, "data/edges.csv")
 
 # kthxbye
