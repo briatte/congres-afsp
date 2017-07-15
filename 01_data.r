@@ -111,17 +111,23 @@ d <- mapply(function(year, i) {
 # (1) remove composed family names to avoid married 'x-y' duplicates
 d$i <- str_replace(d$i, "^(\\w+)-(.*)\\s", "\\1 ")
 
-# fix some problematic rows (many caused by extra comma between first and last names)
+# fix some problematic rows
+# - many caused by extra comma between first and last names
+# - many caused by name inversions, esp. among foreigners
 
 d$i[ d$year == 2009 & d$i == "HAMEL CHISTOPHER" ] <- "HAMEL CHRISTOPHER"
 d$i[ d$year == 2009 & d$i == "TEJERINA BEJAMIN" ] <- "TEJERINA BENJAMIN"
+d$i[ d$year == 2009 & d$i == "THOMAS MARIONA" ] <- "TOMAS FORNES MARIONA"
+d$i[ d$year == 2009 & d$i == "SAFI KATAYOUN" ] <- "KATAYOUN SAFI"
+d$i[ d$year == 2009 & d$i == "SUMBUL KAYA" ] <- "KAYA SUMBUL"
 d$i[ d$year %in% c(2009, 2015) & d$i == "VISSCHER CHRISTIAN DE" ] <- "VISSCHER CHRISTIAN"
-d$i[ d$year == 2013 & d$i == "ABEL FRANCOIS" ] <- "FRANCOIS ABEL" # name inversion
+d$i[ d$year == 2011 & d$i == "LOUAFI DELIM" ] <- "LAOUFI SELIM"
+d$i[ d$year == 2013 & d$i == "ABEL FRANCOIS" ] <- "FRANCOIS ABEL"
 d$i[ d$year == 2013 & d$i == "ABENA-TSOUNGI" ] <- "ABENA-TSOUNGI ALAIN"
 d$i[ d$year == 2013 & d$i == "DEBOCK CAMILLE" ] <- "BEDOCK CAMILLE"
+d$i[ d$year == 2013 & d$i == "DE SIO LORENZI" ] <- "DE SIO LORENZO"
 d$i[ d$year == 2013 & d$i == "DUSCHINSKY MICHAEL PINTO" ] <- "PINTO DUSCHINSKY MICHAEL"
 d$i[ d$year == 2013 & d$i == "PILLON" ] <- "PILLON JEAN-MARIE"
-d$i[ d$year == 2013 & d$i == "LONTZI AMADO-BORTHAYRE" ] <- "AMADO BORTHAYRE LONTZI"
 d$i[ d$year == 2015 & d$i == "JIMENEZ FERNADO" ] <- "JIMENEZ FERNANDO"
 d$i[ d$year == 2015 & d$i == "LENGUITA" ] <- "LENGUITA PAULA"
 d$i[ d$year == 2015 & d$i == "MATUKHNO NATALIA NATALIA" ] <- "MATUKHNO NATALIA"
@@ -129,10 +135,22 @@ d$i[ d$year == 2017 & d$i == "BLEUWENN BLEUWENN" ] <- "LECHAUX BLEUWENN"
 d$i[ d$year == 2017 & d$i == "BILLOWS BILLOWS" ] <- "BILLOWS SEBASTIEN"
 d$i[ d$year == 2017 & d$i == "EVRARD AURELIEN EVRARD" ] <- "EVRARD AURELIEN"
 d$i[ d$year == 2017 & d$i == "GONZALES-GONZALESVERONICA" ] <- "GONZALES VERONICA"
+d$i[ d$year == 2017 & d$i == "KEFALA VIVI" ] <- "VIVI KEFALA"
 d$i[ d$year == 2017 & d$i == "SOULE FOLASAHDE" ] <- "SOULE FOLASHADE"
 
-# convenience fixes (simplification of foreign names)
+# convenience fixes
+# - mostly simplifications of foreign names
+# - Korean names 'Kil-Ho' and 'Sung-Eun' simplified by losing dash,
+#   as seems to have been commonly done in the original data
+d$i[ d$year == 2009 & d$i == "NGAMCHARA MBOUEMBOUE" ] <- "NGAMCHARA CAROLINE"
+d$i[ d$year == 2009 & d$i == "SHIM SUNG-EUN" ] <- "SHIM SUNGEUN"
+d$i[ d$year == 2013 & d$i %in% c("AMADO BORTHAYRE LONTZI", "LONTZI AMADO-BORTHAYRE") ] <- "AMADO LONTZI"
+d$i[ d$year == 2015 & d$i == "MONTEIRO BENTO RODRIGO PEREIRA" ] <- "MONTEIRO BENTO"
 d$i[ d$year == 2015 & d$i == "NOSTITZ FELIX-CHRISTOPHER VON" ] <- "NOSTITZ FELIX"
+d$i[ d$year == 2015 & d$i == "TAWA LAMA-REWAL" ] <- "TAWA STEPHANIE"
+d$i[ d$year == 2015 & d$i == "YONG KWON HYEOK" ] <- "HYEOK KWON"
+d$i[ d$year == 2017 & d$i == "HOUTE ARNAUD DOMINIQUE" ] <- "HOUTE ARNAUD"
+d$i[ d$year == 2017 & d$i == "LEE KIL-HO" ] <- "LEE KILHO"
 d$i[ d$year == 2017 & d$i == "NDONGMO BERTRAND MAGLOIRE" ] <- "NDONGMO BERTRAND"
 
 # # to detect (several forms of, but not all) errors:
