@@ -230,7 +230,8 @@ if (!file.exists(f)) {
   
 }
 
-p <- read_tsv(f, locale = locale(encoding = "latin1"), col_types = "iccd") %>% 
+p <- locale(encoding = "latin1")
+p <- read_tsv(f, locale = p, col_types = "iccd", progress = FALSE) %>% 
   filter(preusuel != "_PRENOMS_RARES", str_count(preusuel) > 2) %>% 
   mutate(preusuel = iconv(preusuel, to = "ASCII//TRANSLIT", sub = " ") %>%
            # remove diacritics
@@ -265,11 +266,12 @@ a <- left_join(a, p, by = "first_name") %>%
   )
 
 # manually collected values
-f <- read_tsv("data/genders.tsv", col_types = "cc") %>% 
+f <- "data/genders.tsv"
+p <- read_tsv(f, col_types = "cc") %>% 
   filter(gender %in% c("f", "m")) # remove missing values
 
-a$p_f[ a$i %in% f$name[ f$gender == "f" ] ] <- 1 # females
-a$p_f[ a$i %in% f$name[ f$gender == "m" ] ] <- 0 # males
+a$p_f[ a$i %in% p$name[ p$gender == "f" ] ] <- 1 # females
+a$p_f[ a$i %in% p$name[ p$gender == "m" ] ] <- 0 # males
 
 # ==============================================================================
 # FINALIZE FIRST NAMES
@@ -294,7 +296,7 @@ stopifnot(!is.na(a$family_name))
 cat(
   "\n[MISSING] First names of",
   n_distinct(a$i[ is.na(a$first_name) ]),
-  "attendees\n"
+  "attendee(s)\n"
 )
 
 # ==============================================================================
@@ -308,19 +310,21 @@ a$gender <- recode(a$p_f, `1` = "f", `0` = "m", .default = NA_character_)
 # filter(a, !p_f %in% c(0, 1)) %>% View
 
 # save manually collected values, with missing values back again
-data_frame(gender = NA_character_, name = a$i[ is.na(a$first_name) ]) %>% 
-  bind_rows(f) %>% 
-  arrange(name) %>% 
-  write_tsv("data/genders.tsv")
+w <- a$i[ is.na(a$gender) ]
+if (length(w) > 0) {
+  data_frame(gender = NA_character_, name = w) %>% 
+    bind_rows(p) %>% 
+    arrange(name) %>% 
+    write_tsv(f)
+}
 
-cat(
-  "[MISSING] Gender of",
-  n_distinct(a$i[ is.na(a$gender) ]),
-  "attendees\n"
-)
+cat("[MISSING] Gender of", n_distinct(w), "attendee(s)\n")
+
+# sanity check: all rows in genders.tsv exist in attendees data
+stopifnot(read_tsv(f, col_types = "cc")$name %in% unique(a$i))
 
 # ==============================================================================
-# EXPORT TO CSV
+# EXPORT ATTENDEES TO CSV
 # ==============================================================================
 
 write_csv(
