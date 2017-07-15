@@ -8,6 +8,8 @@ Briatte, François. 2017. _AFSP Conference Panel Co-attendance Data._ DOI: [10.5
 
 # DATA
 
+> __Important notice:__ the following datasets contain personal data taken from the [AFSP](http://www.afsp.info/) website. The data have been compiled for research purposes only. According to [French law](https://www.cnil.fr/comprendre-vos-droits), you can ask the maintainer of the data for [access](https://www.cnil.fr/fr/le-droit-dacces), [rectification](https://www.cnil.fr/fr/le-droit-de-rectification) or even [suppression](https://www.cnil.fr/fr/le-droit-dopposition) of the data (although the latter requires 'legitimate' reasons to do so). To exercise any of those rights, please [email me](mailto:francois.briatte@sciencespo.fr).
+
 ## [`edges.csv`][data-edges]
 
 A CSV file with one row per attendee and per conference panel attended:
@@ -123,3 +125,7 @@ dplyr::mutate(p, j = stringr::str_c(year, "_", id)) %>%
   dplyr::inner_join(d, by = c("year", "j")) %>% 
   nrow(.) == nrow(d)
 ```
+
+# LICENSE
+
+The contents of this repository are released under a [Creative Commons Attribution-NonCommercial-ShareAlike](https://creativecommons.org/licenses/by-nc-sa/4.0/) license.
