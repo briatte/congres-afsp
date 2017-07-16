@@ -532,12 +532,12 @@ if (!file.exists(f)) {
 
 # specify '.' when merging to ensure that affiliation.x is from panels.tsv
 p <- read_tsv(f, col_types = "ccc") %>% 
-  full_join(., a, by = c("i", "j"))
+  full_join(a, ., by = c("i", "j"))
 
 # replace empty affiliations with existing ones in panels.tsv
 w <- which(is.na(p$affiliation.x) & !is.na(p$affiliation.y))
 p$affiliation.x[ w ] <- p$affiliation.y[ w ]
-cat("[REPLACED]", length(w), "missing affiliation(s)\n")
+cat("\n[REPLACED]", length(w), "missing affiliation(s)\n")
 
 # replace 'raw' affiliations with revised ones in panels.tsv
 w <- which(p$affiliation.x != p$affiliation.y)
