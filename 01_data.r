@@ -117,6 +117,7 @@ d$i <- str_replace(d$i, "^(\\w+)-(.*)\\s", "\\1 ")
 # - many caused by name inversions, esp. among foreigners
 
 d$i[ d$year == 2009 & d$i == "HAMEL CHISTOPHER" ] <- "HAMEL CHRISTOPHER"
+d$i[ d$year == 2009 & d$i == "QUENTIN DAVID" ] <- "DAVID QUENTIN"
 d$i[ d$year == 2009 & d$i == "TEJERINA BEJAMIN" ] <- "TEJERINA BENJAMIN"
 d$i[ d$year == 2009 & d$i == "THOMAS MARIONA" ] <- "TOMAS FORNES MARIONA"
 d$i[ d$year == 2009 & d$i == "SAFI KATAYOUN" ] <- "KATAYOUN SAFI"
@@ -129,6 +130,7 @@ d$i[ d$year == 2013 & d$i == "DEBOCK CAMILLE" ] <- "BEDOCK CAMILLE"
 d$i[ d$year == 2013 & d$i == "DE SIO LORENZI" ] <- "DE SIO LORENZO"
 d$i[ d$year == 2013 & d$i == "DUSCHINSKY MICHAEL PINTO" ] <- "PINTO DUSCHINSKY MICHAEL"
 d$i[ d$year == 2013 & d$i == "PILLON" ] <- "PILLON JEAN-MARIE"
+d$i[ d$year == 2013 & d$i == "STEIN ANDREA" ] <- "STEINER ANDREA"
 d$i[ d$year == 2015 & d$i == "JIMENEZ FERNADO" ] <- "JIMENEZ FERNANDO"
 d$i[ d$year == 2015 & d$i == "LENGUITA" ] <- "LENGUITA PAULA"
 d$i[ d$year == 2015 & d$i == "MATUKHNO NATALIA NATALIA" ] <- "MATUKHNO NATALIA"
