@@ -13,8 +13,8 @@ A TSV (tab-separated) file with one row per conference attendee and per conferen
   - The affiliation then usually contains the name of the university or other institution that hosts the research unit:
     - All linguistic variants of the word "university" are replaced with `U.`.
     - All Parisian universities are denoted by their Arabic number, e.g. `U. PARIS 10`.
-  - Last, when the institution is located outside of France, the country is then indicated in brackets, in French. This also applies to some French institutions located abroad.
-  - All other information (irregularly) reported in the raw data have been removed, including, for instance, CNRS and FNRS affiliations, and professor titles.
+  - Last, when the institution is located outside of France, the country is then indicated in brackets, in French, at the exception of `USA`. This also applies to some French institutions located abroad.
+  - All other information (irregularly) reported in the raw data have been removed, including, for instance, CNRS, FNRS or IUF affiliations, and professor titles.
   - Non-academic affiliations are surrounded by `[`hard brackets`]`. Attendees who declared being independent consultants/researchers are coded as `[INDEPENDANT]`.
   - Multiple affiliations are listed by their original order of appearance and are separated with slashes, as in `x, y (z) / a, b` (in this example, the first affiliation is from a non-French institution).
 
