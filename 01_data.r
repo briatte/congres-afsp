@@ -42,7 +42,7 @@ for (i in rev(y)) {
     # transliterate, using sub to keep strings with non-convertible bytes
     iconv(to = "ASCII//TRANSLIT", sub = " ") %>%
     # remove diacritics
-    str_replace_all("[\"^'`\\.]|&#8217;|&(l|r)squo;", "") %>%
+    str_replace_all("[\"^'`~\\.]|&#8217;|&(l|r)squo;", "") %>%
     # remove loose HTML tags
     str_replace_all("<br\\s?/?>|<(p|b|li|span)(.*?)>|</(p|b|li|span)>", "") %>%
     # remove French/Spanish name particles
@@ -238,7 +238,7 @@ p <- read_tsv(f, locale = p, col_types = "iccd", progress = FALSE) %>%
   filter(preusuel != "_PRENOMS_RARES", str_count(preusuel) > 2) %>% 
   mutate(preusuel = iconv(preusuel, to = "ASCII//TRANSLIT", sub = " ") %>%
            # remove diacritics
-           str_replace_all("[\"^'`\\.]|&#8217;|&(l|r)squo;", "") %>% 
+           str_replace_all("[\"^'`~\\.]|&#8217;|&(l|r)squo;", "") %>% 
            # make 'marie claude' and 'marie-claude' the same
            str_replace_all("-", " ")) %>%
   group_by(preusuel) %>% 
@@ -467,7 +467,7 @@ for (i in unique(d$j)) {
     str_to_upper %>% 
     iconv(to = "ASCII//TRANSLIT", sub = " ") %>%
     # remove diacritics
-    str_replace_all("[\"^'`\\.]", "") %>%
+    str_replace_all("[\"^'`~\\.]", "") %>%
     # composed names + handle multiple spaces
     str_replace_all( "-|\\s+", " ") %>% 
     str_trim
