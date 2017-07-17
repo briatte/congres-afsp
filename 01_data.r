@@ -131,16 +131,20 @@ d$i[ d$year == 2013 & d$i == "DE SIO LORENZI" ] <- "DE SIO LORENZO"
 d$i[ d$year == 2013 & d$i == "DUSCHINSKY MICHAEL PINTO" ] <- "PINTO DUSCHINSKY MICHAEL"
 d$i[ d$year == 2013 & d$i == "PILLON" ] <- "PILLON JEAN-MARIE"
 d$i[ d$year == 2013 & d$i == "STEIN ANDREA" ] <- "STEINER ANDREA"
+d$i[ d$year == 2015 & d$i == "EL YOUSSEF" ] <- "EL CHAZLI YOUSSEF"
 d$i[ d$year == 2015 & d$i == "JIMENEZ FERNADO" ] <- "JIMENEZ FERNANDO"
 d$i[ d$year == 2015 & d$i == "LENGUITA" ] <- "LENGUITA PAULA"
 d$i[ d$year == 2015 & d$i == "MATUKHNO NATALIA NATALIA" ] <- "MATUKHNO NATALIA"
 d$i[ d$year == 2015 & d$i == "PINTO DUCHINSKI MICHAEL" ] <- "PINTO DUSCHINSKY MICHAEL"
 d$i[ d$year == 2017 & d$i == "BLEUWENN BLEUWENN" ] <- "LECHAUX BLEUWENN"
 d$i[ d$year == 2017 & d$i == "BILLOWS BILLOWS" ] <- "BILLOWS SEBASTIEN"
+d$i[ d$year == 2017 & d$i == "CHAVALLIER THOMAS" ] <- "CHEVALLIER THOMAS"
+d$i[ d$year == 2017 & d$i == "CHIASSO GUY" ] <- "CHIASSON GUY"
 d$i[ d$year == 2017 & d$i == "DERON EVA" ] <- "DERONT EVA"
 d$i[ d$year == 2017 & d$i == "EVRARD AURELIEN EVRARD" ] <- "EVRARD AURELIEN"
 d$i[ d$year == 2017 & d$i == "GONZALES-GONZALESVERONICA" ] <- "GONZALES VERONICA"
 d$i[ d$year == 2017 & d$i == "KEFALA VIVI" ] <- "VIVI KEFALA"
+d$i[ d$year == 2017 & d$i == "ROUSSEAU EMMANUEL" ] <- "ROUSSEAUX EMMANUEL"
 d$i[ d$year == 2017 & d$i == "SOULE FOLASAHDE" ] <- "SOULE FOLASHADE"
 d$i[ d$year == 2017 & d$i == "SAEIDNIA SAHAR" ] <- "SAEIDNIA SAHAR AURORE"
 
@@ -589,6 +593,6 @@ cat(
 # group_by(p, affiliation) %>%
 #   tally(sort = TRUE)
 
-write_csv(p, "data/edges.csv")
+write_csv(select(p, -affiliation), "data/edges.csv")
 
 # kthxbye
