@@ -450,7 +450,8 @@ a <- filter(a, str_detect(j, "ST")) %>%
       is.na(first_name),
       family_name,
       str_c(first_name, "[\\s\\w]+?", family_name, "|", family_name, "[\\s\\w]+?", first_name)
-    )
+    ),
+    role = NA # organiser or presenter (other roles need to be hand-coded)
   )
 
 # create panel uid
@@ -472,8 +473,9 @@ for (i in unique(d$j)) {
   # the other one...
   
   # let's try to match both
+  t <- "//*[contains(text(), '(') or contains(text(), 'tation scientifique')]"
   t <- read_html(f) %>% 
-    html_nodes(xpath = "//*[contains(text(), '(')]") %>% 
+    html_nodes(xpath = t) %>% 
     html_text %>% 
     str_to_upper %>% 
     iconv(to = "ASCII//TRANSLIT", sub = " ") %>%
@@ -482,21 +484,35 @@ for (i in unique(d$j)) {
     # composed names + handle multiple spaces
     str_replace_all( "-|\\s+", " ") %>% 
     str_trim
-  
+
   # keep only strings likely to match a name and affiliation
-  t <- t[ str_detect(t, "\\s") & str_count(t) > 2 & str_count(t) < 5000 ] %>% 
-    str_extract("(.*)\\)") # exclude everything after last affiliation
+  w <- str_count(t) > 2 & str_count(t) < 5000
+  t <- t[ (t == "PRESENTATION SCIENTIFIQUE" | str_detect(t, "\\s")) & w ]
+  
+  # pointer separating panels organisers from participants
+  w <- max(which(t == "PRESENTATION SCIENTIFIQUE"))
+  stopifnot(is.integer(w))
+  
+  # exclude everything after last affiliation
+  t[ -w ] <- str_extract(t[ -w], "(.*)\\)")
+  
+  a$role[ a$j == i ] <- sapply(a$affiliation[ a$j == i ], function(x) {
+    str_which(t, x)[1]
+  }) < w # returns TRUE or FALSE
   
   a$affiliation[ a$j == i ] <- sapply(a$affiliation[ a$j == i ], function(x) {
     t[ str_which(t, x)[1] ] %>%
       str_extract(str_c("(", x, ")(.*?)\\)"))
-  }) # still returns lists in some cases, don't know why
+  }) # returns lists, don't know why
   
 }
 
-# coerce to vector
+# coerce list of chr[1] to vector
 stopifnot(sapply(a$affiliation, length) == 1)
 a$affiliation <- unlist(a$affiliation)
+
+# coerce logical organiser or presenter role (with precedence to the former)
+a$role <- if_else(a$role, "o", "p")
 
 # ==============================================================================
 # FINALIZE EXTRACTED AFFILIATIONS
@@ -528,37 +544,52 @@ a$affiliation <- str_replace_all(a$affiliation, "\\s+", " ") %>%
 #   arrange(-n_a)
 
 # ==============================================================================
-# EXPORT AND REVISE AFFILIATIONS
+# EXPORT ROLES AND AFFILIATIONS
 # ==============================================================================
 
-a <- select(a, i, j, affiliation) %>% 
+a <- select(a, role, i, j, affiliation) %>% 
   arrange(i, j)
 
 # sanity check: all rows are distinct
 stopifnot(nrow(distinct(a)) == nrow(a))
 
 # initialize file if missing
-f <- "data/affiliations.tsv"
+f <- "data/participants.tsv"
 if (!file.exists(f)) {
   write_tsv(a, f)
 }
 
-# specify '.' when merging to ensure that affiliation.x is from panels.tsv
-p <- read_tsv(f, col_types = "ccc") %>% 
+# ==============================================================================
+# REVISE ROLES AND AFFILIATIONS
+# ==============================================================================
+
+# specifying '.' to ensure that participants.tsv columns are marked .y
+p <- read_tsv(f, col_types = "cccc") %>% 
   full_join(a, ., by = c("i", "j"))
 
-# replace empty affiliations with existing ones in panels.tsv
+# replace empty roles with existing ones in participants.tsv
+w <- which(is.na(p$role.x) & !is.na(p$role.y))
+p$role.x[ w ] <- p$role.y[ w ]
+cat("\n[REPLACED]", length(w), "missing role(s)\n")
+
+# replace 'raw' roles with revised ones in participants.tsv
+w <- which(p$role.x != p$role.y)
+p$role.x[ w ] <- p$role.y[ w ]
+cat("[REPLACED]", length(w), "revised role(s)\n")
+
+# replace empty affiliations with existing ones in participants.tsv
 w <- which(is.na(p$affiliation.x) & !is.na(p$affiliation.y))
 p$affiliation.x[ w ] <- p$affiliation.y[ w ]
 cat("\n[REPLACED]", length(w), "missing affiliation(s)\n")
 
-# replace 'raw' affiliations with revised ones in panels.tsv
+# replace 'raw' affiliations with revised ones in participants.tsv
 w <- which(p$affiliation.x != p$affiliation.y)
 p$affiliation.x[ w ] <- p$affiliation.y[ w ]
 cat("[REPLACED]", length(w), "revised affiliation(s)\n")
 
 f <- "data/edges.csv"
-p <- select(p, i, j, affiliation = affiliation.x, -affiliation.y) %>% 
+p <- rename(p, role = role.x, affiliation = affiliation.x) %>% 
+  select(i, j, role, affiliation) %>% 
   left_join(read_csv(f, col_types = "icciiiiccc"), ., by = c("i", "j"))
 
 cat("\nDistinct attendees:\n\n")
@@ -594,9 +625,11 @@ cat(
   "affiliations.\n"
 )
 
+# # top affiliations (imprecise: ignores multiple affiliations)
 # group_by(p, affiliation) %>%
 #   tally(sort = TRUE)
 
-write_csv(select(p, -affiliation), "data/edges.csv")
+# add affiliations and roles only if need be
+write_csv(select(p, -affiliation, -role), "data/edges.csv")
 
 # kthxbye
