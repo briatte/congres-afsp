@@ -2,28 +2,6 @@
 
 All files documented below are UTF8-encoded, with missing values coded as `NA`.
 
-## [`affiliations.tsv`][data-affiliations]
-
-A TSV (tab-separated) file with one row per conference attendee and per conference panel attended (see [`edges.csv`][data-edges] below):
-  
-- `i` – Full name of the attendee, coded exactly as `i` in [`edges.csv`][data-edges].
-- `j` – Panel attended, coded exactly as `j` in [`edges.csv`][data-edges].
-- `affiliation` – Academic affiliation, standardized to some level:
-  - When available, the affiliation starts with the acronym or name of the research unit, which might be a department, an institute, a research laboratory, etc.
-  - The affiliation then usually contains the name of the university or other institution that hosts the research unit:
-    - All linguistic variants of the word "university" are replaced with `U.`.
-    - All Parisian universities are denoted by their Arabic number, e.g. `U. PARIS 10`.
-  - Last, when the institution is located outside of France, the country is then indicated in brackets, in French, at the exception of `USA`. This also applies to some French institutions located abroad.
-  - All other information (irregularly) reported in the raw data have been removed, including, for instance, CNRS, FNRS or IUF affiliations, and professor titles.
-  - Non-academic affiliations are surrounded by `[`hard brackets`]`. Attendees who declared being independent consultants/researchers are coded as `[INDEPENDANT]`.
-  - Multiple affiliations are listed by their original order of appearance and are separated with slashes, as in `x, y (z) / a, b` (in this example, the first affiliation is from a non-French institution).
-
-Many of the affiliations listed in this file are either lowly accurate, incomplete, or missing entirely.
-
-This file can be manually revised to improve the accuracy of the `affiliation` variable in [`edges.csv`][data-edges]. Its contents will get copied to [`edges.csv`][data-edges] during data preparation.
-
-[data-affiliations]: https://github.com/briatte/congres-afsp/blob/master/data/affiliations.tsv
-
 ## [`edges.csv`][data-edges]
 
 A CSV file with one row per conference attendee and per conference panel attended:
@@ -100,3 +78,26 @@ The data were manually extracted from the relevant [AFSP Web pages](http://www.a
 This file contains slightly better formatted panel titles than those collected during data preparation, and should therefore be preferred when requesting that information. The information contained in the `notes` column are exclusive to that file.
 
 [data-panels]: https://github.com/briatte/congres-afsp/blob/master/data/panels.tsv
+
+## [`participants.tsv`][data-participants]
+
+A TSV (tab-separated) file with one row per conference attendee and per conference panel attended (see [`edges.csv`][data-edges] below):
+
+- `role` – Role of the attendee within the panel:
+  - Programmatically identified roles: `o` (organiser), `p` (presenter); those roles are the only ones that can be trusted to be somewhat reliably coded for most panels.
+  - Manually identified roles: `c` and `d` (chair or discussant who is not also a presenter), `a` (absentee, i.e. participant listed in the conference index but not listed anywhere in the panel page).
+- `i` – Full name of the attendee, coded exactly as `i` in [`edges.csv`][data-edges].
+- `j` – Panel attended, coded exactly as `j` in [`edges.csv`][data-edges].
+- `affiliation` – Academic affiliation, standardized to a reasonable level:
+  - When available, the affiliation starts with the acronym or name of the research unit, which might be a department, an institute, a research laboratory or team, etc. Merged units contain both names separated by dashes, e.g. `GSPE-PRISME-SAGE`.
+  - The affiliation then usually contains the name of the university or other institution that hosts the research unit. All linguistic variants of the word "university" are replaced with `U.`, and Parisian universities are denoted by their [post-1968 number](https://fr.wikipedia.org/wiki/Universit%C3%A9_de_Paris#D.C3.A9membrement_de_l.27universit.C3.A9_de_Paris) in Arabic form (e.g. `"U. PARIS 11"`). Some units are co-hosted by several institutions separated with dashes, e.g. `IEP-U. STRASBOURG` or `ENS-PARIS & EHESS PARIS`.
+  - When the institution is located in France, an effort is made to include the city in its name, e.g. `INSEEC BORDEAUX`. When the institution is located outside of France, the country is then indicated in brackets, in French, at the exception of `USA`. This also applies to some French institutions located abroad.
+  - Non-academic affiliations, which can be either institutions (e.g. `"UNESCO"`), or occupations (e.g. `"consultant"`), are surrounded by `[`hard brackets`]` and might include a geographic indication (see previous point).
+  - All other information (irregularly) reported in the raw data have been removed, including, for instance, CNRS, FNRS and IUF affiliations, memberships to informal research groups or to funded projects (e.g. ANR, ERC), and doctor or professor titles.
+  - Multiple affiliations are listed by their original order of appearance and are separated with slashes, as in `x, y (z) / a, b` (in this example, the first affiliation is from an institution located outside of France).
+
+Although an effort has been made to harmonize affiliations, many of the affiliations listed in this file are either lowly accurate, incomplete, or missing entirely.
+
+This file can be manually revised to improve the accuracy of the `affiliation` variable in [`edges.csv`][data-edges]. Its `role` variable will get copied to [`edges.csv`][data-edges] during data preparation.
+
+[data-participants]: https://github.com/briatte/congres-afsp/blob/master/data/participants.tsv
