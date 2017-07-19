@@ -112,60 +112,14 @@ d <- mapply(function(year, i) {
 # (1) remove composed family names to avoid married 'x-y' duplicates
 d$i <- str_replace(d$i, "^(\\w+)-(.*)\\s", "\\1 ")
 
-# fix some problematic rows
-# - many caused by extra comma between first and last names
-# - many caused by name inversions, esp. among foreigners
-
-d$i[ d$year == 2009 & d$i == "HAMEL CHISTOPHER" ] <- "HAMEL CHRISTOPHER"
-d$i[ d$year == 2009 & d$i == "QUENTIN DAVID" ] <- "DAVID QUENTIN"
-d$i[ d$year == 2009 & d$i == "TEJERINA BEJAMIN" ] <- "TEJERINA BENJAMIN"
-d$i[ d$year == 2009 & d$i == "THOMAS MARIONA" ] <- "TOMAS FORNES MARIONA"
-d$i[ d$year == 2009 & d$i == "SAFI KATAYOUN" ] <- "KATAYOUN SAFI"
-d$i[ d$year == 2009 & d$i == "SUMBUL KAYA" ] <- "KAYA SUMBUL"
-d$i[ d$year %in% c(2009, 2015) & d$i == "VISSCHER CHRISTIAN DE" ] <- "VISSCHER CHRISTIAN"
-d$i[ d$year == 2011 & d$i == "LOUAFI DELIM" ] <- "LAOUFI SELIM"
-d$i[ d$year == 2013 & d$i == "ABEL FRANCOIS" ] <- "FRANCOIS ABEL"
-d$i[ d$year == 2013 & d$i == "ABENA-TSOUNGI" ] <- "ABENA-TSOUNGI ALAIN"
-d$i[ d$year == 2013 & d$i == "DEBOCK CAMILLE" ] <- "BEDOCK CAMILLE"
-d$i[ d$year == 2013 & d$i == "DE SIO LORENZI" ] <- "DE SIO LORENZO"
-d$i[ d$year == 2013 & d$i == "DUSCHINSKY MICHAEL PINTO" ] <- "PINTO DUSCHINSKY MICHAEL"
-d$i[ d$year == 2013 & d$i == "OBKANI NADIA" ] <- "OKBANI NADIA"
-d$i[ d$year == 2013 & d$i == "PILLON" ] <- "PILLON JEAN-MARIE"
-d$i[ d$year == 2013 & d$i == "STEIN ANDREA" ] <- "STEINER ANDREA"
-d$i[ d$year == 2015 & d$i == "EL YOUSSEF" ] <- "EL CHAZLI YOUSSEF"
-d$i[ d$year == 2015 & d$i == "EMPERADOR BADIMON MONTSERRAT" ] <- "EMPERADOR MONTSERRAT"
-d$i[ d$year == 2015 & d$i == "JIMENEZ FERNADO" ] <- "JIMENEZ FERNANDO"
-d$i[ d$year == 2015 & d$i == "LENGUITA" ] <- "LENGUITA PAULA"
-d$i[ d$year == 2015 & d$i == "MATUKHNO NATALIA NATALIA" ] <- "MATUKHNO NATALIA"
-d$i[ d$year == 2015 & d$i == "PINTO DUCHINSKI MICHAEL" ] <- "PINTO DUSCHINSKY MICHAEL"
-d$i[ d$year == 2015 & d$i == "VERLIN JAN" ] <- "WOERLIN JAN"
-d$i[ d$year == 2015 & d$i == "WOERLEIN JAN" ] <- "WOERLIN JAN"
-d$i[ d$year == 2017 & d$i == "BLEUWENN BLEUWENN" ] <- "LECHAUX BLEUWENN"
-d$i[ d$year == 2017 & d$i == "BILLOWS BILLOWS" ] <- "BILLOWS SEBASTIEN"
-d$i[ d$year == 2017 & d$i == "CHAVALLIER THOMAS" ] <- "CHEVALLIER THOMAS"
-d$i[ d$year == 2017 & d$i == "CHIASSO GUY" ] <- "CHIASSON GUY"
-d$i[ d$year == 2017 & d$i == "DERON EVA" ] <- "DERONT EVA"
-d$i[ d$year == 2017 & d$i == "EVRARD AURELIEN EVRARD" ] <- "EVRARD AURELIEN"
-d$i[ d$year == 2017 & d$i == "GONZALES-GONZALESVERONICA" ] <- "GONZALES VERONICA"
-d$i[ d$year == 2017 & d$i == "KEFALA VIVI" ] <- "VIVI KEFALA"
-d$i[ d$year == 2017 & d$i == "ROUSSEAU EMMANUEL" ] <- "ROUSSEAUX EMMANUEL"
-d$i[ d$year == 2017 & d$i == "SOULE FOLASAHDE" ] <- "SOULE FOLASHADE"
-d$i[ d$year == 2017 & d$i == "SAEIDNIA SAHAR" ] <- "SAEIDNIA SAHAR AURORE"
-
-# convenience fixes
-# - mostly simplifications of foreign names
-# - Korean names 'Kil-Ho' and 'Sung-Eun' simplified by losing dash,
-#   as seems to have been commonly done in the original data
-d$i[ d$year == 2009 & d$i == "NGAMCHARA MBOUEMBOUE" ] <- "NGAMCHARA CAROLINE"
-d$i[ d$year == 2009 & d$i == "SHIM SUNG-EUN" ] <- "SHIM SUNGEUN"
-d$i[ d$year == 2013 & d$i %in% c("AMADO BORTHAYRE LONTZI", "LONTZI AMADO-BORTHAYRE") ] <- "AMADO LONTZI"
-d$i[ d$year == 2015 & d$i == "MONTEIRO BENTO RODRIGO PEREIRA" ] <- "MONTEIRO BENTO"
-d$i[ d$year == 2015 & d$i == "NOSTITZ FELIX-CHRISTOPHER VON" ] <- "NOSTITZ FELIX"
-d$i[ d$year == 2015 & d$i == "TAWA LAMA-REWAL" ] <- "TAWA STEPHANIE"
-d$i[ d$year == 2015 & d$i == "YONG KWON HYEOK" ] <- "HYEOK KWON"
-d$i[ d$year == 2017 & d$i == "HOUTE ARNAUD DOMINIQUE" ] <- "HOUTE ARNAUD"
-d$i[ d$year == 2017 & d$i == "LEE KIL-HO" ] <- "LEE KILHO"
-d$i[ d$year == 2017 & d$i == "NDONGMO BERTRAND MAGLOIRE" ] <- "NDONGMO BERTRAND"
+# (2) fix some problematic names using names.tsv
+# - some caused by extra comma between first and last names
+# - some caused by name inversions, esp. among foreigners
+# - some caused by typos, e.g. double consonants
+f <- read_tsv("data/names.tsv", col_types = "ccc")
+d <- left_join(d, f, by = c("year", "i")) %>% 
+  mutate(i = if_else(is.na(i_fixed), i, i_fixed)) %>% 
+  select(-i_fixed)
 
 # # to detect (several forms of, but not all) errors:
 # str_split(d$i, " ") %>% sapply(function(x) x[1] == x[2]) %>% which
