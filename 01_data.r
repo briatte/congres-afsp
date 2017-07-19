@@ -516,6 +516,14 @@ if (!file.exists(f)) {
 p <- read_tsv(f, col_types = "cccc") %>% 
   full_join(a, ., by = c("i", "j"))
 
+# sanity checks:
+
+# (1) all 'ST' panel affiliations are covered by participants.tsv ...
+stopifnot(!length(p$i[ !(p$i %in% a$i | !str_detect(p$j, "ST")) ]))
+
+# (2) ... and none of participants.tsv are extraneous to the data
+stopifnot(!length(a$i[ !a$i %in% p$i ]))
+
 # replace empty roles with existing ones in participants.tsv
 w <- which(is.na(p$role.x) & !is.na(p$role.y))
 p$role.x[ w ] <- p$role.y[ w ]
