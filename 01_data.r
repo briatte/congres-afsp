@@ -7,7 +7,7 @@ dir.create("data", showWarnings = FALSE)
 dir.create("html", showWarnings = FALSE)
 
 # ==============================================================================
-# DATA :: ATTENDEE INDEXES
+# DATA :: PARTICIPANTS
 # ==============================================================================
 
 y <- c("http://www.afsp.info/congres/congres-2017/index/",
@@ -18,10 +18,10 @@ y <- c("http://www.afsp.info/congres/congres-2017/index/",
 
 d <- data_frame()
 
-cat("[PARSING] attendee indexes for", length(y), "conferences:\n\n")
+cat("[PARSING] participant indexes for", length(y), "conferences:\n\n")
 for (i in rev(y)) {
   
-  f <- str_c("html/", str_extract(i, "\\d{4}"), ".html")
+  f <- str_c("html/", str_extract(i, "\\d{4}"), "_participants.html")
   if (!file.exists(f)) {
     download.file(i, f, mode = "wb", quiet = TRUE)
   }
@@ -74,7 +74,7 @@ d <- filter(d, str_detect(i, ","), !str_detect(i, ";|^\\("))
 # 2009 = 725 (got all)
 # 2013 = 862 (got all)
 # 2017 = 756 (missing 2)
-cat("\nAttendees per conference:\n")
+cat("\nParticipants per conference:\n")
 print(table(d$year))
 
 # how many participations in a single conference?
@@ -95,19 +95,19 @@ d <- mapply(function(year, i) {
   lapply(function(x) {
     data_frame(
       year = str_extract(x, "\\d{4}"), # year
-      i = str_extract(x, "(.*)::"),    # attendee
+      i = str_extract(x, "(.*)::"),    # participant
       j = str_extract(x, "::(.*)")     # panel
     )
   }) %>% 
   bind_rows %>% 
-  # remove separator from attendee and panel names
+  # remove separator from participant and panel names
   mutate_at(2:3, str_replace, pattern = "::", replacement = "")
 
 # ==============================================================================
 # FINALIZE
 # ==============================================================================
 
-# finalize attendee names
+# finalize participant names
 
 # (1) remove composed family names to avoid married 'x-y' duplicates
 d$i <- str_replace(d$i, "^(\\w+)-(.*)\\s", "\\1 ")
@@ -186,7 +186,7 @@ d$j <- str_replace(d$j, "_(\\d+)$", "_ST\\1")
 # fix sessions with an extra comma between type and id (one case in 2009)
 d$j <- str_replace(d$j, "ST, (\\d+)$", "_ST\\1")
 
-# remove panels with less than 2 attendees (false positives)
+# remove panels with less than 2 participants (false positives)
 d <- group_by(d, year, j) %>% 
   summarise(n_j = n()) %>% 
   filter(n_j > 1) %>% 
@@ -204,7 +204,7 @@ t <- group_by(d, i) %>%
   summarise(t_c = n_distinct(year)) %>% 
   arrange(-t_c)
 
-table(t$t_c) # 35 attendees went to all conferences, ~ 1,800+ went to only 1
+table(t$t_c) # 35 participants went to all conferences, ~ 1,800+ went to only 1
 table(t$t_c > 1) / nrow(t) # over 70% attended only 1 of 5 conferences in 8 years
 
 # number of panels overall
@@ -310,7 +310,7 @@ stopifnot(!is.na(a$family_name))
 cat(
   "\n[MISSING] First names of",
   n_distinct(a$i[ is.na(a$first_name) ]),
-  "attendee(s)\n"
+  "participants(s)\n"
 )
 
 # ==============================================================================
@@ -332,13 +332,13 @@ if (length(w) > 0) {
     write_tsv(f)
 }
 
-cat("[MISSING] Gender of", n_distinct(w), "attendee(s)\n")
+cat("[MISSING] Gender of", n_distinct(w), "participant(s)\n")
 
-# sanity check: all rows in genders.tsv exist in attendees data
+# sanity check: all rows in genders.tsv exist in participants data
 stopifnot(read_tsv(f, col_types = "cc")$name %in% unique(a$i))
 
 # ==============================================================================
-# EXPORT ATTENDEES TO CSV
+# EXPORT PARTICIPANTS TO CSV
 # ==============================================================================
 
 write_csv(
@@ -352,7 +352,7 @@ cat(
   nrow(d),
   "rows,", 
   n_distinct(d$i),
-  "attendees,",
+  "participants,",
   n_distinct(d$j),
   "panels."
 )
@@ -438,10 +438,10 @@ for (i in 1:nrow(d)) {
 # note: one ST panel of 2015 is missing because it was cancelled/postponed
 
 # ==============================================================================
-# PREPARE ATTENDEES AND PANELS DATA
+# PREPARE PARTICIPANTS AND PANELS DATA
 # ==============================================================================
 
-# reduce attendees to unique groups of conference years, attendees and panels
+# reduce participants to unique conference year-participant-panels tuples
 a <- filter(a, str_detect(j, "ST")) %>% 
   select(year, i, j, first_name, family_name) %>% 
   distinct %>% 
@@ -467,12 +467,7 @@ for (i in unique(d$j)) {
   
   f <- str_c("html/", i, ".html")
   
-  # this is where it gets messy...
-  # what we have are on one end are 'standardized' attendee names in uppercase
-  # (see README for details), and various strands of not-so-structured HTML on 
-  # the other one...
-  
-  # let's try to match both
+  # trying to find participants or separator between organisers and presenters
   t <- "//*[contains(text(), '(') or contains(text(), 'tation scientifique')]"
   t <- read_html(f) %>% 
     html_nodes(xpath = t) %>% 
@@ -489,7 +484,7 @@ for (i in unique(d$j)) {
   w <- str_count(t) > 2 & str_count(t) < 5000
   t <- t[ (t == "PRESENTATION SCIENTIFIQUE" | str_detect(t, "\\s")) & w ]
   
-  # pointer separating panels organisers from participants
+  # pointer separating panel organisers from presenters
   w <- max(which(t == "PRESENTATION SCIENTIFIQUE"))
   stopifnot(is.integer(w))
   
@@ -538,7 +533,7 @@ a$affiliation[ w ] <- str_replace(
 a$affiliation <- str_replace_all(a$affiliation, "\\s+", " ") %>% 
   str_trim
 
-# # some attendees have had a lot of different affiliations...
+# # some participants have had a lot of different affiliations...
 # group_by(a, i) %>%
 #   summarise(n_a = n_distinct(affiliation)) %>%
 #   arrange(-n_a)
@@ -592,11 +587,11 @@ p <- rename(p, role = role.x, affiliation = affiliation.x) %>%
   select(i, j, role, affiliation) %>% 
   left_join(read_csv(f, col_types = "icciiiiccc"), ., by = c("i", "j"))
 
-cat("\nDistinct attendees:\n\n")
+cat("\nDistinct participants:\n\n")
 tapply(p$i, p$year, n_distinct) %>%
   print
 
-cat("\nNon-missing attendees:\n\n")
+cat("\nNon-missing participants:\n\n")
 tapply(p$i, p$year, function(x) sum(!is.na(x), na.rm = TRUE)) %>%
   print
 
@@ -618,7 +613,7 @@ cat(
   nrow(p),
   "rows,", 
   n_distinct(p$i),
-  "attendees,",
+  "participants,",
   n_distinct(p$j),
   "panels,",
   n_distinct(p$affiliation),

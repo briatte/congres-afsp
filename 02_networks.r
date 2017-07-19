@@ -26,7 +26,7 @@ for (i in colnames(m)) {
 rowSums(m) # number of panel attendances per person (includes self-loops)
 colSums(m) # number of persons per panel
 
-stopifnot(colSums(m) > 1) # all panels have 2+ attendees
+stopifnot(colSums(m) > 1) # all panels have 2+ participants
 
 # ==============================================================================
 # SIMPLE INVERSE WEIGHTING
