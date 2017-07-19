@@ -4,30 +4,30 @@ All files documented below are UTF8-encoded, with missing values coded as `NA`.
 
 ## [`edges.csv`][data-edges]
 
-A CSV file with one row per conference attendee and per conference panel attended:
+A CSV file with one row per conference participant and per conference panel attended:
   
 - `year` – Year of AFSP conference ([2009][2009], [2011][2011], [2013][2013], [2015][2015], [2017][2017]).
-- `i` – Full name of the attendee, slightly simplified for cross-year matching:
+- `i` – Full name of the participant, slightly simplified for cross-year matching:
   - Coded as `FAMILY NAME FIRST NAME`, all uppercase.
   - Composed family names `X-Y` are simplified to their first component `X`.
-  - Dashes in names (e.g. `MARIE-CLAUDE`) have been removed.
+  - Dashes in first names (e.g. `MARIE-CLAUDE`) have been removed.
   - Lone initials (e.g. `SMITH JOHN K`) have been removed.
   - Name particles (e.g. `X DE Y`) have been removed.
 - `j` – Panel attended, coded as `YEAR_ID`, where `ID` contains:
   - The type of panel (e.g. `CP` for plenary conferences, `ST` for thematic sessions).
   - The alphanumeric identifier of the panel when there was one.
-- `n_j` – Number of attendees to the conference panel.
-- `n_p` – Number of conference panels attended that year by the attendee.
-- `t_p` – Total number of panels attended by the attendee.
-- `t_c` – Total number of conferences attended by the attendee.
-- `first_name` – First name of the attendee.
+- `n_j` – Number of participants to the conference panel.
+- `n_p` – Number of conference panels attended that year by the participant.
+- `t_p` – Total number of panels attended by the participant.
+- `t_c` – Total number of conferences attended by the participant.
+- `first_name` – First name of the participant.
   - Extracted from `i`, with possible mistakes (see note below).
   - Missing when the first name could not be safely confirmed.
-- `family_name` – Family name of the attendee.
+- `family_name` – Family name of the participant.
   - Extracted from `i`, with possible mistakes (see note below).
-- `gender` – Gender of the attendee:
+- `gender` – Gender of the participant:
   - Determined from `first_name` (see note below).
-- `affiliation` – Academic affiliation(s) of the attendee; see [`affiliations.tsv`][data-affiliations] above.
+  - Coded as `f` for female and `m` for male.
 
 __Note__ – The first name and gender variables are based on the frequencies observed in the [_Fichier Prénoms Insee_, 2016 edition][data-prenoms], which will be downloaded to the `data` folder during data preparation, as well as on manual additions provided in [`genders.tsv`][data-genders] (see below).
 
@@ -41,22 +41,34 @@ __Note__ – The first name and gender variables are based on the frequencies ob
   
 ## [`genders.tsv`][data-genders]
   
-A TSV (tab-separated) file with one row per attendee present in [`edges.csv`][data-edges] for which gender could not be determined from the [_Fichier Prénoms Insee_, 2016 edition][data-prenoms] (see note above):
+A TSV (tab-separated) file with one row per conference participant present in [`edges.csv`][data-edges] for which gender could not be determined from the [_Fichier Prénoms Insee_, 2016 edition][data-prenoms] (see note above):
   
-- `gender` – Gender of the attendee:
-  - Coded as `f` for female, `m` for male, or `NA` if missing.
-  - All, missing values so far have been manually inputed.
-- `name` – Full name of the attendee, coded exactly as `i` in [`edges.csv`][data-edges].
+- `gender` – Gender of the participant:
+  - Coded as `f` for female and `m` for male.
+  - All missing values so far have been manually inputed.
+- `name` – Full name of the participant, coded exactly as `i` in [`edges.csv`][data-edges].
 
-This file can be manually revised to improve the completeness of the `gender` variable in [`edges.csv`][data-edges]. The file will be loaded, possibly updated with new attendee names for which gender could not be determined, and then re-saved during data preparation.
+This file can be manually revised to improve the completeness of the `gender` variable in [`edges.csv`][data-edges]. The file will be loaded, possibly updated with new participant names for which gender could not be determined, and then re-saved during data preparation.
 
 [data-genders]: https://github.com/briatte/congres-afsp/blob/master/data/genders.tsv
 
 ## [`incidence_matrix.rds`][data-incidence_matrix]
 
-A serialized R object of class `matrix` representing the _i_ &times; _j_ incidence matrix contained in [`edges.csv`][data-edges], with each edge weighted by 1 / _n<sub>j</sub>_. Because all conference panels have at least two attendees, the edge weights have a maximum value of 0.5.
+A serialized R object of class `matrix` representing the _i_ (conference participant) &times; _j_ (conference panel) incidence matrix contained in [`edges.csv`][data-edges], with each edge inversely weighted by 1 / _n<sub>j</sub>_, where _n<sub>j</sub>_ denotes the total number of participants to panel _j_. Because all conference panels have at least two participants, the edge weights have a maximum value of 0.5.
 
 [data-incidence_matrix]: https://github.com/briatte/congres-afsp/blob/master/data/incidence_matrix.rds
+
+## [`names.tsv`][data-names]
+
+A TSV (tab-separated) file with one row per participant present in [`edges.csv`][data-edges] for which the name needed to be manually modified for any reason (usually typos or inconsistencies across conference years):
+
+- `year` – Year of AFSP conference.
+- `i` – Full name of the participant, as found in the original data.
+- `i_fixed` – Corrected full name of the participant, coded exactly as `i` in [`edges.csv`][data-edges].
+
+__Note__ – The corrections apply the simplifications listed in the documentation for [`edges.csv`][data-edges], as well as some additional simplifications to foreign names: for instance, Korean first names (e.g. `KIL-HO` or `SUNG-EUN`) are simplified by removing the dash, as seems to have been commonly done in the original data.
+
+[data-names]: https://github.com/briatte/congres-afsp/blob/master/data/names.tsv
 
 ## [`panels.tsv`][data-panels]
 
@@ -73,7 +85,7 @@ A TSV (tab-separated) file with one row per conference panel:
   - All instances of `État` (the State) are accentuated.
 - `notes` – Notes, in French, when available (e.g. to indicate the panel was postponed).
 
-The data were manually extracted from the relevant [AFSP Web pages](http://www.afsp.info/congres/editions-precedentes/). A handful of panels listed in the file have no participants listed in [`edges.csv`][data-edges], for various reasons (e.g. the panel was cancelled or postponed, the panel is a PhD workshop with no attendees list).
+The data were manually extracted from the relevant [AFSP Web pages](http://www.afsp.info/congres/editions-precedentes/). A handful of panels listed in the file have no participants listed in [`edges.csv`][data-edges], for various reasons (e.g. the panel was cancelled or postponed, the panel is a PhD workshop with no participants list).
 
 This file contains slightly better formatted panel titles than those collected during data preparation, and should therefore be preferred when requesting that information. The information contained in the `notes` column are exclusive to that file.
 
@@ -81,12 +93,12 @@ This file contains slightly better formatted panel titles than those collected d
 
 ## [`participants.tsv`][data-participants]
 
-A TSV (tab-separated) file with one row per conference attendee and per conference panel attended (see [`edges.csv`][data-edges] below):
+A TSV (tab-separated) file with one row per conference participants and per conference panel attended (see [`edges.csv`][data-edges] below):
 
-- `role` – Role of the attendee within the panel:
+- `role` – Role of the participant within the panel:
   - Programmatically identified roles: `o` (organiser), `p` (presenter); those roles are the only ones that can be trusted to be somewhat reliably coded for most panels.
   - Manually identified roles: `c` and `d` (chair or discussant who is not also a presenter), `a` (absentee, i.e. participant listed in the conference index but not listed anywhere in the panel page).
-- `i` – Full name of the attendee, coded exactly as `i` in [`edges.csv`][data-edges].
+- `i` – Full name of the participant, coded exactly as `i` in [`edges.csv`][data-edges].
 - `j` – Panel attended, coded exactly as `j` in [`edges.csv`][data-edges].
 - `affiliation` – Academic affiliation, standardized to a reasonable level:
   - When available, the affiliation starts with the acronym or name of the research unit, which might be a department, an institute, a research laboratory or team, etc. Merged units contain both names separated by dashes, e.g. `GSPE-PRISME-SAGE`.

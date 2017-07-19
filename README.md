@@ -47,6 +47,17 @@ p <- readr::read_tsv("data/panels.tsv", col_types = "iccc")
 dplyr::mutate(p, j = stringr::str_c(year, "_", id)) %>% 
   dplyr::inner_join(d, by = c("year", "j")) %>% 
   nrow(.) == nrow(d)
+  
+# OTHER FILES
+
+# participant details
+n <- readr::read_tsv("data/participants.tsv", col_types = "cccc")
+
+# corrected names
+n <- readr::read_tsv("data/names.tsv", col_types = "ccc") # or "icc"
+
+# missing genders
+g <- readr::read_tsv("data/genders.tsv", col_types = "cc")
 ```
 
 # LICENSE
