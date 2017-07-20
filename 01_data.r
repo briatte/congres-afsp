@@ -123,6 +123,9 @@ d <- left_join(d, f, by = c("year", "i")) %>%
   mutate(i = if_else(is.na(i_fixed), i, i_fixed)) %>% 
   select(-i_fixed)
 
+# special case: confused with another participant
+d$i[ d$i == "DIAZ PABLO" & d$j == "2015_ST52" ] <- "DIAZ PAOLA"
+
 # # to detect (several forms of, but not all) errors:
 # str_split(d$i, " ") %>% sapply(function(x) x[1] == x[2]) %>% which
 # str_split(d$i, " ") %>% sapply(function(x) x[1] == x[3]) %>% which
