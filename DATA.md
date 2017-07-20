@@ -98,6 +98,7 @@ A TSV (tab-separated) file with one row per conference participants and per conf
 - `role` – Role of the participant within the panel:
   - Programmatically identified roles: `o` (organiser), `p` (presenter); those roles are the only ones that can be trusted to be somewhat reliably coded for most panels.
   - Manually identified roles: `c` and `d` (chair or discussant who is not also a presenter), `a` (absentee, i.e. participant listed in the conference index but not listed anywhere in the panel page).
+  - The role is coded as `e` (for "else") if the participant is listed at the end of the panel page but does not appear anywhere else on the page.
 - `i` – Full name of the participant, coded exactly as `i` in [`edges.csv`][data-edges].
 - `j` – Panel attended, coded exactly as `j` in [`edges.csv`][data-edges].
 - `affiliation` – Academic affiliation, standardized to a reasonable level:
