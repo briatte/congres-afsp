@@ -134,9 +134,6 @@ d$i[ d$i == "DIAZ PABLO" & d$j == "2015_ST52" ] <- "DIAZ PAOLA"
 # no remaining problematic rows
 stopifnot(str_detect(d$i, "\\s"))
 
-# (2) remove dashes to avoid 'marie claude' and 'marie-claude' duplicates
-d$i <- str_replace_all(d$i, "-", " ")
-
 # finalize panel names
 
 # fix sessions with no type (all are 2009, all are ST)
@@ -208,9 +205,7 @@ p <- read_tsv(f, locale = p, col_types = "iccd", progress = FALSE) %>%
   filter(preusuel != "_PRENOMS_RARES", str_count(preusuel) > 2) %>% 
   mutate(preusuel = iconv(preusuel, to = "ASCII//TRANSLIT", sub = " ") %>%
            # remove diacritics
-           str_replace_all("[\"^'`~\\.]|&#8217;|&(l|r)squo;", "") %>% 
-           # make 'marie claude' and 'marie-claude' the same
-           str_replace_all("-", " ")) %>%
+           str_replace_all("[\"^'`~\\.]|&#8217;|&(l|r)squo;", "")) %>%
   group_by(preusuel) %>% 
   summarise(p_f = sum(nombre[ sexe == 2 ]) / sum(nombre)) %>% 
   rename(first_name = preusuel)
