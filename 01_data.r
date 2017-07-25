@@ -511,6 +511,28 @@ if (!file.exists(f)) {
 }
 
 # ==============================================================================
+# REVISE NAMES
+# ==============================================================================
+
+# some names in the panel pages contain errors and/or have been modified so as
+# to create cross-year identities for 'x marie' and 'x-y marie' when those are
+# the same persons; some names need two corrections, one in the participants
+# index and one in the panel pages, because they were misspelt in both sources
+d <- read_tsv("data/names.tsv", col_types = "ccc")
+
+# sanity check: no extraneous names in -corrected- names
+stopifnot(d$i_fixed %in% a$i)
+
+cat("\n[REPLACED]", sum(a$i %in% d$i), "name(s)\n")
+
+a <- left_join(mutate(a, year = str_sub(j, 1, 4)), d, by = c("year", "i")) %>% 
+  mutate(i = if_else(is.na(i_fixed), i, i_fixed)) %>% 
+  select(-year, -i_fixed)
+
+# # debug with the following line
+# a[ !a$i %in% read_tsv(f, col_types = "cccc")$i, ] %>% print
+
+# ==============================================================================
 # REVISE ROLES AND AFFILIATIONS
 # ==============================================================================
 
@@ -518,13 +540,8 @@ if (!file.exists(f)) {
 p <- read_tsv(f, col_types = "cccc") %>% 
   full_join(a, ., by = c("i", "j"))
 
-# sanity checks:
-
-# (1) all 'ST' panel affiliations are covered by participants.tsv ...
+# sanity check: all 'ST' panel affiliations are covered by participants.tsv
 stopifnot(!length(p$i[ !(p$i %in% a$i | !str_detect(p$j, "ST")) ]))
-
-# (2) ... and none of participants.tsv are extraneous to the data
-stopifnot(!length(a$i[ !a$i %in% p$i ]))
 
 # replace empty roles with existing ones in participants.tsv
 w <- which(is.na(p$role.x) & !is.na(p$role.y))
@@ -535,6 +552,10 @@ cat("\n[REPLACED]", length(w), "missing role(s)\n")
 w <- which(p$role.x != p$role.y)
 p$role.x[ w ] <- p$role.y[ w ]
 cat("[REPLACED]", length(w), "revised role(s)\n")
+
+# ==============================================================================
+# REVISE AFFILIATIONS
+# ==============================================================================
 
 # replace empty affiliations with existing ones in participants.tsv
 w <- which(is.na(p$affiliation.x) & !is.na(p$affiliation.y))
