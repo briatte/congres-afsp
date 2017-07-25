@@ -109,8 +109,8 @@ d <- mapply(function(year, i) {
 
 # finalize participant names
 
-# (1) remove composed family names to avoid married 'x-y' duplicates
-d$i <- str_replace(d$i, "^(\\w+)-(.*)\\s", "\\1 ")
+# (1) remove multiple spaces
+d$i <- str_replace_all(d$i, "\\s+", " ")
 
 # (2) fix some problematic names using names.tsv
 # - some caused by extra comma between first and last names
@@ -278,7 +278,7 @@ a$gender <- recode(a$p_f, `1` = "f", `0` = "m", .default = NA_character_)
 # filter(a, !p_f %in% c(0, 1)) %>% View
 
 # save manually collected values, with missing values back again
-w <- a$i[ is.na(a$gender) ]
+w <- unique(a$i[ is.na(a$gender) ])
 if (length(w) > 0) {
   data_frame(gender = NA_character_, name = w) %>% 
     bind_rows(p) %>% 
