@@ -117,7 +117,9 @@ d$i <- str_replace_all(d$i, "\\s+", " ")
 # - some caused by name inversions, esp. among foreigners
 # - some caused by typos, e.g. double consonants
 f <- read_tsv("data/names.tsv", col_types = "ccc")
-stopifnot(f$i %in% d$i) # sanity check: no extraneous names
+
+# sanity check: no extraneous names
+stopifnot(f$i %in% d$i)
 
 d <- left_join(d, f, by = c("year", "i")) %>% 
   mutate(i = if_else(is.na(i_fixed), i, i_fixed)) %>% 
