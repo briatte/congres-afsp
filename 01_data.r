@@ -153,6 +153,10 @@ d$j[ d$i == "MORENA EDOUARD" & d$j == "2013_ST44" ] <- "2013_ST45"
 # (3) add participants completely omitted from the indexes
 d <- rbind(d, data_frame(year = "2009", i = "COSTA OLIVIER", j = "2009_ST1"))
 
+# (4) remove duplicated participant (removed ones are not the right names)
+d <- d[ -which(d$i == "CHRISTIAN PIERRE" & d$j == "2009_ST7"), ]
+d <- d[ -which(d$i == "TOURRAILLE FANNY" & d$j == "2013_ST24"), ]
+
 # match participants (source: indexes) to participants.tsv (source: panels)
 f <- read_tsv("data/participants.tsv", col_types = "cccc") %>% 
   anti_join(d, by = c("i", "j")) # removes all rows from f
