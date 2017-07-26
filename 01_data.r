@@ -183,8 +183,8 @@ t <- group_by(d, i) %>%
   summarise(t_c = n_distinct(year)) %>% 
   arrange(-t_c)
 
-table(t$t_c) # 35 participants went to all conferences, ~ 1,800+ went to only 1
-table(t$t_c > 1) / nrow(t) # over 70% attended only 1 of 5 conferences in 8 years
+table(t$t_c) # 37 participants went to all conferences, ~ 1,700+ went to only 1
+table(t$t_c > 1) / nrow(t) # ~ 70% attended only 1 of 5 conferences in 8 years
 
 # number of panels overall
 n_distinct(d$j)
