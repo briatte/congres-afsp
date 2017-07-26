@@ -125,9 +125,6 @@ d <- left_join(d, f, by = c("year", "i")) %>%
   mutate(i = if_else(is.na(i_fixed), i, i_fixed)) %>% 
   select(-i_fixed)
 
-# special case: confused with another participant
-d$i[ d$i == "DIAZ PABLO" & d$j == "2015_ST52" ] <- "DIAZ PAOLA"
-
 # # to detect (several forms of, but not all) errors:
 # str_split(d$i, " ") %>% sapply(function(x) x[1] == x[2]) %>% which
 # str_split(d$i, " ") %>% sapply(function(x) x[1] == x[3]) %>% which
@@ -144,7 +141,27 @@ d$j <- str_replace(d$j, "_(\\d+)$", "_ST\\1")
 # fix sessions with an extra comma between type and id (one case in 2009)
 d$j <- str_replace(d$j, "ST, (\\d+)$", "_ST\\1")
 
-# remove panels with less than 2 participants (false positives)
+# handle special cases (all detected manually, in wait for a better fix)
+
+# (1) fix participants confused with other participants
+d$i[ d$i == "DIAZ PABLO" & d$j == "2015_ST52" ] <- "DIAZ PAOLA"
+d$i[ d$i == "BERARD YANN" & d$j == "2013_ST33" ] <- "BERARD JEAN"
+
+# (2) fix participants assigned to the wrong conference panel
+d$j[ d$i == "MORENA EDOUARD" & d$j == "2013_ST44" ] <- "2013_ST45"
+
+# (3) add participants completely omitted from the indexes
+d <- rbind(d, data_frame(year = "2009", i = "COSTA OLIVIER", j = "2009_ST1"))
+
+# match participants (source: indexes) to participants.tsv (source: panels)
+f <- read_tsv("data/participants.tsv", col_types = "cccc") %>% 
+  anti_join(d, by = c("i", "j")) # removes all rows from f
+
+# sanity check: all rows from participants.tsv are (now) matched
+stopifnot(!nrow(f))
+
+# remove panels with less than 2 participants -- either false positives or
+# plenary conferences/workshops with a single announced participant/speaker
 d <- group_by(d, year, j) %>% 
   summarise(n_j = n()) %>% 
   filter(n_j > 1) %>% 
@@ -214,7 +231,6 @@ p <- read_tsv(f, locale = p, col_types = "iccd", progress = FALSE) %>%
 
 a <- select(d, year, i, j) %>% 
   distinct
-
 # extract first names
 a$first_name <- if_else(
   str_detect(a$i, " (ANNE|JEAN|MARIE) \\w+$"), # e.g. Jean-Marie, Marie-Claude
@@ -299,7 +315,8 @@ stopifnot(read_tsv(f, col_types = "cc")$name %in% unique(a$i))
 
 write_csv(
   select(a, -found_name, -p_f) %>% 
-    left_join(d, ., by = c("year", "i", "j")),
+    left_join(d, ., by = c("year", "i", "j")) %>% 
+    arrange(year, i, j),
   "data/edges.csv"
 )
 
@@ -570,7 +587,7 @@ cat("[REPLACED]", length(w), "revised affiliation(s)\n")
 f <- "data/edges.csv"
 p <- rename(p, role = role.x, affiliation = affiliation.x) %>% 
   select(i, j, role, affiliation) %>% 
-  left_join(read_csv(f, col_types = "icciiiiccc"), ., by = c("i", "j"))
+  full_join(read_csv(f, col_types = "icciiiiccc"), ., by = c("i", "j"))
 
 cat("\nDistinct participants:\n\n")
 tapply(p$i, p$year, n_distinct) %>%
