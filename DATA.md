@@ -5,31 +5,19 @@ All files documented below are UTF8-encoded, with missing values coded as `NA`.
 ## [`edges.csv`][data-edges]
 
 A CSV file with one row per conference participant and per conference panel attended:
-  
+
 - `year` – Year of AFSP conference ([2009][2009], [2011][2011], [2013][2013], [2015][2015], [2017][2017]).
-- `i` – Full name of the participant, slightly simplified for cross-year matching:
-  - Coded as `FAMILY NAME FIRST NAME`, all uppercase.
-  - Composed family names `X-Y` are simplified to their first component `X`.
-  - Dashes in first names (e.g. `MARIE-CLAUDE`) have been removed.
-  - Lone initials (e.g. `SMITH JOHN K`) have been removed.
-  - Name particles (e.g. `X DE Y`) have been removed.
-- `j` – Panel attended, coded as `YEAR_ID`, where `ID` contains:
-  - The type of panel (e.g. `CP` for plenary conferences, `ST` for thematic sessions).
-  - The alphanumeric identifier of the panel when there was one.
+- `i` – Full name of the participant, coded as `FAMILY NAME FIRST NAME`, all uppercase, without accents or lone initials, and sometimes harmonised to allow for matching across conference years.
+- `j` – Panel attended, coded as `YEAR_ID`, where `ID` contains the type of panel (e.g. `CP` for plenary conferences, `ST` for thematic sessions), followed by the alphanumeric identifier of the panel when there was one.
 - `n_j` – Number of participants to the conference panel.
 - `n_p` – Number of conference panels attended that year by the participant.
 - `t_p` – Total number of panels attended by the participant.
 - `t_c` – Total number of conferences attended by the participant.
-- `first_name` – First name of the participant.
-  - Extracted from `i`, with possible mistakes (see note below).
-  - Missing when the first name could not be safely confirmed.
-- `family_name` – Family name of the participant.
-  - Extracted from `i`, with possible mistakes (see note below).
-- `gender` – Gender of the participant:
-  - Determined from `first_name` (see note below).
-  - Coded as `f` for female and `m` for male.
+- `first_name` – First name(s) of the participant, extracted from `i`.
+- `family_name` – Family name of the participant, extracted from `i`.
+- `gender` – Gender of the participant, coded as `f` for female and `m` for male.
 
-__Note__ – The first name and gender variables are based on the frequencies observed in the [_Fichier Prénoms Insee_, 2016 edition][data-prenoms], which will be downloaded to the `data` folder during data preparation, as well as on manual additions provided in [`genders.tsv`][data-genders] (see below).
+__Note__ – The `gender` variable is based on sex ratios computed from the [_Fichier Prénoms Insee_, 2016 edition][data-prenoms], which will be downloaded to the `data` folder during data preparation, as well as on manual additions provided in [`genders.tsv`][data-genders].
 
 [data-edges]: https://github.com/briatte/congres-afsp/blob/master/data/edges.csv
 [data-prenoms]: https://www.insee.fr/fr/statistiques/2540004
@@ -38,17 +26,17 @@ __Note__ – The first name and gender variables are based on the frequencies ob
 [2013]: http://www.afsp.info/archives/congres/congres2013/indexducongres.html
 [2015]: http://www.afsp.info/archives/congres/congres2015/indexcongres.html
 [2017]: http://www.afsp.info/congres/congres-2017/index/
-  
+
 ## [`genders.tsv`][data-genders]
-  
+
 A TSV (tab-separated) file with one row per conference participant present in [`edges.csv`][data-edges] for which gender could not be determined from the [_Fichier Prénoms Insee_, 2016 edition][data-prenoms] (see note above):
-  
+
 - `gender` – Gender of the participant:
   - Coded as `f` for female and `m` for male.
   - All missing values so far have been manually inputed.
 - `name` – Full name of the participant, coded exactly as `i` in [`edges.csv`][data-edges].
 
-This file can be manually revised to improve the completeness of the `gender` variable in [`edges.csv`][data-edges]. The file will be loaded, possibly updated with new participant names for which gender could not be determined, and then re-saved during data preparation.
+This file can be manually revised to improve the completeness of the `gender` variable in [`edges.csv`][data-edges]. The file will be loaded during data preparation, updated with any new participant names for which gender could not be determined, and then re-saved.
 
 [data-genders]: https://github.com/briatte/congres-afsp/blob/master/data/genders.tsv
 
@@ -73,7 +61,7 @@ __Note__ – The corrections apply the simplifications listed in the documentati
 ## [`panels.tsv`][data-panels]
 
 A TSV (tab-separated) file with one row per conference panel:
-  
+
 - `year` – Year of AFSP conference (2009, 2011, 2013, 2015, 2017).
 - `id` – Panel identifier that matches the `ID` part of the `j` variable in [`edges.csv`][data-edges].
 - `title` – Panel title, slightly cleaned up:
