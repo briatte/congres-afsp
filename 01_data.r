@@ -151,7 +151,31 @@ d$i[ d$i == "BERARD YANN" & d$j == "2013_ST33" ] <- "BERARD JEAN"
 d$j[ d$i == "MORENA EDOUARD" & d$j == "2013_ST44" ] <- "2013_ST45"
 
 # (3) add participants completely omitted from the indexes
-d <- rbind(d, data_frame(year = "2009", i = "COSTA OLIVIER", j = "2009_ST1"))
+f <- tibble::tribble(
+  ~year  , ~j           , ~i,
+  "2009" , "2009_ST1"   , "COSTA OLIVIER",
+  "2009" , "2009_ST2"   , "CHARILLON FREDERIC",
+  "2009" , "2009_ST2"   , "POSTEL-VINAY KAROLINE",
+  "2009" , "2009_ST21"  , "HOEFFLER CATHERINE",
+  "2009" , "2009_ST21"  , "JOANA JEAN",
+  "2009" , "2009_ST7"   , "COMBES HELENE",
+  "2009" , "2009_ST7"   , "FRETEL JULIEN",
+  "2011" , "2011_ST32"  , "FERTIKH KARIM",
+  "2011" , "2011_ST32"  , "FRETEL JULIEN",
+  "2013" , "2013_ST43"  , "NEUMAYER LAURE",
+  "2013" , "2013_ST43"  , "JOUHANNEAU CECILE",
+  "2015" , "2015_ST15"  , "ANSALONI MATTHIEU",
+  "2015" , "2015_ST50"  , "DAVIAUD SOPHIE",
+  "2017", "2017_ST35"   , "BRUNIER SYLVAIN",
+  "2017", "2017_ST35"   , "VIALLET-THEVENIN SCOTT",
+  "2017", "2017_ST41"   , "JAULIN THIBAUT",
+  "2017", "2017_ST6"    , "ANGELI AGUITON SARA",
+  "2017", "2017_ST6"    , "BEAUSSIER ANNE-LAURE",
+  "2017", "2017_ST6"    , "CABANE LYDIE",
+  "2017", "2017_ST76"   , "LEJEUNE CAROLINE",
+  "2017", "2017_ST76"   , "HESS GERALD"
+)
+d <- rbind(d, f)
 
 # (4) remove duplicated participant (removed ones are not the right names)
 d <- d[ -which(d$i == "CHRISTIAN PIERRE" & d$j == "2009_ST7"), ]
@@ -625,6 +649,11 @@ cat(
   n_distinct(p$affiliation),
   "affiliations.\n"
 )
+
+# # only two panels (from 2009) have a single organiser
+# group_by(p, j) %>%
+#   summarise(n_o = sum(role == "o")) %>%
+#   filter(is.na(n_o) | n_o < 2, str_detect(j, "ST"))
 
 # # top affiliations (imprecise: ignores multiple affiliations)
 # group_by(p, affiliation) %>%
