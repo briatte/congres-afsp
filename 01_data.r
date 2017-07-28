@@ -141,62 +141,61 @@ d$j <- str_replace(d$j, "_(\\d+)$", "_ST\\1")
 # fix sessions with an extra comma between type and id (one case in 2009)
 d$j <- str_replace(d$j, "ST, (\\d+)$", "_ST\\1")
 
-# handle special cases (all detected manually, in wait for a better fix)
+# finalize rows by handling special cases (all detected manually)
 
-# (1) fix participants confused with other participants
-d$i[ d$i == "DIAZ PABLO" & d$j == "2015_ST52" ] <- "DIAZ PAOLA"
-d$i[ d$i == "BERARD YANN" & d$j == "2013_ST33" ] <- "BERARD JEAN"
+f <- read_tsv("data/fixes.tsv", col_types = "ccc")
+stopifnot(f$type %in% c("abs", "add", "err"))
 
-# (2) fix participants assigned to the wrong conference panel
-d$j[ d$i == "MORENA EDOUARD" & d$j == "2013_ST44" ] <- "2013_ST45"
+# (1) remove participants with wrong names, wrong panel entries, or both; the
+#     list contains participants confused with other participants or assigned
+#     to the wrong panel; the correct information are added in the next step
 
-# (3) add participants completely omitted from the indexes
-f <- tibble::tribble(
-  ~year  , ~j           , ~i,
-  "2009" , "2009_ST1"   , "COSTA OLIVIER",
-  "2009" , "2009_ST2"   , "CHARILLON FREDERIC",
-  "2009" , "2009_ST2"   , "POSTEL-VINAY KAROLINE",
-  "2009" , "2009_ST21"  , "HOEFFLER CATHERINE",
-  "2009" , "2009_ST21"  , "JOANA JEAN",
-  "2009" , "2009_ST7"   , "COMBES HELENE",
-  "2009" , "2009_ST7"   , "FRETEL JULIEN",
-  "2011" , "2011_ST32"  , "FERTIKH KARIM",
-  "2011" , "2011_ST32"  , "FRETEL JULIEN",
-  "2013" , "2013_ST43"  , "NEUMAYER LAURE",
-  "2013" , "2013_ST43"  , "JOUHANNEAU CECILE",
-  "2015" , "2015_ST15"  , "ANSALONI MATTHIEU",
-  "2015" , "2015_ST50"  , "DAVIAUD SOPHIE",
-  "2017", "2017_ST35"   , "BRUNIER SYLVAIN",
-  "2017", "2017_ST35"   , "VIALLET-THEVENIN SCOTT",
-  "2017", "2017_ST41"   , "JAULIN THIBAUT",
-  "2017", "2017_ST6"    , "ANGELI AGUITON SARA",
-  "2017", "2017_ST6"    , "BEAUSSIER ANNE-LAURE",
-  "2017", "2017_ST6"    , "CABANE LYDIE",
-  "2017", "2017_ST76"   , "LEJEUNE CAROLINE",
-  "2017", "2017_ST76"   , "HESS GERALD"
-)
-d <- rbind(d, f)
+d <- anti_join(d, filter(f, type == "err"), by = c("i", "j"))
 
-# (4) remove duplicated participant (removed ones are not the right names)
-d <- d[ -which(d$i == "CHRISTIAN PIERRE" & d$j == "2009_ST7"), ]
-d <- d[ -which(d$i == "TOURRAILLE FANNY" & d$j == "2013_ST24"), ]
+# (2) add participants completely omitted from the indexes or that correct some
+#     of the rows just removed (see note above); after that step, the list of
+#     participants and panels listed in d (edges) should match participants.tsv
 
-# match participants (source: indexes) to participants.tsv (source: panels)
-f <- read_tsv("data/participants.tsv", col_types = "cccc") %>% 
-  anti_join(d, by = c("i", "j")) # removes all rows from f
+d <- filter(f, type == "add") %>% 
+  mutate(year = str_sub(j, 1, 4)) %>% 
+  select(year, i, j) %>% 
+  rbind(d) %>% 
+  arrange(year, i, j) # (not really needed)
 
-# sanity check: all rows from participants.tsv are (now) matched
-stopifnot(!nrow(f))
+# almost done (1/2): if participants.tsv already exists, check that the edges
+#                    collected in d match its contents (including absentees)
 
-# remove panels with less than 2 participants -- either false positives or
-# plenary conferences/workshops with a single announced participant/speaker
+p <- "data/participants.tsv"
+if (file.exists(p)) {
+  
+  p <- read_tsv(p, col_types = "cccc")
+  
+  # match absentees in participants.tsv (source: panels)
+  # to absentees in fixes.tsv (source: indexes)
+  
+  f <- filter(p, role == "a") %>%  # absentees, participants.tsv
+    anti_join(filter(f, type == "abs"), by = c("i", "j")) # absentees, fixes.tsv
+  
+  stopifnot(!nrow(f)) # all rows should have been matched
+  
+  # match participants in participants.tsv (source: panels)
+  # to participants in d (source: indexes)
+
+  f <- anti_join(p, d, by = c("i", "j"))
+
+  stopifnot(!nrow(f)) # all rows should have been matched
+  
+}
+
+# almost done (2/2): remove panels with less than 2 participants, which are
+#                    either false positives or plenary conferences/workshops 
+#                    with a single announced participant/speaker
+
 d <- group_by(d, year, j) %>% 
   summarise(n_j = n()) %>% 
   filter(n_j > 1) %>% 
   inner_join(d, ., by = c("year", "j")) %>% 
-  distinct(.keep_all = TRUE)
-
-# safety measure to avoid duplicate rows
+  distinct(.keep_all = TRUE) # safety measure to avoid duplicate rows
 
 # ==============================================================================
 # COUNTS
