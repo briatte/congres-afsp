@@ -58,6 +58,9 @@ n <- readr::read_tsv("data/names.tsv", col_types = "ccc") # or "icc"
 
 # missing genders
 g <- readr::read_tsv("data/genders.tsv", col_types = "cc")
+
+# various other fixes
+f <- readr::read_tsv("data/fixes.tsv", col_types = "ccc")
 ```
 
 # LICENSE
