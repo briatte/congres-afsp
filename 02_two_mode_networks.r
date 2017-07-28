@@ -38,7 +38,10 @@ w <- apply(m, 2, function(x) { x / sum(x) }) # \in (0, 0.5]
 # BIPARTITE NETWORK PLOTS
 # ==============================================================================
 
+l <- c("Panel", "Participant(e) de degré 1", "Participant(e) de degré 2+")
+
 y <- unique(str_sub(colnames(w), 1, 4))
+
 for (i in y) {
   
   n <- w[, str_sub(colnames(w), 1, 4) == i ]
@@ -51,12 +54,10 @@ for (i in y) {
   
   E(n)$weight <- E(n)$weight / max(E(n)$weight)
   
-  V(n)$type <- ifelse(str_detect(V(n)$name, "^\\d{4}"), "Panel", "Participant(e)")
-  V(n)$type <- ifelse(V(n)$type == "Panel", "P0", ifelse(degree(n) > 1, "P2", "P1"))
+  V(n)$type <- if_else(str_detect(V(n)$name, "^\\d{4}"), "Panel", "Participant(e)")
+  V(n)$type <- if_else(V(n)$type == "Panel", "P0", if_else(degree(n) > 1, "P2", "P1"))
   V(n)$size <- degree(n)
-  V(n)$size <- ifelse(V(n)$type == "P0", 1.5, V(n)$size)
-  
-  l <- c("Panel", "Participant(e) de degré 1", "Participant(e) de degré 2+")
+  V(n)$size <- if_else(V(n)$type == "P0", 1.5, V(n)$size)
   
   ggraph(n, layout = "fr") +
     geom_edge_link(aes(alpha = weight), show.legend = FALSE) +
@@ -77,8 +78,8 @@ for (i in y) {
            sum(V(n)$type != "P0"), " participant(e)s")
     )
 
-  ggsave(str_c("plots/congres-afsp", i, ".pdf"), width = 8, height = 9)
-  ggsave(str_c("plots/congres-afsp", i, ".png"), width = 8, height = 9, dpi = 150)
+  ggsave(str_c("plots/congres-afsp", i, "-2mode.pdf"), width = 8, height = 9)
+  ggsave(str_c("plots/congres-afsp", i, "-2mode.png"), width = 8, height = 9, dpi = 150)
 
   cat("\nYear", i, ":", components(n)$no, "components\n")
   print(table(V(n)$type))
