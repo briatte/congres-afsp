@@ -1,6 +1,6 @@
 > __Important notice:__ the following datasets contain personal data taken from the [AFSP](http://www.afsp.info/) website. The data have been compiled for research purposes only. According to [French law](https://www.cnil.fr/comprendre-vos-droits), you can ask the maintainer of the data for [access](https://www.cnil.fr/fr/le-droit-dacces), [rectification](https://www.cnil.fr/fr/le-droit-de-rectification) or even [suppression](https://www.cnil.fr/fr/le-droit-dopposition) of the data (although the latter requires 'legitimate' reasons to do so). To exercise any of those rights, please [email me](mailto:francois.briatte@sciencespo.fr).
 
-All files documented below are UTF8-encoded, with missing values coded as `NA`.
+All files documented below are UTF-8 encoded. All values are unquoted, and missing values are coded as `NA`. None of the files should contain any duplicated rows.
 
 ## [`edges.csv`][data-edges]
 
@@ -26,6 +26,19 @@ __Note__ – The `gender` variable is based on sex ratios computed from the [_Fi
 [2013]: http://www.afsp.info/archives/congres/congres2013/indexducongres.html
 [2015]: http://www.afsp.info/archives/congres/congres2015/indexcongres.html
 [2017]: http://www.afsp.info/congres/congres-2017/index/
+
+## [`fixes.tsv`][data-fixes]
+
+A TSV (tab-separated) file with one row per conference participant and per conference panel attended for which a fix was identified by manually checking the original data, and therefore to be used to fix errors in [`edges.csv`][data-edges]:
+
+- `type` – type of fix to perform:
+  - `add`: append this row (i.e. the participant is entirely missing from the [`edges.csv`][data-edges], i.e. from participant indexes)
+  - `err`: remove the row ("error" found either in the panel identifier, and/or in the identity of the participant)
+  - `abs`: remove or ignore prior to analysis, depending on analytical strategy; indicates that the participant has been manually confirmed as absent (i.e. unlisted) from the panel data, which should match value `a` in variable `role` in [`participants.tsv`][data-participants]
+- `i` – Full name of the participant, either coded exactly as `i` in [`edges.csv`][data-edges] or corrected for misspellings and other errors.
+- `j` – Panel attended, coded exactly as `j` in [`edges.csv`][data-edges].
+
+[data-fixes]: https://github.com/briatte/congres-afsp/blob/master/data/fixes.tsv
 
 ## [`genders.tsv`][data-genders]
 
@@ -62,7 +75,7 @@ __Note__ – The corrections apply the simplifications listed in the documentati
 
 A TSV (tab-separated) file with one row per conference panel:
 
-- `year` – Year of AFSP conference (2009, 2011, 2013, 2015, 2017).
+- `year` – Year of AFSP conference.
 - `id` – Panel identifier that matches the `ID` part of the `j` variable in [`edges.csv`][data-edges].
 - `title` – Panel title, slightly cleaned up:
   - Multiples spaces were replaced by a single one.
