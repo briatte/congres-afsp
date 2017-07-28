@@ -30,7 +30,8 @@ library(ggraph)
 
 # full construction routine
 source("01_data.r")
-source("02_networks.r")
+source("02_two_mode_networks.r")
+source("03_one_mode_networks.r")
 
 # to load the edge list on its own
 d <- readr::read_csv("data/edges.csv", col_types = "icciiiiccc")
