@@ -116,7 +116,7 @@ d$i <- str_replace_all(d$i, "\\s+", " ")
 # - some caused by extra comma between first and last names
 # - some caused by name inversions, esp. among foreigners
 # - some caused by typos, e.g. double consonants
-f <- read_tsv("data/names.tsv", col_types = "ccc")
+f <- read_tsv("data/participants_names.tsv", col_types = "ccc")
 
 # sanity check: no extraneous names
 stopifnot(f$i %in% d$i)
@@ -143,7 +143,7 @@ d$j <- str_replace(d$j, "ST, (\\d+)$", "_ST\\1")
 
 # finalize rows by handling special cases (all detected manually)
 
-f <- read_tsv("data/fixes.tsv", col_types = "ccc")
+f <- read_tsv("data/participants_fixes.tsv", col_types = "ccc")
 stopifnot(f$type %in% c("abs", "add", "err"))
 
 # (1) remove participants with wrong names, wrong panel entries, or both; the
@@ -279,7 +279,7 @@ a <- left_join(a, p, by = "first_name") %>%
   )
 
 # manually collected values
-f <- "data/genders.tsv"
+f <- "data/participants_genders.tsv"
 p <- read_tsv(f, col_types = "cc") %>% 
   filter(gender %in% c("f", "m")) # remove missing values
 
@@ -562,7 +562,7 @@ if (!file.exists(f)) {
 # to create cross-year identities for 'x marie' and 'x-y marie' when those are
 # the same persons; some names need two corrections, one in the participants
 # index and one in the panel pages, because they were misspelt in both sources
-d <- read_tsv("data/names.tsv", col_types = "ccc")
+d <- read_tsv("data/participants_names.tsv", col_types = "ccc")
 
 # sanity check: no extraneous names in -corrected- names
 stopifnot(d$i_fixed %in% a$i)
