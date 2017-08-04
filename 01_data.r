@@ -498,13 +498,11 @@ for (i in unique(d$j)) {
   a$affiliation[ a$j == i ] <- sapply(a$affiliation[ a$j == i ], function(x) {
     t[ str_which(t, x)[1] ] %>%
       str_extract(str_c("(", x, ")(.*?)\\)"))
-  }) # returns lists, don't know why
+  })
   
 }
 
-# coerce list of chr[1] to vector
-stopifnot(sapply(a$affiliation, length) == 1)
-a$affiliation <- unlist(a$affiliation)
+stopifnot(class(a$affiliation) == "character")
 
 # coerce logical organiser or presenter role (with precedence to the former)
 a$role <- if_else(a$role, "o", "p")
