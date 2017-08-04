@@ -493,11 +493,13 @@ for (i in unique(d$j)) {
   
   a$role[ a$j == i ] <- sapply(a$affiliation[ a$j == i ], function(x) {
     str_which(t, x)[1]
-  }) < w # returns TRUE or FALSE
-  
+  }) < w # returns TRUE (organisers) or FALSE (others)
+
+  # extract the affiliation
   a$affiliation[ a$j == i ] <- sapply(a$affiliation[ a$j == i ], function(x) {
+    # let's also try to identify presidents (chairs) and discussants
     t[ str_which(t, x)[1] ] %>%
-      str_extract(str_c("(", x, ")(.*?)\\)"))
+      str_extract(str_c("(DISCUTANT-?E?-?S?|PRESIDENT-?E?-?S?)?( DE SEANCE)?(\\s+:\\s+)?(", x, ")(.*?)\\)"))
   })
   
 }
@@ -506,6 +508,16 @@ stopifnot(class(a$affiliation) == "character")
 
 # coerce logical organiser or presenter role (with precedence to the former)
 a$role <- if_else(a$role, "o", "p")
+
+# identify discussants
+a$role[ which(a$role == "p" & str_detect(a$affiliation, "^DISCUTANT")) ] <- "d"
+a$role[ which(a$role == "p" & str_detect(a$affiliation, "^PRESIDENT")) ] <- "c"
+# # uncomment to detect multiple chairs/discussants for manual fixing
+# a$plural <- str_detect(a$affiliation, "S :")
+
+# remove chair/discussant prefixes
+w <- "^(DISCUTANT-?E?-?S?|PRESIDENT-?E?-?S?)?( DE SEANCE)?(\\s+:\\s+)?"
+a$affiliation <- str_replace(a$affiliation, w, "")
 
 # ==============================================================================
 # FINALIZE EXTRACTED AFFILIATIONS
