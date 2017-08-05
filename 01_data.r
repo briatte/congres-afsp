@@ -586,15 +586,6 @@ a <- left_join(mutate(a, year = str_sub(j, 1, 4)), d, by = c("year", "i")) %>%
 # # debug with the following line
 # a[ !a$i %in% read_tsv(f, col_types = "cccc")$i, ] %>% print
 
-w <- mutate(p, year = str_sub(j, 1, 4)) %>%
-  filter(str_detect(j, "_ST")) %>% 
-  group_by(year, i) %>%
-  summarise(n_aff = n_distinct(affiliation)) %>%
-  filter(n_aff > 1)
-
-# sanity check: all participants have only one affiliation per conference year
-stopifnot(!nrow(w))
-
 # ==============================================================================
 # REVISE ROLES AND AFFILIATIONS
 # ==============================================================================
@@ -605,6 +596,17 @@ p <- read_tsv(f, col_types = "cccc") %>%
 
 # sanity check: all 'ST' panel affiliations are covered by participants.tsv
 stopifnot(!length(p$i[ !(p$i %in% a$i | !str_detect(p$j, "ST")) ]))
+
+# count affiliations per participant and per conference year
+w <- mutate(p, year = str_sub(j, 1, 4)) %>%
+  filter(str_detect(j, "_ST")) %>% 
+  group_by(year, i) %>%
+  summarise(n_aff = n_distinct(affiliation)) %>%
+  filter(n_aff > 1)
+
+# sanity check: all participants have only one affiliation per conference year
+stopifnot(!nrow(w))
+
 
 # replace empty roles with existing ones in participants.tsv
 w <- which(is.na(p$role.x) & !is.na(p$role.y))
@@ -651,7 +653,7 @@ cat("\nNon-missing affiliations:\n\n")
 tapply(p$affiliation, p$year, function(x) sum(!is.na(x), na.rm = TRUE)) %>%
   print
 
-cat("\nPercentages of non-missing affiliations:\n\n")
+cat("\nPercentages of non-missing affiliations:\n\n") # always above 90%
 f <- function(x) { 100 * sum(!is.na(x), na.rm = TRUE) }
 round(tapply(p$affiliation, p$year, f) / table(p$year)) %>%
   print
