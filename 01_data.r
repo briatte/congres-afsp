@@ -586,6 +586,15 @@ a <- left_join(mutate(a, year = str_sub(j, 1, 4)), d, by = c("year", "i")) %>%
 # # debug with the following line
 # a[ !a$i %in% read_tsv(f, col_types = "cccc")$i, ] %>% print
 
+w <- mutate(p, year = str_sub(j, 1, 4)) %>%
+  filter(str_detect(j, "_ST")) %>% 
+  group_by(year, i) %>%
+  summarise(n_aff = n_distinct(affiliation)) %>%
+  filter(n_aff > 1)
+
+# sanity check: all participants have only one affiliation per conference year
+stopifnot(!nrow(w))
+
 # ==============================================================================
 # REVISE ROLES AND AFFILIATIONS
 # ==============================================================================
