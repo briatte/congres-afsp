@@ -10,7 +10,8 @@ dir.create("html", showWarnings = FALSE)
 # DATA :: PARTICIPANTS
 # ==============================================================================
 
-y <- c("http://www.afsp.info/congres/congres-2017/index/",
+y <- c("https://www.afsp.info/congres/congres-2019/index/",
+  "http://www.afsp.info/congres/congres-2017/index/",
   "http://www.afsp.info/archives/congres/congres2015/indexcongres.html",
   "http://www.afsp.info/archives/congres/congres2013/indexducongres.html",
   "http://www.afsp.info/archives/congres/congres2011/programme/index.html",
@@ -19,7 +20,7 @@ y <- c("http://www.afsp.info/congres/congres-2017/index/",
 d <- data_frame()
 
 cat("[PARSING] participant indexes for", length(y), "conferences:\n\n")
-for (i in rev(y)) {
+for (i in y) { ### [TEMP] rev(y)
   
   f <- str_c("html/", str_extract(i, "\\d{4}"), "_participants.html")
   if (!file.exists(f)) {
@@ -29,6 +30,7 @@ for (i in rev(y)) {
   cat("", f)
   f <- read_lines(f) %>% 
     # AD   : atelier (2015, 2017)
+    # Conférence : conf. suivie du titre entre guillemets (2019)
     # CP   : conférence plénière, pas toujours numérotée (toutes éditions)
     # MD   : module (2009)
     # MDFB : module (2015)
@@ -36,9 +38,12 @@ for (i in rev(y)) {
     # MTED : module (2015)
     # ST : section thématique (toutes éditions)
     # - parfois numérotées DD.D : 12.1, 12.2 (2009)
-    # - parfois spéciales : 'ST RC20IPSA', 'ST PopAct' (2015)
+    # - parfois spéciales :
+    #   - 'ST RC20IPSA', 'ST PopAct' (2015)
+    #   - 'EpoPé', 'FoLo', 'GrUE', 'SPoC' (2019)
+    # - parfois 'ST GA [nom]' (2019)
     # excluded: single, unnumbered TR (2013)
-    str_subset("(AD|CP|MD|MPP|MTED|ST)\\s?(\\d|GRAM|GrePo|PopAct|RC)|\\s(MDFB|CP)") %>%
+    str_subset("(AD|CP|MD|MPP|MTED|ST)\\s?(\\d|EpoPé|FoLo|GA|GRAM|GrePo|GrUE|PopAct|RC|SPoC)|\\s(MDFB|CP)|Conférence «") %>%
     # transliterate, using sub to keep strings with non-convertible bytes
     iconv(to = "ASCII//TRANSLIT", sub = " ") %>%
     # remove diacritics
@@ -63,22 +68,65 @@ for (i in rev(y)) {
   
 }
 
+# [2019] solve one problematic case (two lines on one)
+d <- filter(d, i != "LEVY Simon ST 2 LHERVIER Louise ST 56") %>% 
+  bind_rows(
+    .,
+    tribble(
+      ~ year, ~ i,
+      "2019", "LEVY Simon ST 2",
+      "2019", "LHERVIER Louise ST 56"
+    )
+  )
+
 # make sure that every row has at least one comma
-d$i <- str_replace(d$i, "([a-z]+)\\s(AD|CP|MD|MPP|MTED|ST|TR)", "\\1, \\2") %>% 
+#
+# [2019] amendments:
+# - [A-Z] (e.g. 'FAURE Samuel BH ST GrUE')
+# - 'Conférence'
+# - l?ST (n = 1 case)
+#
+d$i <- str_replace(d$i, "([A-Za-z]+)\\s(AD|Conference|CP|MD|MPP|MTED|l?ST|TR)", "\\1, \\2") %>% 
   str_to_upper
+
+# corrections (n = 1 but replacing _all)
+#
+# [2013] correction: 'PILLON, JEAN-MARIE'
+d$i <- str_replace_all(d$i, "^PILLON,\\sJEAN-MARIE,", "PILLON JEAN-MARIE,")
+# [2019] correction: 'LE, TRIVIDIC'
+d$i <- str_replace_all(d$i, "^LE,\\s(.*)\\sLILA\\s", "LE \\1 LILA, ")
+# [2019] correction: 'MORO, FRA...'
+d$i <- str_replace_all(d$i, "^MORO,\\s", "MORO ")
 
 # rows with ';' are all false positives, as are rows without ','
 d <- filter(d, str_detect(i, ","), !str_detect(i, ";|^\\("))
 
 # real counts for comparison (established by hand):
-# 2009 = 725 (got all)
-# 2013 = 862 (got all)
-# 2017 = 756 (missing 2)
+# 2009 =  725 (got all)
+# 2011 =  632 (got all)
+# 2013 =  862 (got all)
+# 2015 =  872 [!!!] missing 2
+# 2017 =  756 [!!!] missing 2
+# 2019 = 1020 (got all; [WARNING] two cases on same line)
 cat("\nParticipants per conference:\n")
 print(table(d$year))
 
 # how many participations in a single conference?
 table(str_count(d$i, ","))
+
+# [2019] extract 'ST GA [or] CONFERENCE << X, Y Z >>'
+#        (required because of commas in the panel titles)
+a <- str_extract_all(d$i, "<<(.*?)>>") %>%
+  unlist %>%
+  unique %>%
+  tibble::tibble(title = .) %>%
+  tibble::rowid_to_column(var = "id")
+
+# [2019] replace 'ST GA' and 'CONF' by (arbitrary) numeric UIDs
+for (i in 1:nrow(a)) {
+  cat(a$title[ i ], "->", a$id[ i ], "\n")
+  d$i <- str_replace_all(d$i, a$title[ i ], as.character(a$id[ i ]))
+}
 
 # ==============================================================================
 # EDGES
@@ -124,6 +172,8 @@ stopifnot(f$i %in% d$i)
 d <- left_join(d, f, by = c("year", "i")) %>% 
   mutate(i = if_else(is.na(i_fixed), i, i_fixed)) %>% 
   select(-i_fixed)
+
+stop('mapply')
 
 # # to detect (several forms of, but not all) errors:
 # str_split(d$i, " ") %>% sapply(function(x) x[1] == x[2]) %>% which
