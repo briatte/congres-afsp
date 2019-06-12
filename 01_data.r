@@ -91,14 +91,24 @@ d <- filter(d, i != "LEVY Simon ST 2 LHERVIER Louise ST 56") %>%
 d$i <- str_replace(d$i, "([A-Za-z]+)\\s(AD|Conference|CP|MD|MPP|MTED|l?ST|TR)", "\\1, \\2") %>% 
   str_to_upper
 
-# corrections (n = 1 but replacing _all)
+# hardcoded manual corrections (n = 1 in each case)
 #
-# [2013] correction: 'PILLON, JEAN-MARIE'
-d$i <- str_replace_all(d$i, "^PILLON,\\sJEAN-MARIE,", "PILLON JEAN-MARIE,")
-# [2019] correction: 'LE, TRIVIDIC'
-d$i <- str_replace_all(d$i, "^LE,\\s(.*)\\sLILA\\s", "LE \\1 LILA, ")
-# [2019] correction: 'MORO, FRA...'
-d$i <- str_replace_all(d$i, "^MORO,\\s", "MORO ")
+# [2009] 'ST, 39,'
+d$i <- str_replace(d$i, "ST,\\s39,", "ST 39,")
+# [2011] 'ST 44,'
+d$i <- str_replace(d$i, ",$", "")
+# [2013] 'PILLON, JEAN-MARIE'
+d$i <- str_replace(d$i, "^PILLON,\\sJ", "PILLON J")
+# [2015] 'LENGUITA, PAULA'
+d$i <- str_replace(d$i, "^LENGUITA,\\sP", "LENGUITA P")
+# [2019] 'LE, TRIVIDIC'
+d$i <- str_replace(d$i, "^LE,\\s(.*)\\sLILA\\s", "LE \\1 LILA, ")
+# [2019] 'MORO, FRA...'
+d$i <- str_replace(d$i, "^MORO,\\s", "MORO ")
+# [2019] 'LST' -> 'ST' 
+d$i <- str_replace(d$i, ",\\sLST\\s65", ", ST 65")
+# [2019] 'ST 46 V' and 'ST 19 C'
+d$i <- str_replace(d$i, "ST\\s(\\d{2})\\s\\w{1}$", "ST \\1")
 
 # rows with ';' are all false positives, as are rows without ','
 d <- filter(d, str_detect(i, ","), !str_detect(i, ";|^\\("))
