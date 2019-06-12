@@ -14,7 +14,7 @@ d <- read_csv("data/edges.csv", col_types = "icciiiiccc")
 m <- matrix(0, nrow = n_distinct(d$i), ncol = n_distinct(d$j))
 
 dim(m) # ~ 2,500 x 360
-stopifnot(object.size(m) / 10^6 < 10) # ~ 7 MB, no need to sparse it up
+stopifnot(object.size(m) / 10^6 < 15) # ~ 11 MB, no need to sparsen it
 
 rownames(m) <- unique(d$i)
 colnames(m) <- unique(d$j)
@@ -47,10 +47,14 @@ for (i in y) {
   n <- w[, str_sub(colnames(w), 1, 4) == i ]
   n <- n[ rowSums(n) > 0, ]
   
+  assign(str_c("a", i), n)
+  
   n <- graph_from_incidence_matrix(n, weighted = TRUE) %>%
     igraph::as_data_frame(.) %>% 
     mutate(year = str_sub(to, 1, 4)) %>% 
     graph_from_data_frame(directed = FALSE)
+  
+  assign(str_c("g", i), n)
   
   E(n)$weight <- E(n)$weight / max(E(n)$weight)
   
@@ -86,6 +90,7 @@ for (i in y) {
   
 }
 
+save(list = ls()[ str_detect(ls(), "^(a|g)\\d{4}") ], file = "data/2mode.rda")
 saveRDS(w, file = "data/incidence_matrix.rds")
 
 # kthxbye
