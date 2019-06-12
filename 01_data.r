@@ -10,12 +10,14 @@ dir.create("html", showWarnings = FALSE)
 # DATA :: PARTICIPANTS
 # ==============================================================================
 
-y <- c("https://www.afsp.info/congres/congres-2019/index/",
+y <- c(
+  "https://www.afsp.info/congres/congres-2019/index/",
   "http://www.afsp.info/congres/congres-2017/index/",
   "http://www.afsp.info/archives/congres/congres2015/indexcongres.html",
   "http://www.afsp.info/archives/congres/congres2013/indexducongres.html",
   "http://www.afsp.info/archives/congres/congres2011/programme/index.html",
-  "http://www.afsp.info/archives/congres/congres2009/programmes/indexnoms.html")
+  "http://www.afsp.info/archives/congres/congres2009/programmes/indexnoms.html"
+)
 
 d <- data_frame()
 
@@ -182,11 +184,9 @@ d <- left_join(d, f, by = c("year", "i")) %>%
 # no remaining problematic rows
 stopifnot(str_detect(d$i, "\\s"))
 
-stop('fix names')
-
 # finalize panel names
 
-# fix sessions with no type (all are 2009, all are ST)
+# fix sessions with no type (n = 2, both 2009, both are ST)
 d$j <- str_replace(d$j, "_(\\d+)$", "_ST\\1")
 
 # fix sessions with an extra comma between type and id (one case in 2009)
@@ -257,8 +257,8 @@ t <- group_by(d, i) %>%
   summarise(t_c = n_distinct(year)) %>% 
   arrange(-t_c)
 
-table(t$t_c) # 37 participants went to all conferences, ~ 1,700+ went to only 1
-table(t$t_c > 1) / nrow(t) # ~ 70% attended only 1 of 5 conferences in 8 years
+table(t$t_c) # 24 participants went to all conferences, ~ 2,100+ went to only 1
+table(t$t_c > 1) / nrow(t) # ~ 70% attended only 1 of 6 conferences in 10 years
 
 # number of panels overall
 n_distinct(d$j)
@@ -412,11 +412,14 @@ cat(
 # DATA :: PANELS
 # ==============================================================================
 
-y <- c("http://www.afsp.info/congres/congres-2017/sessions/sections-thematiques/",
-       "http://www.afsp.info/archives/congres/congres2015/st.html",
-       "http://www.afsp.info/archives/congres/congres2013/st.html",
-       "http://www.afsp.info/archives/congres/congres2011/sectionsthematiques/presentation.html",
-       "http://www.afsp.info/archives/congres/congres2009/sectionsthematiques/presentation.html")
+y <- c(
+  "https://www.afsp.info/congres/congres-2019/sections-thematiques/",
+  "http://www.afsp.info/congres/congres-2017/sessions/sections-thematiques/",
+  "http://www.afsp.info/archives/congres/congres2015/st.html",
+  "http://www.afsp.info/archives/congres/congres2013/st.html",
+  "http://www.afsp.info/archives/congres/congres2011/sectionsthematiques/presentation.html",
+  "http://www.afsp.info/archives/congres/congres2009/sectionsthematiques/presentation.html"
+)
 
 # initialize panels data
 d <- data_frame()
