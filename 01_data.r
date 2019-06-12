@@ -20,7 +20,7 @@ y <- c("https://www.afsp.info/congres/congres-2019/index/",
 d <- data_frame()
 
 cat("[PARSING] participant indexes for", length(y), "conferences:\n\n")
-for (i in y) { ### [TEMP] rev(y)
+for (i in rev(y)) {
   
   f <- str_c("html/", str_extract(i, "\\d{4}"), "_participants.html")
   if (!file.exists(f)) {
@@ -122,9 +122,9 @@ a <- str_extract_all(d$i, "<<(.*?)>>") %>%
   tibble::tibble(title = .) %>%
   tibble::rowid_to_column(var = "id")
 
-# [2019] replace 'ST GA' and 'CONF' by (arbitrary) numeric UIDs
+# [2019] replace 'ST GA' and 'CONF' with (arbitrary) numeric UIDs
 for (i in 1:nrow(a)) {
-  cat(a$title[ i ], "->", a$id[ i ], "\n")
+  # cat(a$title[ i ], "->", a$id[ i ], "\n")
   d$i <- str_replace_all(d$i, a$title[ i ], as.character(a$id[ i ]))
 }
 
@@ -133,6 +133,7 @@ for (i in 1:nrow(a)) {
 # ==============================================================================
 
 # add year to panel ids and coerce to (year, i, j) data frame
+# [TODO] rewrite smarter and quicker
 d <- mapply(function(year, i) {
   x <- unlist(str_split(i, ",\\s?"))
   x[ -1 ] <- str_replace_all(x[ -1 ], "\\s+", "") # ST 0 -> ST0
@@ -172,8 +173,6 @@ stopifnot(f$i %in% d$i)
 d <- left_join(d, f, by = c("year", "i")) %>% 
   mutate(i = if_else(is.na(i_fixed), i, i_fixed)) %>% 
   select(-i_fixed)
-
-stop('mapply')
 
 # # to detect (several forms of, but not all) errors:
 # str_split(d$i, " ") %>% sapply(function(x) x[1] == x[2]) %>% which
