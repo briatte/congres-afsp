@@ -182,6 +182,8 @@ d <- left_join(d, f, by = c("year", "i")) %>%
 # no remaining problematic rows
 stopifnot(str_detect(d$i, "\\s"))
 
+stop('fix names')
+
 # finalize panel names
 
 # fix sessions with no type (all are 2009, all are ST)
