@@ -435,7 +435,7 @@ y <- c(
 d <- data_frame()
 
 cat("\n\n[PARSING] 'ST' panel indexes for", length(y), "conferences:\n\n")
-for (i in rev(y)) {
+for (i in y) { ### [TEMP]  rev(y)
   
   f <- str_c("html/", str_extract(i, "\\d{4}"), "_panels.html")
   if (!file.exists(f)) {
@@ -608,6 +608,7 @@ a$affiliation <- str_replace_all(a$affiliation, "\\s+", " ") %>%
   str_trim
 
 # # some participants have had a lot of different affiliations...
+# # ... because the data are super-noisy (e.g. 'X and Y, <affil.>')
 # group_by(a, i) %>%
 #   summarise(n_a = n_distinct(affiliation)) %>%
 #   arrange(-n_a)
