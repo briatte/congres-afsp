@@ -13,7 +13,7 @@ The [DATA](DATA.md) file contains a detailed codebook for all files present in t
 # HOWTO
 
 ```r
-# PACKAGE DEPENDENCIES (repeated in scripts)
+# -- PACKAGE DEPENDENCIES (repeated in scripts) --------------------------------
 
 # data
 library(dplyr)
@@ -26,7 +26,7 @@ library(igraph)
 library(ggplot2)
 library(ggraph)
 
-# BUILD NETWORKS
+# -- BUILD NETWORKS ------------------------------------------------------------
 
 # full construction routine
 source("01_data.r")
@@ -39,7 +39,7 @@ d <- readr::read_csv("data/edges.csv", col_types = "icciiiiccc")
 # to load the weighted incidence matrix on its own
 w <- readRDS("data/incidence_matrix.rds")
 
-# PANEL DATA
+# -- PANEL DATA ----------------------------------------------------------------
 
 # to read the panel information data
 p <- readr::read_tsv("data/panels.tsv", col_types = "iccc")
@@ -49,19 +49,19 @@ dplyr::mutate(p, j = stringr::str_c(year, "_", id)) %>%
   dplyr::inner_join(d, by = c("year", "j")) %>% 
   nrow(.) == nrow(d)
   
-# OTHER FILES
+# -- OTHER FILES ---------------------------------------------------------------
 
 # participant details
 n <- readr::read_tsv("data/participants.tsv", col_types = "cccc")
 
 # corrected names
-n <- readr::read_tsv("data/names.tsv", col_types = "ccc") # or "icc"
+n <- readr::read_tsv("data/participants_names.tsv", col_types = "ccc") # or "icc"
 
 # missing genders
-g <- readr::read_tsv("data/genders.tsv", col_types = "cc")
+g <- readr::read_tsv("data/participants_genders.tsv", col_types = "cc")
 
 # various other fixes
-f <- readr::read_tsv("data/fixes.tsv", col_types = "ccc")
+f <- readr::read_tsv("data/participants_fixes.tsv", col_types = "ccc")
 ```
 
 # LICENSE
