@@ -1,7 +1,9 @@
 library(dplyr)
+library(purrr)   # `map_*`
 library(readr)
 library(rvest)
 library(stringr)
+library(tidyr)   # `unnest`
 
 dir.create("data", showWarnings = FALSE)
 dir.create("html", showWarnings = FALSE)
@@ -146,23 +148,17 @@ for (i in 1:nrow(a)) {
 
 # add year to panel ids and coerce to (year, i, j) data frame
 # [TODO] rewrite smarter and quicker
-d <- mapply(function(year, i) {
-  x <- unlist(str_split(i, ",\\s?"))
-  x[ -1 ] <- str_replace_all(x[ -1 ], "\\s+", "") # ST 0 -> ST0
-  str_c(x[ 1 ], "::", str_c(year, "_", x[ -1 ])) # NAME : YEAR_ST0, ST1, ...
-}, d$year, d$i) %>% 
-  unlist %>% 
-  as.vector %>% 
-  lapply(function(x) {
-    data_frame(
-      year = str_extract(x, "\\d{4}"), # year
-      i = str_extract(x, "(.*)::"),    # participant
-      j = str_extract(x, "::(.*)")     # panel
-    )
-  }) %>% 
+d <- group_split(d, i) %>% 
+  purrr::map_df(
+    mutate,
+    j = str_split(str_replace(i, "(.*?),\\s?(.*)", "\\2"), ",\\s?"),
+    i = str_replace(i, "(.*?),(.*)", "\\1")
+  ) %>% 
   bind_rows %>% 
-  # remove separator from participant and panel names
-  mutate_at(2:3, str_replace, pattern = "::", replacement = "")
+  tidyr::unnest()
+
+d$j <- str_c(d$year, "_", str_replace_all(d$j, "\\s+", "")) # j ~ '2009_ST46'
+# stopifnot(!str_detect(d$j, "\\s")) # spaces in '2019_STGA 1'
 
 # ==============================================================================
 # FINALIZE
