@@ -17,9 +17,11 @@ The [DATA](DATA.md) file contains a detailed codebook for all files present in t
 
 # data
 library(dplyr)
+library(purrr)
 library(readr)
 library(rvest)
 library(stringr)
+library(tidyr)
 
 # networks
 library(igraph)
