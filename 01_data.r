@@ -21,7 +21,7 @@ y <- c(
   "http://www.afsp.info/archives/congres/congres2009/programmes/indexnoms.html"
 )
 
-d <- data_frame()
+d <- tibble()
 
 cat("[PARSING] participant indexes for", length(y), "conferences:\n\n")
 for (i in rev(y)) {
@@ -64,8 +64,8 @@ for (i in rev(y)) {
     str_replace_all("\\s[A-Za-z]{1}\\s", " ") %>% 
     # lone initials at end of name + extra spaces
     str_replace_all("(\\s[A-Za-z])+,|\\s+,", ",") %>% 
-    str_trim %>% 
-    data_frame(year = str_extract(f, "\\d{4}"), i = .)
+    str_trim() %>% 
+    tibble(year = str_extract(f, "\\d{4}"), i = .)
   
   cat(":", nrow(f), "lines\n")
   d <- rbind(d, f)
@@ -382,7 +382,8 @@ a$gender <- recode(a$p_f, `1` = "f", `0` = "m", .default = NA_character_)
 # save manually collected values, with missing values back again
 w <- unique(a$i[ is.na(a$gender) ])
 if (length(w) > 0) {
-  data_frame(gender = NA_character_, name = w) %>% 
+  
+  tibble(gender = NA_character_, name = w) %>% 
     bind_rows(p) %>% 
     arrange(name) %>% 
     write_tsv(f)
@@ -428,7 +429,7 @@ y <- c(
 )
 
 # initialize panels data
-d <- data_frame()
+d <- tibble()
 
 cat("\n\n[PARSING] 'ST' panel indexes for", length(y), "conferences:\n\n")
 for (i in y) { ### [TEMP]  rev(y)
@@ -447,7 +448,7 @@ for (i in y) { ### [TEMP]  rev(y)
   # special cases below are all for 2015
   w <- str_which(html_attr(f, "href"), "st(-|\\d|gram|grepo|popact|rc20ipsa)+(.html|/$)")
   
-  w <- data_frame(
+  w <- tibble(
     year = as.integer(str_extract(i, "\\d{4}")),
     url = html_attr(f[ w ], "href"),
     id = basename(url) %>%
