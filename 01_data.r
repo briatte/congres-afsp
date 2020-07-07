@@ -32,7 +32,7 @@ for (i in rev(y)) {
   }
   
   cat("", f)
-  f <- read_lines(f) %>% 
+  f <- readr::read_lines(f) %>% 
     # AD   : atelier (2015, 2017)
     # Conférence : conf. suivie du titre entre guillemets (2019)
     # CP   : conférence plénière, pas toujours numérotée (toutes éditions)
@@ -173,7 +173,7 @@ d$i <- str_replace_all(d$i, "\\s+", " ")
 # - some caused by extra comma between first and last names
 # - some caused by name inversions, esp. among foreigners
 # - some caused by typos, e.g. double consonants
-f <- read_tsv("data/participants_names.tsv", col_types = "ccc")
+f <- readr::read_tsv("data/participants_names.tsv", col_types = "ccc")
 
 # sanity check: no extraneous names
 stopifnot(f$i %in% d$i)
@@ -200,7 +200,7 @@ d$j <- str_replace(d$j, "ST, (\\d+)$", "_ST\\1")
 
 # finalize rows by handling special cases (all detected manually)
 
-f <- read_tsv("data/participants_fixes.tsv", col_types = "ccc")
+f <- readr::read_tsv("data/participants_fixes.tsv", col_types = "ccc")
 stopifnot(f$type %in% c("abs", "add", "err"))
 
 # (1) remove participants with wrong names, wrong panel entries, or both; the
@@ -225,7 +225,7 @@ d <- filter(f, type == "add") %>%
 p <- "data/participants.tsv"
 if (file.exists(p)) {
   
-  p <- read_tsv(p, col_types = "cccc")
+  p <- readr::read_tsv(p, col_types = "cccc")
   
   # match absentees in participants.tsv (source: panels)
   # to absentees in fixes.tsv (source: indexes)
@@ -304,7 +304,7 @@ if (!file.exists(f)) {
 }
 
 p <- locale(encoding = "latin1")
-p <- read_tsv(f, locale = p, col_types = "iccd", progress = FALSE) %>% 
+p <- readr::read_tsv(f, locale = p, col_types = "iccd", progress = FALSE) %>% 
   filter(preusuel != "_PRENOMS_RARES", str_count(preusuel) > 2) %>% 
   mutate(preusuel = iconv(preusuel, to = "ASCII//TRANSLIT", sub = " ") %>%
            # remove diacritics
@@ -338,7 +338,7 @@ a <- left_join(a, p, by = "first_name") %>%
 
 # manually collected values
 f <- "data/participants_genders.tsv"
-p <- read_tsv(f, col_types = "cc") %>% 
+p <- readr::read_tsv(f, col_types = "cc") %>% 
   filter(gender %in% c("f", "m")) # remove missing values
 
 a$p_f[ a$i %in% p$name[ p$gender == "f" ] ] <- 1 # females
@@ -387,19 +387,20 @@ if (length(w) > 0) {
   tibble(gender = NA_character_, name = w) %>% 
     bind_rows(p) %>% 
     arrange(name) %>% 
-    write_tsv(f)
+    readr::write_tsv(f)
+  
 }
 
 cat("[MISSING] Gender of", n_distinct(w), "participant(s)\n")
 
 # sanity check: all rows in genders.tsv exist in participants data
-stopifnot(read_tsv(f, col_types = "cc")$name %in% unique(a$i))
+stopifnot(readr::read_tsv(f, col_types = "cc")$name %in% unique(a$i))
 
 # ==============================================================================
 # EXPORT PARTICIPANTS TO CSV
 # ==============================================================================
 
-write_csv(
+readr::write_csv(
   select(a, -found_name, -p_f) %>% 
     left_join(d, ., by = c("year", "i", "j")) %>% 
     arrange(year, i, j),
@@ -479,7 +480,7 @@ d$id[ str_detect(d$url, "st2-2") ] <- "ST2"
 # save only if the cleaner file does not exist
 f <- "data/panels.tsv"
 if (!file.exists(f)) {
-  write_tsv(d, f)
+  readr::write_tsv(d, f)
 }
 
 # ==============================================================================
@@ -626,7 +627,7 @@ stopifnot(nrow(distinct(a)) == nrow(a))
 # initialize file if missing
 f <- "data/participants.tsv"
 if (!file.exists(f)) {
-  write_tsv(a, f)
+  readr::write_tsv(a, f)
 }
 
 # ==============================================================================
@@ -637,7 +638,7 @@ if (!file.exists(f)) {
 # to create cross-year identities for 'x marie' and 'x-y marie' when those are
 # the same persons; some names need two corrections, one in the participants
 # index and one in the panel pages, because they were misspelt in both sources
-d <- read_tsv("data/participants_names.tsv", col_types = "ccc")
+d <- readr::read_tsv("data/participants_names.tsv", col_types = "ccc")
 
 # sanity check: no extraneous names in -corrected- names
 stopifnot(d$i_fixed %in% a$i)
@@ -649,14 +650,14 @@ a <- left_join(mutate(a, year = str_sub(j, 1, 4)), d, by = c("year", "i")) %>%
   select(-year, -i_fixed)
 
 # # debug with the following line
-# a[ !a$i %in% read_tsv(f, col_types = "cccc")$i, ] %>% print
+# a[ !a$i %in% readr::read_tsv(f, col_types = "cccc")$i, ] %>% print
 
 # ==============================================================================
 # REVISE ROLES AND AFFILIATIONS
 # ==============================================================================
 
 # specifying '.' to ensure that participants.tsv columns are marked .y
-p <- read_tsv(f, col_types = "cccc") %>% 
+p <- readr::read_tsv(f, col_types = "cccc") %>% 
   full_join(a, ., by = c("i", "j"))
 
 # sanity check: all 'ST' panel affiliations are covered by participants.tsv
@@ -700,7 +701,7 @@ cat("[REPLACED]", length(w), "revised affiliation(s)\n")
 f <- "data/edges.csv"
 p <- rename(p, role = role.x, affiliation = affiliation.x) %>% 
   select(i, j, role, affiliation) %>% 
-  full_join(read_csv(f, col_types = "icciiiiccc"), ., by = c("i", "j"))
+  full_join(readr::read_csv(f, col_types = "icciiiiccc"), ., by = c("i", "j"))
 
 cat("\nDistinct participants:\n\n")
 tapply(p$i, p$year, n_distinct) %>%
@@ -745,6 +746,6 @@ cat(
 #   tally(sort = TRUE)
 
 # add affiliations and roles only if need be
-write_csv(select(p, -affiliation, -role), "data/edges.csv")
+readr::write_csv(select(p, -affiliation, -role), "data/edges.csv")
 
 # kthxbye
