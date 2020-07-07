@@ -91,7 +91,7 @@ d <- filter(d, i != "LEVY Simon ST 2 LHERVIER Louise ST 56") %>%
 # - l?ST (n = 1 case)
 #
 d$i <- str_replace(d$i, "([A-Za-z]+)\\s(AD|Conference|CP|MD|MPP|MTED|l?ST|TR)", "\\1, \\2") %>% 
-  str_to_upper
+  str_to_upper()
 
 # hardcoded manual corrections (n = 1 in each case)
 #
@@ -131,8 +131,8 @@ table(str_count(d$i, ","))
 # [2019] extract 'ST GA [or] CONFERENCE << X, Y Z >>'
 #        (required because of commas in the panel titles)
 a <- str_extract_all(d$i, "<<(.*?)>>") %>%
-  unlist %>%
-  unique %>%
+  unlist() %>%
+  unique() %>%
   tibble::tibble(title = .) %>%
   tibble::rowid_to_column(var = "id")
 
@@ -154,7 +154,7 @@ d <- group_split(d, i) %>%
     j = str_split(str_replace(i, "(.*?),\\s?(.*)", "\\2"), ",\\s?"),
     i = str_replace(i, "(.*?),(.*)", "\\1")
   ) %>% 
-  bind_rows %>% 
+  bind_rows() %>% 
   tidyr::unnest()
 
 d$j <- str_c(d$year, "_", str_replace_all(d$j, "\\s+", "")) # j ~ '2009_ST46'
@@ -314,7 +314,8 @@ p <- read_tsv(f, locale = p, col_types = "iccd", progress = FALSE) %>%
   rename(first_name = preusuel)
 
 a <- select(d, year, i, j) %>% 
-  distinct
+  distinct()
+
 # extract first names
 a$first_name <- if_else(
   str_detect(a$i, " (ANNE|JEAN|MARIE) \\w+$"), # e.g. Jean-Marie, Marie-Claude
@@ -357,7 +358,7 @@ a$family_name <- if_else(
   is.na(a$first_name),
   str_replace(a$i, "(.*)\\s(.*)", "\\1"),
   str_replace(a$i, a$first_name, "") %>% 
-    str_trim
+    str_trim()
 )
 
 # sanity check
@@ -453,7 +454,7 @@ for (i in y) { ### [TEMP]  rev(y)
     url = html_attr(f[ w ], "href"),
     id = basename(url) %>%
       str_replace_all(".html|-", "") %>%
-      str_to_upper, # matches ids in edges.csv and panels.tsv
+      str_to_upper(), # matches ids in edges.csv and panels.tsv
     title = html_nodes(f[ w ], xpath = j) %>% 
       html_text(trim = TRUE) %>% 
       str_replace("^ST[\\.\\s\\d/-]+", "") # redundant with (cleaner) panels.tsv
@@ -505,7 +506,7 @@ for (i in 1:nrow(d)) {
 # reduce participants to unique conference year-participant-panels tuples
 a <- filter(a, str_detect(j, "ST")) %>% 
   select(year, i, j, first_name, family_name) %>% 
-  distinct %>% 
+  distinct() %>% 
   mutate(
     affiliation = if_else(
       is.na(first_name),
@@ -532,14 +533,14 @@ for (i in unique(d$j)) {
   t <- "//*[contains(text(), '(') or contains(text(), 'tation scientifique')]"
   t <- read_html(f) %>% 
     html_nodes(xpath = t) %>% 
-    html_text %>% 
-    str_to_upper %>% 
+    html_text() %>% 
+    str_to_upper() %>% 
     iconv(to = "ASCII//TRANSLIT", sub = " ") %>%
     # remove diacritics
     str_replace_all("[\"^'`~\\.]", "") %>%
     # composed names + handle multiple spaces
     str_replace_all( "-|\\s+", " ") %>% 
-    str_trim
+    str_trim()
 
   # keep only strings likely to match a name and affiliation
   w <- str_count(t) > 2 & str_count(t) < 5000
@@ -602,7 +603,7 @@ a$affiliation[ w ] <- str_replace(
 )
 
 a$affiliation <- str_replace_all(a$affiliation, "\\s+", " ") %>% 
-  str_trim
+  str_trim()
 
 # # some participants have had a lot of different affiliations...
 # # ... because the data are super-noisy (e.g. 'X and Y, <affil.>')
@@ -701,24 +702,24 @@ p <- rename(p, role = role.x, affiliation = affiliation.x) %>%
 
 cat("\nDistinct participants:\n\n")
 tapply(p$i, p$year, n_distinct) %>%
-  print
+  print()
 
 cat("\nNon-missing participants:\n\n")
 tapply(p$i, p$year, function(x) sum(!is.na(x), na.rm = TRUE)) %>%
-  print
+  print()
 
 cat("\nDistinct affiliations:\n\n")
 tapply(p$affiliation, p$year, n_distinct) %>%
-  print
+  print()
 
 cat("\nNon-missing affiliations:\n\n")
 tapply(p$affiliation, p$year, function(x) sum(!is.na(x), na.rm = TRUE)) %>%
-  print
+  print()
 
 cat("\nPercentages of non-missing affiliations:\n\n") # always above 90%
 f <- function(x) { 100 * sum(!is.na(x), na.rm = TRUE) }
 round(tapply(p$affiliation, p$year, f) / table(p$year)) %>%
-  print
+  print()
 
 cat(
   "\n[SAVED]",
