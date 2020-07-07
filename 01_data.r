@@ -68,7 +68,7 @@ for (i in rev(y)) {
     tibble(year = str_extract(f, "\\d{4}"), i = .)
   
   cat(":", nrow(f), "lines\n")
-  d <- rbind(d, f)
+  d <- bind_rows(d, f)
   
 }
 
@@ -216,7 +216,7 @@ d <- anti_join(d, filter(f, type == "err"), by = c("i", "j"))
 d <- filter(f, type == "add") %>% 
   mutate(year = str_sub(j, 1, 4)) %>% 
   select(year, i, j) %>% 
-  rbind(d) %>% 
+  bind_rows(d) %>% 
   arrange(year, i, j) # (not really needed)
 
 # almost done (1/2): if participants.tsv already exists, check that the edges
@@ -449,6 +449,8 @@ for (i in y) { ### [TEMP]  rev(y)
   # special cases below are all for 2015
   w <- str_which(html_attr(f, "href"), "st(-|\\d|gram|grepo|popact|rc20ipsa)+(.html|/$)")
   
+  # except 'ga-...', 'folo', 'grue' and 'spoc`, which are for 2019
+  w <- str_which(html_attr(f, "href"), "st(-|\\d|ga-(.*)|epope|folo|grue|spoc|gram|grepo|popact|rc20ipsa)+(\\.html|/$)")
   w <- tibble(
     year = as.integer(str_extract(i, "\\d{4}")),
     url = html_attr(f[ w ], "href"),
@@ -467,7 +469,7 @@ for (i in y) { ### [TEMP]  rev(y)
   stopifnot(!str_detect(w$id, "st$"))
   
   cat(":", nrow(w), "ST panels\n")
-  d <- rbind(d, w)
+  d <- bind_rows(d, w)
   
 }
 
