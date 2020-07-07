@@ -275,12 +275,14 @@ print(tapply(d$j, d$year, n_distinct))
 
 # add number of panels attended per conference
 # (useful for edge weighting)
-d <- summarise(group_by(d, year, i), n_p = n()) %>% 
+d <- group_by(d, year, i) %>% 
+  summarise(n_p = n()) %>% 
   inner_join(d, ., by = c("year", "i"))
 
 # add total number of panels attended and total number of conferences attended
 # (useful for vertex subsetting)
-d <- summarise(group_by(d, i), t_p = n_distinct(j), t_c = n_distinct(year)) %>% 
+d <- group_by(d, i) %>% 
+  summarise(t_p = n_distinct(j), t_c = n_distinct(year)) %>% 
   inner_join(d, ., by = "i")
 
 # ==============================================================================
@@ -442,7 +444,7 @@ for (i in y) { ### [TEMP]  rev(y)
   }
   
   cat("", f)
-  f <- read_html(f) %>% 
+  f <- rvest::read_html(f) %>% 
     html_nodes(xpath = "//a[contains(@href, 'st')]")
   
   j <- str_c("ancestor::", if_else(str_detect(i, "2017"), "p", "li"))
@@ -534,7 +536,7 @@ for (i in unique(d$j)) {
   
   # trying to find participants or separator between organisers and presenters
   t <- "//*[contains(text(), '(') or contains(text(), 'tation scientifique')]"
-  t <- read_html(f) %>% 
+  t <- rvest::read_html(f) %>% 
     html_nodes(xpath = t) %>% 
     html_text() %>% 
     str_to_upper() %>% 
@@ -554,7 +556,7 @@ for (i in unique(d$j)) {
   stopifnot(is.integer(w))
   
   # exclude everything after last affiliation
-  t[ -w ] <- str_extract(t[ -w], "(.*)\\)")
+  t[ -w ] <- str_extract(t[ -w ], "(.*)\\)")
   
   a$role[ a$j == i ] <- sapply(a$affiliation[ a$j == i ], function(x) {
     str_which(t, x)[1]
@@ -672,7 +674,6 @@ w <- mutate(p, year = str_sub(j, 1, 4)) %>%
 
 # sanity check: all participants have only one affiliation per conference year
 stopifnot(!nrow(w))
-
 
 # replace empty roles with existing ones in participants.tsv
 w <- which(is.na(p$role.x) & !is.na(p$role.y))
