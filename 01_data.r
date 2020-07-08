@@ -152,7 +152,7 @@ d <- d %>%
 
 # add year to panel ids
 d$j <- str_c(d$year, "_", str_replace_all(d$j, "\\s+", "")) # j ~ '2009_ST46'
-# stopifnot(!str_detect(d$j, "\\s")) # spaces in '2019_STGA 1'
+stopifnot(!str_detect(d$j, "\\s"))
 
 # ==============================================================================
 # FINALIZE
