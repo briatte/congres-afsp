@@ -132,7 +132,11 @@ a <- str_extract_all(d$i, "<<(.*?)>>") %>%
   tibble::tibble(title = .) %>%
   tibble::rowid_to_column(var = "id")
 
+# [NOTE] in one case, the participant has attended more than one ST GA
+filter(d, str_count(i, "ST GA") > 1)
+
 # [2019] replace 'ST GA' and 'CONF' with (arbitrary) numeric UIDs
+# [TODO] probably not doable with `purrr::[map,walk]2`, but who knows...
 for (i in 1:nrow(a)) {
   # cat(a$title[ i ], "->", a$id[ i ], "\n")
   d$i <- str_replace_all(d$i, a$title[ i ], as.character(a$id[ i ]))
