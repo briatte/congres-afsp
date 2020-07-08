@@ -1,9 +1,5 @@
-library(dplyr)
-library(purrr)   # `map_*`
-library(readr)
-library(rvest)
-library(stringr)
-library(tidyr)   # `unnest`
+library(tidyverse) # dplyr, purrr, readr, stringr, tibble, tidyr
+library(rvest)     # installed but not loaded by {tidyverse}
 
 dir.create("data", showWarnings = FALSE)
 dir.create("html", showWarnings = FALSE)
