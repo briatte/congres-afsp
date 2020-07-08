@@ -17,7 +17,7 @@ y <- c(
   "http://www.afsp.info/archives/congres/congres2009/programmes/indexnoms.html"
 )
 
-d <- tibble()
+d <- tibble::tibble()
 
 cat("[PARSING] participant indexes for", length(y), "conferences:\n\n")
 for (i in rev(y)) {
@@ -61,7 +61,7 @@ for (i in rev(y)) {
     # lone initials at end of name + extra spaces
     str_replace_all("(\\s[A-Za-z])+,|\\s+,", ",") %>% 
     str_trim() %>% 
-    tibble(year = str_extract(f, "\\d{4}"), i = .)
+    tibble::tibble(year = str_extract(f, "\\d{4}"), i = .)
   
   cat(":", nrow(f), "lines\n")
   d <- bind_rows(d, f)
@@ -72,7 +72,7 @@ for (i in rev(y)) {
 d <- filter(d, i != "LEVY Simon ST 2 LHERVIER Louise ST 56") %>% 
   bind_rows(
     .,
-    tribble(
+    tibble::tribble(
       ~ year, ~ i,
       "2019", "LEVY Simon ST 2",
       "2019", "LHERVIER Louise ST 56"
@@ -380,7 +380,7 @@ a$gender <- recode(a$p_f, `1` = "f", `0` = "m", .default = NA_character_)
 w <- unique(a$i[ is.na(a$gender) ])
 if (length(w) > 0) {
   
-  tibble(gender = NA_character_, name = w) %>% 
+  tibble::tibble(gender = NA_character_, name = w) %>% 
     bind_rows(p) %>% 
     arrange(name) %>% 
     readr::write_tsv(f)
@@ -427,7 +427,7 @@ y <- c(
 )
 
 # initialize panels data
-d <- tibble()
+d <- tibble::tibble()
 
 cat("\n\n[PARSING] 'ST' panel indexes for", length(y), "conferences:\n\n")
 for (i in y) { ### [TEMP]  rev(y)
