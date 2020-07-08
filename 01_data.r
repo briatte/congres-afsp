@@ -117,7 +117,7 @@ d <- filter(d, str_detect(i, ","), !str_detect(i, ";|^\\("))
 # 2013 =  862 (got all)
 # 2015 =  872 [!!!] missing 2
 # 2017 =  756 [!!!] missing 2
-# 2019 = 1020 (got all; [WARNING] two cases on same line)
+# 2019 = 1020 (got all; [NOTE] two cases on same line, solved earlier)
 cat("\nParticipants per conference:\n")
 print(table(d$year))
 
