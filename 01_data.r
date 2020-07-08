@@ -483,7 +483,7 @@ if (!file.exists(f)) {
 # DOWNLOAD PANEL PAGES
 # ==============================================================================
 
-# approx. 300 files (quick enough)
+# approx. 411 files (quick enough)
 cat("\n[DOWNLOADING]", nrow(d), "panel pages\n")
 
 for (i in 1:nrow(d)) {
