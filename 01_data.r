@@ -438,7 +438,7 @@ for (i in y) { ### [TEMP]  rev(y)
   }
   
   cat("", f)
-  f <- rvest::read_html(f) %>% 
+  f <- read_html(f) %>% 
     html_nodes(xpath = "//a[contains(@href, 'st')]")
   
   j <- str_c("ancestor::", if_else(str_detect(i, "2017"), "p", "li"))
@@ -530,7 +530,7 @@ for (i in unique(d$j)) {
   
   # trying to find participants or separator between organisers and presenters
   t <- "//*[contains(text(), '(') or contains(text(), 'tation scientifique')]"
-  t <- rvest::read_html(f) %>% 
+  t <- read_html(f) %>% 
     html_nodes(xpath = t) %>% 
     html_text() %>% 
     str_to_upper() %>% 
