@@ -452,7 +452,7 @@ for (i in y) { ### [TEMP]  rev(y)
   
   # except 'ga-...', 'folo', 'grue' and 'spoc`, which are for 2019
   w <- str_which(html_attr(f, "href"), "st(-|\\d|ga-(.*)|epope|folo|grue|spoc|gram|grepo|popact|rc20ipsa)+(\\.html|/$)")
-  w <- tibble(
+  w <- tibble::tibble(
     year = as.integer(str_extract(i, "\\d{4}")),
     url = html_attr(f[ w ], "href"),
     id = basename(url) %>%
@@ -500,7 +500,7 @@ for (i in 1:nrow(d)) {
   
 }
 
-# note: one ST panel of 2015 is missing because it was cancelled/postponed
+# note: one ST panel of 2015 is missing because it was canceled/postponed
 
 # ==============================================================================
 # PREPARE PARTICIPANTS AND PANELS DATA
@@ -561,9 +561,10 @@ for (i in unique(d$j)) {
   }) < w # returns TRUE (organisers) or FALSE (others)
 
   # extract the affiliation
+  # [NOTE] horrendous code, but works
   a$affiliation[ a$j == i ] <- sapply(a$affiliation[ a$j == i ], function(x) {
     # let's also try to identify presidents (chairs) and discussants
-    t[ str_which(t, x)[1] ] %>%
+    t[ str_which(t, x)[ 1 ] ] %>%
       str_extract(str_c("(DISCUTANT-?E?-?S?|PRESIDENT-?E?-?S?)?( DE SEANCE)?(\\s+:\\s+)?(", x, ")(.*?)\\)"))
   })
   
