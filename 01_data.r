@@ -181,9 +181,21 @@ d <- left_join(d, f, by = c("year", "i")) %>%
   select(-i_fixed)
 
 # # to detect (several forms of, but not all) errors:
+#
+# (1) duplicated words in name
+#
 # str_split(d$i, " ") %>% sapply(function(x) x[1] == x[2]) %>% which
 # str_split(d$i, " ") %>% sapply(function(x) x[1] == x[3]) %>% which
 # str_split(d$i, " ") %>% sapply(function(x) x[2] == x[3]) %>% which
+#
+# (2) names with only 1 or 2 different letters:
+# library(stringdist)
+# for(i in unique(d$i)) {
+#   m <- stringdist::stringdist(i, unique(d$i))
+#   m <- which(m > 0 & m < 3)
+#   if (length(m) > 0)
+#     cat(i, ":", str_c("\n ~ ", unique(d$i)[ m ]), "\n\n")
+# }
 
 # no remaining problematic rows
 stopifnot(str_detect(d$i, "\\s"))
