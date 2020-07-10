@@ -563,8 +563,9 @@ for (i in unique(d$j)) {
   
   # pointer separating panel organisers from presenters
   w <- max(which(t == "PRESENTATION SCIENTIFIQUE"))
-  stopifnot(is.integer(w))
-  
+  # one special case omitted (produces a WARNING because `w` is set to -Inf)
+  stopifnot(is.integer(w) | f == "html/2019_STSPOC.html")
+
   # exclude everything after last affiliation
   t[ -w ] <- str_extract(t[ -w ], "(.*)\\)")
   
