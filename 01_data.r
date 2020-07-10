@@ -556,21 +556,22 @@ for (i in unique(d$j)) {
   # exclude everything after last affiliation
   t[ -w ] <- str_extract(t[ -w ], "(.*)\\)")
   
-  a$role[ a$j == i ] <- sapply(a$affiliation[ a$j == i ], function(x) {
-    str_which(t, x)[1]
-  }) < w # returns TRUE (organisers) or FALSE (others)
-
-  # extract the affiliation
-  # [NOTE] horrendous code, but works
-  a$affiliation[ a$j == i ] <- sapply(a$affiliation[ a$j == i ], function(x) {
+  # extract role
+  a$role[ a$j == i ] <- map_int(
+    a$affiliation[ a$j == i ],
+    ~ str_which(t, .x)[ 1 ]
+  ) < w # returns TRUE (organisers) or FALSE (others)
+  
+  # extract affiliation
+  a$affiliation[ a$j == i ] <- map_chr(
+    a$affiliation[ a$j == i ],
     # let's also try to identify presidents (chairs) and discussants
-    t[ str_which(t, x)[ 1 ] ] %>%
-      str_extract(str_c("(DISCUTANT-?E?-?S?|PRESIDENT-?E?-?S?)?( DE SEANCE)?(\\s+:\\s+)?(", x, ")(.*?)\\)"))
-  })
+    # [NOTE] horrendous code, but works
+    ~ t[ str_which(t, .x)[ 1 ] ] %>%
+      str_extract(str_c("(DISCUTANT-?E?-?S?|PRESIDENT-?E?-?S?)?( DE SEANCE)?(\\s+:\\s+)?(", .x, ")(.*?)\\)"))
+  )
   
 }
-
-stopifnot(class(a$affiliation) == "character")
 
 # coerce logical organiser or presenter role (with precedence to the former)
 a$role <- if_else(a$role, "o", "p")
