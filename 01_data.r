@@ -47,11 +47,11 @@ for (i in rev(y)) {
     # transliterate, using sub to keep strings with non-convertible bytes
     iconv(to = "ASCII//TRANSLIT", sub = " ") %>%
     # remove diacritics
-    str_replace_all("[\"^'`~\\.]|&#8217;|&(l|r)squo;", "") %>%
+    str_remove_all("[\"^'`~\\.]|&#8217;|&(l|r)squo;") %>%
     # remove loose HTML tags
-    str_replace_all("<br\\s?/?>|<(p|b|li|span)(.*?)>|</(p|b|li|span)>", "") %>%
+    str_remove_all("<br\\s?/?>|<(p|b|li|span)(.*?)>|</(p|b|li|span)>") %>%
     # remove French/Spanish name particles
-    str_replace_all(regex("\\s\\(d(a|e)\\)", ignore_case = TRUE), "") %>%
+    str_remove_all(regex("\\s\\(d(a|e)\\)", ignore_case = TRUE)) %>%
     # fix spaces (keep before next)
     str_replace_all("(\\s|&nbsp;)+", " ") %>% 
     # &eacute, &icirc -> e, i
@@ -94,7 +94,7 @@ d$i <- str_replace(d$i, "([A-Za-z]+)\\s(AD|Conference|CP|MD|MPP|MTED|l?ST|TR)", 
 # [2009] 'ST, 39,'
 d$i <- str_replace(d$i, "ST,\\s39,", "ST 39,")
 # [2011] 'ST 44,'
-d$i <- str_replace(d$i, ",$", "")
+d$i <- str_remove(d$i, ",$")
 # [2013] 'PILLON, JEAN-MARIE'
 d$i <- str_replace(d$i, "^PILLON,\\sJ", "PILLON J")
 # [2015] 'LENGUITA, PAULA'
@@ -155,7 +155,7 @@ d <- d %>%
   tidyr::unnest(j)
 
 # add year to panel ids
-d$j <- str_c(d$year, "_", str_replace_all(d$j, "\\s+", "")) # j ~ '2009_ST46'
+d$j <- str_c(d$year, "_", str_remove_all(d$j, "\\s+")) # j ~ '2009_ST46'
 stopifnot(!str_detect(d$j, "\\s"))
 
 # ==============================================================================
@@ -308,7 +308,7 @@ p <- readr::read_tsv(f, locale = p, col_types = "iccd", progress = FALSE) %>%
   filter(preusuel != "_PRENOMS_RARES", str_count(preusuel) > 2) %>% 
   mutate(preusuel = iconv(preusuel, to = "ASCII//TRANSLIT", sub = " ") %>%
            # remove diacritics
-           str_replace_all("[\"^'`~\\.]|&#8217;|&(l|r)squo;", "")) %>%
+           str_remove_all("[\"^'`~\\.]|&#8217;|&(l|r)squo;")) %>%
   group_by(preusuel) %>% 
   summarise(p_f = sum(nombre[ sexe == 2 ]) / sum(nombre)) %>% 
   rename(first_name = preusuel)
@@ -357,7 +357,7 @@ a$first_name <- if_else(a$found_name, a$first_name, NA_character_)
 a$family_name <- if_else(
   is.na(a$first_name),
   str_replace(a$i, "(.*)\\s(.*)", "\\1"),
-  str_replace(a$i, a$first_name, "") %>% 
+  str_remove(a$i, a$first_name) %>% 
     str_trim()
 )
 
@@ -456,11 +456,11 @@ for (i in y) { ### [TEMP]  rev(y)
     year = as.integer(str_extract(i, "\\d{4}")),
     url = html_attr(f[ w ], "href"),
     id = basename(url) %>%
-      str_replace_all(".html|-", "") %>%
+      str_remove_all(".html|-") %>%
       str_to_upper(), # matches ids in edges.csv and panels.tsv
     title = html_nodes(f[ w ], xpath = j) %>% 
       html_text(trim = TRUE) %>% 
-      str_replace("^ST[\\.\\s\\d/-]+", "") # redundant with (cleaner) panels.tsv
+      str_remove("^ST[\\.\\s\\d/-]+") # redundant with (cleaner) panels.tsv
   )
   
   # fix relative URLs
@@ -540,7 +540,7 @@ for (i in unique(d$j)) {
     str_to_upper() %>% 
     iconv(to = "ASCII//TRANSLIT", sub = " ") %>%
     # remove diacritics
-    str_replace_all("[\"^'`~\\.]", "") %>%
+    str_remove_all("[\"^'`~\\.]") %>%
     # composed names + handle multiple spaces
     str_replace_all( "-|\\s+", " ") %>% 
     str_trim()
@@ -583,7 +583,7 @@ a$role[ which(a$role == "p" & str_detect(a$affiliation, "^PRESIDENT")) ] <- "c"
 
 # remove chair/discussant prefixes
 w <- "^(DISCUTANT-?E?-?S?|PRESIDENT-?E?-?S?)?( DE SEANCE)?(\\s+:\\s+)?"
-a$affiliation <- str_replace(a$affiliation, w, "")
+a$affiliation <- str_remove(a$affiliation, w)
 
 # ==============================================================================
 # FINALIZE EXTRACTED AFFILIATIONS
@@ -600,10 +600,9 @@ a$affiliation[ w ] <- str_replace(a$affiliation[ w ], "\\((.*)\\)", "\\1")
 
 # remove full names
 w <- !is.na(a$first_name)
-a$affiliation[ w ] <- str_replace(
+a$affiliation[ w ] <- str_remove(
   a$affiliation[ w ],
-  str_c(a$first_name[ w ], " ", a$family_name[ w ]),
-  ""
+  str_c(a$first_name[ w ], " ", a$family_name[ w ])
 )
 
 a$affiliation <- str_replace_all(a$affiliation, "\\s+", " ") %>% 
