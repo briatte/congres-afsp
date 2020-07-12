@@ -20,7 +20,7 @@ y <- c(
 d <- tibble::tibble()
 
 cat("[PARSING] participant indexes for", length(y), "conferences:\n\n")
-for (i in rev(y)) {
+for (i in y) {
   
   f <- str_c("html/", str_extract(i, "\\d{4}"), "_participants.html")
   if (!file.exists(f)) {
@@ -446,7 +446,7 @@ y <- c(
 d <- tibble::tibble()
 
 cat("\n\n[PARSING] 'ST' panel indexes for", length(y), "conferences:\n\n")
-for (i in y) { ### [TEMP]  rev(y)
+for (i in y) {
   
   f <- str_c("html/", str_extract(i, "\\d{4}"), "_panels.html")
   if (!file.exists(f)) {
