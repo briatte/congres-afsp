@@ -40,10 +40,16 @@ for (i in y) {
     # - parfois numérotées DD.D : 12.1, 12.2 (2009)
     # - parfois spéciales :
     #   - 'ST RC20IPSA', 'ST PopAct' (2015)
-    #   - 'EpoPé', 'FoLo', 'GrUE', 'SPoC' (2019)
-    # - parfois 'ST GA [nom]' (2019)
-    # excluded: single, unnumbered TR (2013)
-    str_subset("(AD|CP|MD|MPP|MTED|ST)\\s?(\\d|EpoPé|FoLo|GA|GRAM|GrePo|GrUE|PopAct|RC|SPoC)|\\s(MDFB|CP)|Conférence «") %>%
+  #   - 'EpoPé', 'FoLo', 'GrUE', 'SPoC' (2019)
+  # - parfois 'ST GA [nom]' (2019)
+  # excluded: single, unnumbered TR (2013)
+  str_subset(
+    str_c(
+      "(AD|CP|MD|MPP|MTED|ST)\\s?",
+      "(\\d|EpoPé|FoLo|GA|GRAM|GrePo|GrUE|PopAct|RC|SPoC)",
+      "|\\s(MDFB|CP)|Conférence «"
+    )
+  ) %>%
     # transliterate, using sub to keep strings with non-convertible bytes
     iconv(to = "ASCII//TRANSLIT", sub = " ") %>%
     # remove diacritics
@@ -86,7 +92,11 @@ d <- filter(d, i != "LEVY Simon ST 2 LHERVIER Louise ST 56") %>%
 # - 'Conférence'
 # - l?ST (n = 1 case)
 #
-d$i <- str_replace(d$i, "([A-Za-z]+)\\s(AD|Conference|CP|MD|MPP|MTED|l?ST|TR)", "\\1, \\2") %>% 
+d$i <- str_replace(
+  d$i,
+  "([A-Za-z]+)\\s(AD|Conference|CP|MD|MPP|MTED|l?ST|TR)",
+  "\\1, \\2"
+) %>% 
   str_to_upper()
 
 # hardcoded manual corrections (n = 1 in each case)
@@ -433,13 +443,16 @@ cat(
 # DATA :: PANELS
 # ==============================================================================
 
-y <- c(
-  "https://www.afsp.info/congres/congres-2019/sections-thematiques/",
-  "http://www.afsp.info/congres/congres-2017/sessions/sections-thematiques/",
-  "http://www.afsp.info/archives/congres/congres2015/st.html",
-  "http://www.afsp.info/archives/congres/congres2013/st.html",
-  "http://www.afsp.info/archives/congres/congres2011/sectionsthematiques/presentation.html",
-  "http://www.afsp.info/archives/congres/congres2009/sectionsthematiques/presentation.html"
+y <- str_c(
+  "https://www.afsp.info/",
+  c(
+    "congres/congres-2019/sections-thematiques/",
+    "congres/congres-2017/sessions/sections-thematiques/",
+    "archives/congres/congres2015/st.html",
+    "archives/congres/congres2013/st.html",
+    "archives/congres/congres2011/sectionsthematiques/presentation.html",
+    "archives/congres/congres2009/sectionsthematiques/presentation.html"
+  )
 )
 
 # initialize panels data
@@ -463,7 +476,13 @@ for (i in y) {
   w <- str_which(html_attr(f, "href"), "st(-|\\d|gram|grepo|popact|rc20ipsa)+(.html|/$)")
   
   # except 'ga-...', 'folo', 'grue' and 'spoc`, which are for 2019
-  w <- str_which(html_attr(f, "href"), "st(-|\\d|ga-(.*)|epope|folo|grue|spoc|gram|grepo|popact|rc20ipsa)+(\\.html|/$)")
+  w <- str_which(
+    html_attr(f, "href"),
+    str_c(
+      "st(-|\\d|ga-(.*)|epope|folo|grue|spoc|gram|grepo|popact|rc20ipsa)+",
+      "(\\.html|/$)"
+    )
+  )
   w <- tibble::tibble(
     year = as.integer(str_extract(i, "\\d{4}")),
     url = html_attr(f[ w ], "href"),
@@ -476,7 +495,11 @@ for (i in y) {
   )
   
   # fix relative URLs
-  w$url <- if_else(str_detect(w$url, "^http"), w$url, str_c(dirname(i), "/", w$url))
+  w$url <- if_else(
+    str_detect(w$url, "^http"),
+    w$url,
+    str_c(dirname(i), "/", w$url)
+  )
   
   # avoid 'empty id' mistakes that would overwrite indexes!
   stopifnot(!str_detect(w$id, "st$"))
@@ -526,7 +549,10 @@ a <- filter(a, str_detect(j, "ST")) %>%
     affiliation = if_else(
       is.na(first_name),
       family_name,
-      str_c(first_name, "[\\s\\w]+?", family_name, "|", family_name, "[\\s\\w]+?", first_name)
+      str_c(
+        first_name, "[\\s\\w]+?", family_name, "|", 
+        family_name, "[\\s\\w]+?", first_name
+      )
     ),
     role = NA # organiser or presenter (other roles need to be hand-coded)
   )
@@ -581,7 +607,13 @@ for (i in unique(d$j)) {
     # let's also try to identify presidents (chairs) and discussants
     # [NOTE] horrendous code, but works
     ~ t[ str_which(t, .x)[ 1 ] ] %>%
-      str_extract(str_c("(DISCUTANT-?E?-?S?|PRESIDENT-?E?-?S?)?( DE SEANCE)?(\\s+:\\s+)?(", .x, ")(.*?)\\)"))
+      str_extract(
+        str_c(
+          "(DISCUTANT-?E?-?S?|PRESIDENT-?E?-?S?)?( DE SEANCE)?(\\s+:\\s+)?(",
+          .x,
+          ")(.*?)\\)"
+        )
+      )
   )
   
 }
