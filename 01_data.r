@@ -114,7 +114,7 @@ d$i <- str_replace(
 ) %>% 
   str_to_upper()
 
-# hardcoded manual corrections (n = 1 in each case)
+# hard-coded manual corrections (n = 1 in each case)
 #
 # [2009] 'ST, 39,'
 d$i <- str_replace(d$i, "ST,\\s39,", "ST 39,")
@@ -137,12 +137,14 @@ d$i <- str_replace(d$i, "ST\\s(\\d{2})\\s\\w{1}$", "ST \\1")
 d <- filter(d, str_detect(i, ","), !str_detect(i, ";|^\\("))
 
 # [NOTE] real counts for comparison (established by hand):
+#
 # 2009 =  725 (got all)
 # 2011 =  632 (got all)
 # 2013 =  862 (got all)
-# 2015 =  872 [!!!] missing 2
-# 2017 =  756 [!!!] missing 2
+# 2015 =  872 [!!!] [NOTE] missing 2, not sure why
+# 2017 =  756 [!!!] [NOTE] missing 2, not sure why
 # 2019 = 1020 (got all; [NOTE] two cases on same line, solved earlier)
+#
 cat("\nParticipants per conference:\n")
 print(table(d$year))
 
