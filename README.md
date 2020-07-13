@@ -36,10 +36,10 @@ source("02_two_mode_networks.r")
 source("03_one_mode_networks.r")
 
 # to load the edge list on its own
-d <- readr::read_csv("data/edges.csv", col_types = "icciiiiccc")
+d <- readr::read_tsv("data/edges.tsv", col_types = "icciiiiccc")
 
 # to load the weighted incidence matrix on its own
-w <- readRDS("data/incidence_matrix.rds")
+w <- readr::read_rds("data/incidence_matrix.rds")
 
 # -- PANEL DATA ----------------------------------------------------------------
 

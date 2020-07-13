@@ -424,14 +424,14 @@ cat("[MISSING] Gender of", n_distinct(w), "participant(s)\n")
 stopifnot(readr::read_tsv(f, col_types = "cc")$name %in% unique(a$i))
 
 # ==============================================================================
-# EXPORT PARTICIPANTS TO CSV
+# EXPORT PARTICIPANTS TO TSV
 # ==============================================================================
 
-readr::write_csv(
+readr::write_tsv(
   select(a, -found_name, -p_f) %>% 
     left_join(d, ., by = c("year", "i", "j")) %>% 
     arrange(year, i, j),
-  "data/edges.csv"
+  "data/edges.tsv"
 )
 
 cat(
@@ -493,7 +493,7 @@ for (i in y) {
     url = html_attr(f[ w ], "href"),
     id = basename(url) %>%
       str_remove_all(".html|-") %>%
-      str_to_upper(), # matches ids in edges.csv and panels.tsv
+      str_to_upper(), # matches ids in edges.tsv and panels.tsv
     title = html_nodes(f[ w ], xpath = j) %>% 
       html_text(trim = TRUE) %>% 
       str_remove("^ST[\\.\\s\\d/-]+") # redundant with (cleaner) panels.tsv
@@ -748,10 +748,10 @@ w <- which(p$affiliation.x != p$affiliation.y)
 p$affiliation.x[ w ] <- p$affiliation.y[ w ]
 cat("[REPLACED]", length(w), "revised affiliation(s)\n")
 
-f <- "data/edges.csv"
+f <- "data/edges.tsv"
 p <- rename(p, role = role.x, affiliation = affiliation.x) %>% 
   select(i, j, role, affiliation) %>% 
-  full_join(readr::read_csv(f, col_types = "icciiiiccc"), ., by = c("i", "j"))
+  full_join(readr::read_tsv(f, col_types = "icciiiiccc"), ., by = c("i", "j"))
 
 cat("\nDistinct participants:\n\n")
 tapply(p$i, p$year, n_distinct) %>%
@@ -796,6 +796,6 @@ cat(
 #   tally(sort = TRUE)
 
 # add affiliations and roles only if need be
-readr::write_csv(select(p, -affiliation, -role), "data/edges.csv")
+readr::write_tsv(select(p, -affiliation, -role), "data/edges.tsv")
 
 # kthxbye

@@ -9,7 +9,7 @@ p <- read_tsv("data/participants.tsv", col_types = "cccc") %>%
   select(i, j, role)
 
 # load only organisers, chairs/discussants and participants to 'ST' panels
-d <- read_csv("data/edges.csv", col_types = "icciiiiccc") %>%
+d <- read_tsv("data/edges.tsv", col_types = "icciiiiccc") %>%
   left_join(p, by = c("i", "j")) %>% # add roles
   filter(str_detect(j, "_ST(.*)"), role %in% c("c", "d", "o", "p"))
 
