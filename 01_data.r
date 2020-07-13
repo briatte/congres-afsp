@@ -257,9 +257,9 @@ if (file.exists(p)) {
   
   # match participants in participants.tsv (source: panels)
   # to participants in d (source: indexes)
-
+  
   f <- anti_join(p, d, by = c("i", "j"))
-
+  
   stopifnot(!nrow(f)) # all rows should have been matched
   
 }
@@ -582,7 +582,7 @@ for (i in unique(d$j)) {
     # composed names + handle multiple spaces
     str_replace_all( "-|\\s+", " ") %>% 
     str_trim()
-
+  
   # keep only strings likely to match a name and affiliation
   w <- str_count(t) > 2 & str_count(t) < 5000
   t <- t[ (t == "PRESENTATION SCIENTIFIQUE" | str_detect(t, "\\s")) & w ]
@@ -591,7 +591,7 @@ for (i in unique(d$j)) {
   w <- max(which(t == "PRESENTATION SCIENTIFIQUE"))
   # one special case omitted (produces a WARNING because `w` is set to -Inf)
   stopifnot(is.integer(w) | f == "html/2019_STSPOC.html")
-
+  
   # exclude everything after last affiliation
   t[ -w ] <- str_extract(t[ -w ], "(.*)\\)")
   
