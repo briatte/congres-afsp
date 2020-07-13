@@ -146,11 +146,16 @@ a <- str_extract_all(d$i, "<<(.*?)>>") %>%
 filter(d, str_count(i, "ST GA") > 1)
 
 # [2019] replace 'ST GA' and 'CONF' with (arbitrary) numeric UIDs
-# [TODO] probably not doable with `purrr::[map,walk]2`, but who knows...
 for (i in 1:nrow(a)) {
   # cat(a$title[ i ], "->", a$id[ i ], "\n")
   d$i <- str_replace_all(d$i, a$title[ i ], as.character(a$id[ i ]))
 }
+
+# [NOTE] the loop can be replaced with `purrr::walk2` (1), but only by calling
+#        `assign` and `get` in ugly ways (1, 2), so not doing that
+#
+# [1]: https://stackoverflow.com/a/62879125/635806
+# [2]: https://stackoverflow.com/a/15670409/635806
 
 # ==============================================================================
 # EDGES
