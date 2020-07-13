@@ -487,10 +487,8 @@ for (i in y) {
   
   j <- str_c("ancestor::", if_else(str_detect(i, "2017"), "p", "li"))
   
-  # special cases below are all for 2015
-  w <- str_which(html_attr(f, "href"), "st(-|\\d|gram|grepo|popact|rc20ipsa)+(.html|/$)")
-  
-  # except 'ga-...', 'folo', 'grue' and 'spoc`, which are for 2019
+  # special cases below are all for [2015],
+  # except 'ga-(.*)', 'folo', 'grue' and 'spoc`, which are for [2019]
   w <- str_which(
     html_attr(f, "href"),
     str_c(
