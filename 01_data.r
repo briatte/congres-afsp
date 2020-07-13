@@ -1,3 +1,12 @@
+# ==============================================================================
+# 01 - Download and parse all AFSP Web pages
+#
+# - See DATA and README files for a guide to the resulting data files.
+# - Substantive comments included in the code are marked with [NOTE].
+# - Lines required by a specific year of data are marked with it, e.g. [2017].
+# - Other comments are sometimes prefixed with [TODO] or [TOFIX].
+# ==============================================================================
+
 library(tidyverse) # dplyr, purrr, readr, stringr, tibble, tidyr
 library(rvest)     # installed but not loaded by {tidyverse}
 
@@ -29,6 +38,7 @@ for (i in y) {
   
   cat("", f)
   f <- readr::read_lines(f) %>% 
+    # [NOTE] panel abbreviations:
     # AD   : atelier (2015, 2017)
     # Conférence : conf. suivie du titre entre guillemets (2019)
     # CP   : conférence plénière, pas toujours numérotée (toutes éditions)
@@ -121,7 +131,7 @@ d$i <- str_replace(d$i, "ST\\s(\\d{2})\\s\\w{1}$", "ST \\1")
 # rows with ';' are all false positives, as are rows without ','
 d <- filter(d, str_detect(i, ","), !str_detect(i, ";|^\\("))
 
-# real counts for comparison (established by hand):
+# [NOTE] real counts for comparison (established by hand):
 # 2009 =  725 (got all)
 # 2011 =  632 (got all)
 # 2013 =  862 (got all)
@@ -131,7 +141,7 @@ d <- filter(d, str_detect(i, ","), !str_detect(i, ";|^\\("))
 cat("\nParticipants per conference:\n")
 print(table(d$year))
 
-# how many participations in a single conference?
+# how many attendees went to a single conference?
 table(str_count(d$i, ","))
 
 # [2019] extract 'ST GA [or] CONFERENCE << X, Y Z >>'
