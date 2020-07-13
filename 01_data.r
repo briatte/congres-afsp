@@ -39,20 +39,24 @@ for (i in y) {
   cat("", f)
   f <- readr::read_lines(f) %>% 
     # [NOTE] panel abbreviations:
-    # AD   : atelier (2015, 2017)
-    # Conférence : conf. suivie du titre entre guillemets (2019)
-    # CP   : conférence plénière, pas toujours numérotée (toutes éditions)
+    #
+    # AD   : atelier (2013, 2015, 2017)
+    # CONFERENCE : conference, followed by « quoted title » (2019) ; replaces CP
+    # CP   : plenary conference, not always numbered (2009--2017)
     # MD   : module (2009)
     # MDFB : module (2015)
     # MPP  : module (2013)
     # MTED : module (2015)
-    # ST : section thématique (toutes éditions)
-    # - parfois numérotées DD.D : 12.1, 12.2 (2009)
-    # - parfois spéciales :
+    # ST : panel ('section thématique'), all editions
+    # ... sometimes numbered as in DD.D: 12.1, 12.2 (2009)
+    # ... sometimes with non-numeric names (tied to research groups):
     #   - 'ST RC20IPSA', 'ST PopAct' (2015)
-  #   - 'EpoPé', 'FoLo', 'GrUE', 'SPoC' (2019)
-  # - parfois 'ST GA [nom]' (2019)
-  # excluded: single, unnumbered TR (2013)
+    #   - 'ST EpoPé', 'ST FoLo', 'ST GrUE', 'ST SPoC' (2019)
+    #   - 'ST GA « ... »' (2019)
+    #
+    # TR: roundtable ('table ronde')
+    # - a single, unnumbered TR from 2013 is unlisted and thus ignored
+    # - a single, unnumbered TR from 2015 is listed and thus captured
   str_subset(
     str_c(
       "(AD|CP|MD|MPP|MTED|ST)\\s?",
@@ -98,6 +102,7 @@ d <- filter(d, i != "LEVY Simon ST 2 LHERVIER Louise ST 56") %>%
 # make sure that every row has at least one comma
 #
 # [2019] amendments:
+#
 # - [A-Z] (e.g. 'FAURE Samuel BH ST GrUE')
 # - 'Conférence'
 # - l?ST (n = 1 case)
@@ -555,6 +560,12 @@ for (i in 1:nrow(d)) {
 # ==============================================================================
 
 # reduce participants to unique conference year-participant-panels tuples
+#
+# [NOTE] drop non-standard (ST) panels:
+# - keeps only abstract-based panels: ST, ST GA ... (2019), 'ST EPOPE' (2019)
+# - removes all special, not abstract-based panels: 'AD', CP', 'MD', 'TR' etc.
+#   (those are assembled differently, with e.g. invited guests)
+#
 a <- filter(a, str_detect(j, "ST")) %>% 
   select(year, i, j, first_name, family_name) %>% 
   distinct() %>% 
@@ -782,6 +793,10 @@ f <- function(x) { 100 * sum(!is.na(x), na.rm = TRUE) }
 round(tapply(p$affiliation, p$year, f) / table(p$year)) %>%
   print()
 
+# ==============================================================================
+# FINAL CHECKS AND EXPORT
+# ==============================================================================
+
 cat(
   "\n[SAVED]",
   nrow(p),
@@ -802,6 +817,18 @@ cat(
 # # top affiliations (imprecise: ignores multiple affiliations)
 # group_by(p, affiliation) %>%
 #   tally(sort = TRUE)
+
+# panels with no missing data in affiliations
+with(
+  filter(p, !is.na(affiliation)),
+  table(str_remove_all(j, "\\d|_"), str_extract(j, "\\d+"))
+)
+
+# panels with missing affiliations (expected for many: not parsed)
+with(
+  filter(p, is.na(affiliation)),
+  table(str_remove_all(j, "\\d|_"), str_extract(j, "\\d+"))
+)
 
 # add affiliations and roles only if need be
 readr::write_tsv(select(p, -affiliation, -role), "data/edges.tsv")
