@@ -91,6 +91,6 @@ for (i in y) {
 }
 
 save(list = ls()[ str_detect(ls(), "^(a|g)\\d{4}") ], file = "data/2mode.rda")
-saveRDS(w, file = "data/incidence_matrix.rds")
+readr::write_rds(w, file = "data/incidence_matrix.rds")
 
 # kthxbye
