@@ -485,7 +485,7 @@ for (i in y) {
   f <- read_html(f) %>% 
     html_nodes(xpath = "//a[contains(@href, 'st')]")
   
-  j <- str_c("ancestor::", if_else(str_detect(i, "2017"), "p", "li"))
+  j <- str_c("ancestor::", if_else(str_detect(i, "201[79]"), "p", "li"))
   
   # special cases below are all for [2015],
   # except 'ga-(.*)', 'folo', 'grue' and 'spoc`, which are for [2019]
