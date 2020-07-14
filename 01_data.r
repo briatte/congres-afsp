@@ -151,21 +151,32 @@ print(table(d$year))
 # how many attendees went to a single conference?
 table(str_count(d$i, ","))
 
-# [2019] extract 'ST GA [or] CONFERENCE << X, Y Z >>'
-#        (required because of commas in the panel titles)
-a <- str_extract_all(d$i, "<<(.*?)>>") %>%
+# [2019] commas in some panel titles need to be removed before splitting
+#        'ST GA [or] CONFERENCE << X, Y ET Z >>'
+str_extract_all(d$i, "(\\w+\\s)?\\w+\\s<<(.*?)>>") %>%
   unlist() %>%
-  unique() %>%
-  tibble::tibble(title = .) %>%
-  tibble::rowid_to_column(var = "id")
+  table()
 
 # [NOTE] in one case, the participant has attended more than one ST GA
 filter(d, str_count(i, "ST GA") > 1)
 
-# [2019] replace 'ST GA' and 'CONF' with (arbitrary) numeric UIDs
+# later on, when we download panels, we save the files under their basename,
+# stripped of '-' dashes and '.html' -- so we need to do the same thing here,
+# to match data from the participants index page to that from the panel pages
+#
+# "https://www.afsp.info/congres/congres-2019/sections-thematiques/" %>%
+#   read_html() %>%
+#   html_nodes(xpath = "//a[contains(@href, '-ga-')]") %>%
+#   html_attr("href") %>%
+#   basename()
+
+# load corrected titles (no commas or spaces)
+# corrections include CONFERENCE titles, even though we do not use them later
+a <- read_tsv("data/panels_fixes.tsv", col_types = "cc")
+
 for (i in 1:nrow(a)) {
-  # cat(a$title[ i ], "->", a$id[ i ], "\n")
-  d$i <- str_replace_all(d$i, a$title[ i ], as.character(a$id[ i ]))
+  # cat(a$title[ i ], "->", a$titled_fixed[ i ], "\n")
+  d$i <- str_replace_all(d$i, a$title[ i ], as.character(a$title_fixed[ i ]))
 }
 
 # [NOTE] the loop can be replaced with `purrr::walk2` (1), but only by calling
@@ -615,8 +626,12 @@ for (i in unique(d$j)) {
   
   # pointer separating panel organisers from presenters
   w <- max(which(t == "PRESENTATION SCIENTIFIQUE"))
-  # one special case omitted (produces a WARNING because `w` is set to -Inf)
-  stopifnot(is.integer(w) | f == "html/2019_STSPOC.html")
+  
+  # two special cases omitted (produce WARNINGs because `w` is set to -Inf)
+  stopifnot(
+    is.integer(w) |
+      str_detect(f, "2019_(STGAVIOLENCESETCONFLITS|STSPOC)")
+  )
   
   # exclude everything after last affiliation
   t[ -w ] <- str_extract(t[ -w ], "(.*)\\)")

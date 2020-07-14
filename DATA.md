@@ -55,6 +55,15 @@ This file contains slightly better formatted panel titles than those collected d
 
 [data-panels]: https://github.com/briatte/congres-afsp/blob/master/data/panels.tsv
 
+## [`panels_fixes.tsv`][data-panels-fixes]
+
+A TSV (tab-separated) file that removes special characters (commas especially) from the names of some special panels (group-specific thematic panels or conferences) present in the 2019 data.
+
+- `title` – `<<` Quoted `>>` title of the panel.
+- `title_fixed` – Cleaned up panel title.
+
+[data-panels-fixes]: https://github.com/briatte/congres-afsp/blob/master/data/panels_fixes.tsv
+
 ## [`participants.tsv`][data-participants]
 
 A TSV (tab-separated) file with one row per conference participants and per conference panel attended (see [`edges.tsv`][data-edges] below):
@@ -79,7 +88,7 @@ This file can be manually revised to improve the accuracy of the `affiliation` v
 
 [data-participants]: https://github.com/briatte/congres-afsp/blob/master/data/participants.tsv
 
-## [`participants_fixes.tsv`][data-fixes]
+## [`participants_fixes.tsv`][data-participants-fixes]
 
 A TSV (tab-separated) file with one row per conference participant and per conference panel attended for which a fix was identified by manually checking the original data, and therefore to be used to fix errors in [`edges.tsv`][data-edges]:
 
@@ -90,7 +99,7 @@ A TSV (tab-separated) file with one row per conference participant and per confe
 - `i` – Full name of the participant, either coded exactly as `i` in [`edges.tsv`][data-edges] or corrected for misspellings and other errors.
 - `j` – Panel attended, coded exactly as `j` in [`edges.tsv`][data-edges].
 
-[data-fixes]: https://github.com/briatte/congres-afsp/blob/master/data/participants_fixes.tsv
+[data-participants-fixes]: https://github.com/briatte/congres-afsp/blob/master/data/participants_fixes.tsv
 
 ## [`participants_genders.tsv`][data-genders]
 
