@@ -189,13 +189,14 @@ for (i in 1:nrow(a)) {
 # EDGES
 # ==============================================================================
 
+# sanity check: only single spaces in the string to split
+stopifnot(!str_detect(d$i, "\\s{2,}"))
+
 # coerce to (year, i, j) data frame
-d <- d %>% 
-  mutate(
-    j = str_split(str_replace(i, "(.*?),\\s?(.*)", "\\2"), ",\\s?"),
-    i = str_replace(i, "(.*?),(.*)", "\\1")
-  ) %>%
-  tidyr::unnest(j)
+d <- d %>%
+  tidyr::separate(i, c("i", "j"), ",\\s?", extra = "merge", remove = FALSE) %>%
+  mutate(j = str_split(j, ",\\s?")) %>%
+  unnest(j)
 
 # add year to panel ids
 d$j <- str_c(d$year, "_", str_remove_all(d$j, "\\s+")) # j ~ '2009_ST46'
