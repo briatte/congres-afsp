@@ -1,11 +1,7 @@
-library(dplyr)
+library(tidyverse)
 library(igraph)
-library(ggplot2)
 library(ggraph)
-library(readr)
-library(stringr)
 
-d <- read_tsv("data/edges.tsv", col_types = "icciiiiccc")
 
 # ==============================================================================
 # INCIDENCE MATRIX
@@ -91,6 +87,6 @@ for (i in y) {
 }
 
 save(list = ls()[ str_detect(ls(), "^(a|g)\\d{4}") ], file = "data/2mode.rda")
-readr::write_rds(w, file = "data/incidence_matrix.rds")
+readr::write_rds(w, "data/incidence_matrix.rds")
 
 # kthxbye
