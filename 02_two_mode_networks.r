@@ -1,7 +1,13 @@
 library(tidyverse)
 library(igraph)
 library(ggraph)
+library(graphlayouts)
 
+# [NOTE] we use a stress majorization layout because all graphs have several
+#        components, and because `igraph` (1.2.5) fails to produce legible
+#        visualizations of the 2019 with layouts `fr` or `kk`
+
+d <- readr::read_tsv("data/edges.tsv", col_types = "icciiiiccc")
 
 # ==============================================================================
 # INCIDENCE MATRIX
@@ -60,8 +66,9 @@ for (i in rev(y)) {
   V(n)$size <- degree(n)
   V(n)$size <- if_else(V(n)$type == "P0", 1.5, V(n)$size)
   
-  ggraph(n, layout = "fr") +
-    geom_edge_link(aes(alpha = weight), show.legend = FALSE) +
+  # stress majorization, with slightly smaller `bbox` (default = 30)
+  ggraph(n, layout = "stress", bbox = 20) +
+    geom_edge_link0(aes(alpha = weight), show.legend = FALSE) +
     geom_node_point(aes(size = size, shape = type, color = type), alpha = 2/3) +
     scale_shape_manual("", values = c("P0" = 15, "P1" = 19, "P2" = 19), labels = l) +
     scale_color_manual("", values = c("P0" = "grey35", "P1" = "steelblue3", "P2" = "tomato3"), labels = l) +
