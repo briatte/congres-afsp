@@ -1,19 +1,18 @@
-library(dplyr)
+library(tidyverse)
 library(igraph)
-library(ggplot2)
 library(ggraph)
-library(readr)
-library(stringr)
+library(graphlayouts)
 
-p <- read_tsv("data/participants.tsv", col_types = "cccc") %>% 
+p <- readr::read_tsv("data/participants.tsv", col_types = "cccc") %>% 
   select(i, j, role)
 
 # load only organisers, chairs/discussants and participants to 'ST' panels
-d <- read_tsv("data/edges.tsv", col_types = "icciiiiccc") %>%
+d <- readr::read_tsv("data/edges.tsv", col_types = "icciiiiccc") %>%
   left_join(p, by = c("i", "j")) %>% # add roles
   filter(str_detect(j, "_ST(.*)"), role %in% c("c", "d", "o", "p"))
 
-l <- c("Participant(e) mono-panel", "Participant(e) multi-panels")
+# l <- c("Participant(e) mono-panel", "Participant(e) multi-panels")
+l <- c("Mono-panel participant", "Multi-panel participant")
 
 for (y in unique(d$year)) {
   
@@ -26,29 +25,26 @@ for (y in unique(d$year)) {
  
   stopifnot(!nrow(w))
   
-  e <- lapply(unique(e$j), function(p) {
-    expand.grid(
+  e <- purrr::map_df(unique(e$j), function(p) {
+    tidyr::expand_grid( # actually twice slower than `expand.grid`...
       i = e$i[ e$role == "o" & e$j == p ],
-      j = e$i[ e$role != "o" & e$j == p ], # "c", "d", "p"
-      stringsAsFactors = FALSE
+      j = e$i[ e$role != "o" & e$j == p ] # "c", "d", "p"
     ) %>% 
-      mutate(p)
+      tibble::add_column(p, .before = 1)
   }) %>% 
-    bind_rows %>% 
     group_by(p) %>% 
     mutate(weight = 1 / n_distinct(j)) # inverse weighting re: panel size
   
-  # # expected left skew in edge weights
+  # expected left skew in edge weights
   # hist(e$weight)
-  # hist(sqrt(e$weight))
 
-  n <- graph_from_data_frame(e)
+  n <- igraph::graph_from_data_frame(e)
  
   E(n)$weight <- E(n)$weight / max(E(n)$weight)
   
-  V(n)$size <- degree(n)
+  V(n)$size <- igraph::degree(n)
   
-  # data_frame(name = V(n)$name, degree = V(n)$size) %>%
+  # tibble::tibble(name = V(n)$name, degree = V(n)$size) %>%
   #   arrange(-degree) %>%
   #   print
   
@@ -62,7 +58,10 @@ for (y in unique(d$year)) {
   V(n)$color <- as.integer(w[ V(n)$name ])
   V(n)$color <- if_else(V(n)$color == 1, "P1", "P2+")
 
-  ggraph(n, layout = "fr") +
+  cat("\nYear", y, ":", igraph::components(n)$no, "components\n")
+  print(table(V(n)$color))
+  
+  ggraph(n, layout = "stress") +
     geom_edge_link(aes(alpha = weight), show.legend = FALSE) +
     geom_node_point(aes(size = size, color = color), alpha = 2/3) +
     scale_color_manual("", values = c("P1" = "steelblue3", "P2+" = "tomato3"), labels = l) +
@@ -74,17 +73,21 @@ for (y in unique(d$year)) {
       plot.title = element_text(hjust = 0.5),
       plot.subtitle = element_text(hjust = 0.5)
     ) +
-    labs(title = str_c("Congrès AFSP ", y),
-         subtitle = str_c(
-           sum(V(n)$color == "P1"), " participant(e)s, ",
-           sum(V(n)$color == "P2+"), " multi-panels")
+    labs(
+      # title = str_c("Congrès AFSP ", y),
+      title = str_c("AFSP Meeting ", y),
+      # subtitle = str_c(
+      #   sum(V(n)$color == "P1"), " participant(e)s, ",
+      #   sum(V(n)$color == "P2+"), " multi-panels"
+      # )
+      subtitle = str_c(
+        sum(V(n)$color == "P1"), " participants, ",
+        sum(V(n)$color == "P2+"), " multi-panels"
+      )
     )
   
   ggsave(str_c("plots/congres-afsp", y, "-1mode.pdf"), width = 8, height = 9)
   ggsave(str_c("plots/congres-afsp", y, "-1mode.png"), width = 8, height = 9, dpi = 150)
-  
-  cat("\nYear", y, ":", components(n)$no, "components\n")
-  print(table(V(n)$color))
   
 }
 
