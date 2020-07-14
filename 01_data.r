@@ -149,7 +149,7 @@ cat("\nParticipants per conference:\n")
 print(table(d$year))
 
 # how many attendees went to a single conference?
-table(str_count(d$i, ","))
+table(d$year, str_count(d$i, ","))
 
 # [2019] commas in some panel titles need to be removed before splitting
 #        'ST GA [or] CONFERENCE << X, Y ET Z >>'
