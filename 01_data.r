@@ -545,10 +545,12 @@ for (i in y) {
   
 }
 
-# fix mismatch in panel URL / id for one case in 2017
+# [2017] fix mismatch in panel URL / id for n = 1 case
 d$id[ str_detect(d$url, "st2-2") ] <- "ST2"
 
 # save only if the cleaner file does not exist
+# [NOTE] cleaner panels.tsv also includes 'panels' that are not parsed for
+#        participants (e.g. AD, CP, etc.)
 f <- "data/panels.tsv"
 if (!file.exists(f)) {
   readr::write_tsv(d, f)
