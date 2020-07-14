@@ -34,7 +34,7 @@ stopifnot(colSums(m) > 1) # all panels have 2+ participants
 # SIMPLE INVERSE WEIGHTING
 # ==============================================================================
 
-# weight = 1 / (number of panel participants)
+# weight = 1 / (total number of panel participants)
 w <- apply(m, 2, function(x) { x / sum(x) }) # \in (0, 0.5]
 
 # ==============================================================================
