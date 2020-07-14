@@ -744,9 +744,8 @@ a <- left_join(mutate(a, year = str_sub(j, 1, 4)), d, by = c("year", "i")) %>%
 # REVISE ROLES AND AFFILIATIONS
 # ==============================================================================
 
-# specifying '.' to ensure that participants.tsv columns are marked .y
-p <- readr::read_tsv(f, col_types = "cccc") %>% 
-  full_join(a, ., by = c("i", "j"))
+# participants.tsv columns are marked .y
+p <- full_join(a, readr::read_tsv(f, col_types = "cccc"), by = c("i", "j"))
 
 # sanity check: all 'ST' panel affiliations are covered by participants.tsv
 stopifnot(!length(p$i[ !(p$i %in% a$i | !str_detect(p$j, "ST")) ]))
@@ -755,10 +754,11 @@ stopifnot(!length(p$i[ !(p$i %in% a$i | !str_detect(p$j, "ST")) ]))
 w <- mutate(p, year = str_sub(j, 1, 4)) %>%
   filter(str_detect(j, "_ST")) %>% 
   group_by(year, i) %>%
-  summarise(n_aff = n_distinct(affiliation)) %>%
+  summarise(n_aff = n_distinct(affiliation.y)) %>%
   filter(n_aff > 1)
 
-# sanity check: all participants have only one affiliation per conference year
+# sanity check: participants have only one affiliation per conference year in
+# the -- manually corrected -- participants.tsv file
 stopifnot(!nrow(w))
 
 # replace empty roles with existing ones in participants.tsv
