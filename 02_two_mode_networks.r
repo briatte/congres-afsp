@@ -39,7 +39,7 @@ l <- c("Panel", "Participant with degree 1", "Participant with degree 2+")
 
 y <- unique(str_sub(colnames(w), 1, 4))
 
-for (i in y) {
+for (i in rev(y)) {
   
   n <- w[, str_sub(colnames(w), 1, 4) == i ]
   n <- n[ rowSums(n) > 0, ]
