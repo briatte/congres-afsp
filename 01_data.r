@@ -202,6 +202,10 @@ d <- d %>%
 d$j <- str_c(d$year, "_", str_remove_all(d$j, "\\s+")) # j ~ '2009_ST46'
 stopifnot(!str_detect(d$j, "\\s"))
 
+# [2019] single-number panels from that year have a trailing zero in the URL
+#        of their panel Web page
+d$j <- str_replace(d$j, "^2019_ST(\\d)$", "2019_ST0\\1")
+
 # ==============================================================================
 # FINALIZE
 # ==============================================================================
