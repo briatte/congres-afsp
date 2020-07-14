@@ -35,6 +35,7 @@ w <- apply(m, 2, function(x) { x / sum(x) }) # \in (0, 0.5]
 # ==============================================================================
 
 l <- c("Panel", "Participant(e) de degré 1", "Participant(e) de degré 2+")
+l <- c("Panel", "Participant with degree 1", "Participant with degree 2+")
 
 y <- unique(str_sub(colnames(w), 1, 4))
 
@@ -72,10 +73,14 @@ for (i in y) {
       plot.title = element_text(hjust = 0.5),
       plot.subtitle = element_text(hjust = 0.5)
     ) +
-    labs(title = str_c("Congrès AFSP ", i),
-         subtitle = str_c(
-           sum(V(n)$type == "P0"), " panels, ",
-           sum(V(n)$type != "P0"), " participant(e)s")
+    labs(
+      # title = str_c("Congrès AFSP ", i),
+      title = str_c("AFSP Meeting ", i),
+      subtitle = str_c(
+        sum(V(n)$type == "P0"), " panels, ",
+        # sum(V(n)$type != "P0"), " participant(e)s"
+        sum(V(n)$type != "P0"), " participants"
+      )
     )
 
   ggsave(str_c("plots/congres-afsp", i, "-2mode.pdf"), width = 8, height = 9)
