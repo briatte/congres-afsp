@@ -34,13 +34,14 @@ stopifnot(colSums(m) > 1) # all panels have 2+ participants
 # SIMPLE INVERSE WEIGHTING
 # ==============================================================================
 
+# weight = 1 / (number of panel participants)
 w <- apply(m, 2, function(x) { x / sum(x) }) # \in (0, 0.5]
 
 # ==============================================================================
 # BIPARTITE NETWORK PLOTS
 # ==============================================================================
 
-l <- c("Panel", "Participant(e) de degré 1", "Participant(e) de degré 2+")
+# l <- c("Panel", "Participant(e) de degré 1", "Participant(e) de degré 2+")
 l <- c("Panel", "Participant with degree 1", "Participant with degree 2+")
 
 y <- unique(str_sub(colnames(w), 1, 4))
@@ -52,10 +53,10 @@ for (i in rev(y)) {
   
   assign(str_c("a", i), n)
   
-  n <- graph_from_incidence_matrix(n, weighted = TRUE) %>%
+  n <- igraph::graph_from_incidence_matrix(n, weighted = TRUE) %>%
     igraph::as_data_frame(.) %>% 
     mutate(year = str_sub(to, 1, 4)) %>% 
-    graph_from_data_frame(directed = FALSE)
+    igraph::graph_from_data_frame(directed = FALSE)
   
   assign(str_c("g", i), n)
   
@@ -63,9 +64,16 @@ for (i in rev(y)) {
   
   V(n)$type <- if_else(str_detect(V(n)$name, "^\\d{4}"), "Panel", "Participant(e)")
   V(n)$type <- if_else(V(n)$type == "Panel", "P0", if_else(degree(n) > 1, "P2", "P1"))
-  V(n)$size <- degree(n)
-  V(n)$size <- if_else(V(n)$type == "P0", 1.5, V(n)$size)
   
+  cat("\nYear", i, ":", igraph::components(n)$no, "components\n")
+  print(table(V(n)$type))
+  
+  cat("\nEdge weights:\n")
+  print(summary(E(n)$weight))
+  
+  V(n)$size <- igraph::degree(n)
+  V(n)$size <- if_else(V(n)$type == "P0", 1.5, V(n)$size)
+
   # stress majorization, with slightly smaller `bbox` (default = 30)
   ggraph(n, layout = "stress", bbox = 20) +
     geom_edge_link0(aes(alpha = weight), show.legend = FALSE) +
@@ -93,9 +101,6 @@ for (i in rev(y)) {
   ggsave(str_c("plots/congres-afsp", i, "-2mode.pdf"), width = 8, height = 9)
   ggsave(str_c("plots/congres-afsp", i, "-2mode.png"), width = 8, height = 9, dpi = 150)
 
-  cat("\nYear", i, ":", components(n)$no, "components\n")
-  print(table(V(n)$type))
-  
 }
 
 save(list = ls()[ str_detect(ls(), "^(a|g)\\d{4}") ], file = "data/2mode.rda")
