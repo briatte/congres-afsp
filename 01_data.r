@@ -302,15 +302,13 @@ if (file.exists(p)) {
   
 }
 
-# almost done (2/2): remove panels with less than 2 participants, which are
-#                    either false positives or plenary conferences/workshops 
-#                    with a single announced participant/speaker
+# almost done (2/2): check that panels with less than 2 participants are not
+#                    not panels but special events (plenary conferences and
+#                    workshops) with a single announced participant/speaker
 
-d <- group_by(d, year, j) %>% 
-  summarise(n_j = n()) %>% 
-  filter(n_j > 1) %>% 
-  inner_join(d, ., by = c("year", "j")) %>% 
-  distinct(.keep_all = TRUE) # safety measure to avoid duplicate rows
+group_by(d, year, j) %>% 
+  mutate(n_j = n()) %>% 
+  filter(n_j == 1)
 
 # ==============================================================================
 # COUNTS
