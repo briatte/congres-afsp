@@ -35,7 +35,8 @@ stopifnot(colSums(m) > 1) # all panels have 2+ participants
 # ==============================================================================
 
 # weight = 1 / (total number of panel participants)
-w <- apply(m, 2, function(x) { x / sum(x) }) # \in (0, 0.5]
+# w <- apply(m, 2, function(x) { x / sum(x) }) # \in (0, 0.5]
+w <- m
 
 # ==============================================================================
 # BIPARTITE NETWORK PLOTS
