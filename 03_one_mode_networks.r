@@ -79,11 +79,11 @@ for (y in unique(d$year)) {
       title = str_c("AFSP Meeting ", y),
       # subtitle = str_c(
       #   sum(V(n)$color == "P1"), " participant(e)s, ",
-      #   sum(V(n)$color == "P2+"), " multi-panels"
+      #   sum(V(n)$color == "P2+"), " dans plusieurs panels"
       # )
       subtitle = str_c(
         sum(V(n)$color == "P1"), " participants, ",
-        sum(V(n)$color == "P2+"), " multi-panels"
+        sum(V(n)$color == "P2+"), " in multiple panels"
       )
     )
   
