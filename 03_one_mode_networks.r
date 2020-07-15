@@ -47,7 +47,7 @@ for (y in unique(d$year)) {
   
   # tibble::tibble(name = V(n)$name, degree = V(n)$size) %>%
   #   arrange(-degree) %>%
-  #   print
+  #   print()
   
   e <- filter(d, year == y) %>% 
     group_by(i) %>% 
