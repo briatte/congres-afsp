@@ -1,13 +1,8 @@
-# Domagalski, R., Neal, Z. P., & Sagan, B. (2019). backbone: An R package for backbone extraction of weighted graphs. arXiv:1912.12779v1.
-# https://arxiv.org/pdf/1912.12779.pdf
-# 
-# Neal, Z. P. (2014). The backbone of bipartite networks: Inferring relationships from co-authorship, co-sponsorship, co-attendance and other co-behaviors. Social Networks, 39, 84 – 97. https://doi.org/10.1016/j.socnet.2014.06.001
-
 library(tidyverse)
 library(igraph)
 library(ggraph)
 library(graphlayouts)
-library(backbone)
+library(backbone) # arXiv:1912.12779v1
 
 # load adjacency matrices built by script 02
 load("data/2mode.rda")
