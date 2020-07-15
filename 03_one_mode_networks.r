@@ -30,7 +30,7 @@ for (y in unique(d$year)) {
       i = e$i[ e$role == "o" & e$j == p ],
       j = e$i[ e$role != "o" & e$j == p ] # "c", "d", "p"
     ) %>% 
-      tibble::add_column(p, .before = 1)
+      tibble::add_column(p)
   }) %>% 
     group_by(p) %>% 
     mutate(weight = 1 / n_distinct(j)) # inverse weighting re: panel size
@@ -38,7 +38,7 @@ for (y in unique(d$year)) {
   # expected left skew in edge weights
   # hist(e$weight)
 
-  n <- igraph::graph_from_data_frame(e)
+  n <- igraph::graph_from_data_frame(e) # carries `p` and `weight` on edges
  
   E(n)$weight <- E(n)$weight / max(E(n)$weight)
   
