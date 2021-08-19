@@ -622,7 +622,7 @@ for (i in unique(d$j)) {
     # remove diacritics
     str_remove_all("[\"^'`~\\.]") %>%
     # composed names + handle multiple spaces
-    str_replace_all( "-|\\s+", " ") %>% 
+    str_replace_all("-|\\s+", " ") %>% 
     str_trim()
   
   # keep only strings likely to match a name and affiliation
