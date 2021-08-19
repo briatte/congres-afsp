@@ -3,6 +3,7 @@ library(igraph)
 library(ggraph)
 library(graphlayouts)
 library(backbone) # arXiv:1912.12779v1
+library(bipartite)
 
 # load adjacency matrices built by script 02
 load("data/2mode.rda")
@@ -54,12 +55,47 @@ for (i in ls(pattern = "^a\\d{4}")) {
   bb_nodes <- unique(c(bb_edges$from, bb_edges$to))
   cat("connecting", length(bb_nodes), "nodes\n")
   
-  # build the final graph data frame
-  n_df <- graph_from_data_frame(df, directed = FALSE)
+  # -- normalized betweenness centrality ---------------------------------------
+
+  bc <- bipartite::BC(A)
+
+  # bc_panels <- bc$higher
+  bc_participants <- bc$lower
+  stopifnot(nrow(A) == length(bc_participants))
+
+  bc_participants <- tibble::tibble(
+    i = rownames(A),
+    BC = bc_participants,
+    backbone = i %in% bb_nodes
+  )
+
+  ggplot(
+    bc_participants,
+    aes(x = BC, fill = backbone, color = backbone)
+  ) +
+    geom_density(alpha = 1/2) +
+    scale_x_log10() +
+    labs(
+      title = str_c(
+        "Betweenness centrality in AFSP Meeting ",
+        str_remove(i, "\\D")
+      ),
+      subtitle = "Showing only nodes for which BC > 0"
+    )
+
+  ggsave(
+    str_c("plots/congres-afsp", str_remove(i, "\\D"), "-backbone-BC.png"),
+    width = 8,
+    height = 6
+  )
+
+  # -- build the final graph data frame ----------------------------------------
+  
+  n_df <- igraph::graph_from_data_frame(df, directed = FALSE)
   V(n_df)$backbone_node <- V(n_df)$name %in% bb_nodes
   
   # 'trim' the graph, keeping only the largest component
-  n_components <- components(n_df)
+  n_components <- igraph::components(n_df)
   stopifnot(first(n_components$csize) == max(n_components$csize))
   n_df <- igraph::delete_vertices(n_df, which(n_components$membership != 1))
   
