@@ -55,7 +55,7 @@ for (i in y) {
   assign(str_c("a", i), n)
   
   n <- igraph::graph_from_incidence_matrix(n, weighted = TRUE) %>%
-    igraph::as_data_frame(.) %>% 
+    igraph::as_data_frame() %>% 
     mutate(year = str_sub(to, 1, 4)) %>% 
     igraph::graph_from_data_frame(directed = FALSE)
   
